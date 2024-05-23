@@ -1,0 +1,26 @@
+.root {
+    -fx-padding: 20;
+    -fx-alignment: center;
+}
+
+.text-field, .password-field {
+    -fx-pref-width: 200;
+}
+
+.button {
+    -fx-pref-width: 200;
+}
+
+.hyperlink {
+    -fx-text-fill: #1a73e8;
+}
+
+@media screen and (max-width: 600px) {
+    .text-field, .password-field, .button {
+        -fx-pref-width: 100%;
+    }
+
+    .hyperlink {
+        -fx-font-size: 12px;
+    }
+}
