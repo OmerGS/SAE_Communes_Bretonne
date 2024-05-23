@@ -4,15 +4,16 @@
 }
 
 .text-field, .password-field {
-    -fx-pref-width: 200;
+    -fx-pref-width: 200px;
 }
 
 .button {
-    -fx-pref-width: 200;
+    -fx-pref-width: 200px;
 }
 
 .hyperlink {
     -fx-text-fill: #1a73e8;
+    -fx-font-size: 14px;
 }
 
 @media screen and (max-width: 600px) {
