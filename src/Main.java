@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        ViewMainPage viewMainPage = new ViewMainPage();
-        viewMainPage.start(primaryStage);
+        ConnectionPage connectionPage = new ConnectionPage();
+        connectionPage.start(primaryStage);
     }
 }
