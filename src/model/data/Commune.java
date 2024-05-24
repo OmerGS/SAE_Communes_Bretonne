@@ -2,50 +2,108 @@ package data;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
 import data.exceptions.*;
 
+/**
+* Class who represents a commune with different parameters, we can manipulate it with different method. 
+* 
+* @author O.Gunes, R.Peron, C.Brayan
+*/
 public class Commune {
+    /**
+    * The unique number which represent the commune. 
+    */
     private int idCommune;
+
+    /**
+    * The name of the commune. 
+    */
     private String nomCommune;
+
+    /**
+    * The number of house. 
+    */
     private int nbMaison;
+
+    /**
+    * The number of appartment. 
+    */
     private int nbAppart;
+
+    /**
+    * Average price of house and appartment 
+    */
     private float prixMoyen;
+
+    /**
+    * Average price of one square meters. 
+    */
     private float prixM2Moyen;
+
+    /**
+    * Average square meters of house and appartment. 
+    */
     private float surfaceMoy;
+
+    /**
+    * The amount of money spend in cultural activities. 
+    */
     private float depCulturellesTotales;
+
+    /**
+    * Amount of commune budget. 
+    */
     private float budgetTotal;
+
+    /**
+    * The number of person who lives in the commune. 
+    */
     private float population;
 
     /**
+    * List of airport.
+    * 
     * Allow connection with Aeroport.java 
     */
     private List<Aeroport> aeroports;
 
     /**
+    * List of trainstation.
+    *
     * Allow conneciton with Gare.java 
     */
     private List<Gare> gares;
 
     /**
+    * The department of the commune. 
+    * 
     * Allow connection with Departement.java 
     */
     private Departement departement;  
     
     /**
+    * List of neighbours communes. 
+    * 
     * Allow a connection with itself (Commune.java) 
     */
     private List<Commune> communesVoisines;
     
-
-
-
-
-
-
-    
-
+    /**
+    * 
+    * Constructor of Commune.
+    *
+    * @param idCommune 
+    * @param nomCommune
+    * @param nbMaison
+    * @param nbAppart
+    * @param prixMoyen
+    * @param prixM2Moyen
+    * @param surfaceMoy
+    * @param depCulturellesTotales
+    * @param budgetTotal
+    * @param population
+    * @param departement
+    */
     public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, float prixMoyen, float prixM2Moyen, float surfaceMoy, float depCulturellesTotales, float budgetTotal, float population, Departement departement) {
         this.aeroports = new ArrayList<Aeroport>();
         this.gares = new ArrayList<Gare>();
