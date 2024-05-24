@@ -98,7 +98,7 @@ public class CreationAccPage extends Application {
         Hyperlink linkLogin = new Hyperlink("Connectez-vous !");
         Label linkAlreadyAccount = new Label("D\u00E9j\u00e0 inscrit ?");
         linkAlreadyAccount.setStyle("-fx-font-size: 16px; -fx-text-fill: #000000; -fx-font-family: 'Arial';");
-        linkLogin.setStyle("-fx-font-size: 16px; -fx-text-fill: #ff6b6b; -fx-font-family: 'Arial';");
+        linkLogin.setStyle("-fx-font-size: 16px; -fx-text-fill: #ffca10; -fx-font-family: 'Arial';");
 
         // HBox pour linkAlreadyAccount et linkLogin
         HBox loginBox = new HBox(5, linkAlreadyAccount, linkLogin);
