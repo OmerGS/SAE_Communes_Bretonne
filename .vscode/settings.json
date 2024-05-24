@@ -4,13 +4,14 @@
         "src\\model"
     ],
     "java.project.referencedLibraries": [
-        "javafx-sdk-22.0.1\\lib\\javafx.base.jar",
-        "javafx-sdk-22.0.1\\lib\\javafx.controls.jar",
-        "javafx-sdk-22.0.1\\lib\\javafx.fxml.jar",
-        "javafx-sdk-22.0.1\\lib\\javafx.graphics.jar",
-        "javafx-sdk-22.0.1\\lib\\javafx.media.jar",
-        "javafx-sdk-22.0.1\\lib\\javafx.swing.jar",
-        "javafx-sdk-22.0.1\\lib\\javafx.web.jar",
-        "javafx-sdk-22.0.1\\lib\\javafx-swt.jar"
+        "lib\\mysql-connector-j-8.4.0\\mysql-connector-j-8.4.0.jar",
+        "lib\\javafx-sdk-22.0.1\\lib\\javafx.base.jar",
+        "lib\\javafx-sdk-22.0.1\\lib\\javafx.controls.jar",
+        "lib\\javafx-sdk-22.0.1\\lib\\javafx.fxml.jar",
+        "lib\\javafx-sdk-22.0.1\\lib\\javafx.graphics.jar",
+        "lib\\javafx-sdk-22.0.1\\lib\\javafx.media.jar",
+        "lib\\javafx-sdk-22.0.1\\lib\\javafx.swing.jar",
+        "lib\\javafx-sdk-22.0.1\\lib\\javafx.web.jar",
+        "lib\\javafx-sdk-22.0.1\\lib\\javafx-swt.jar"
     ]
 }
