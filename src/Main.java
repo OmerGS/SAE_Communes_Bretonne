@@ -1,6 +1,8 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+//Add page
+
 import view.*;
 
 public class Main extends Application {
