@@ -1,3 +1,5 @@
+package data;
+
 public class Annee {
     private int annee;
     private float tauxInflation;

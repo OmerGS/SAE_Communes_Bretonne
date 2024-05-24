@@ -1,3 +1,6 @@
+import data.Commune;
+import data.Departement;
+
 public class ScenarioSAE {
     public static void main(String[] args) {
 

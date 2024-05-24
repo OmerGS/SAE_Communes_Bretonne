@@ -1,7 +1,10 @@
-import exceptions.*;
+package data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
+import data.exceptions.*;
 
 public class Commune {
     private int idCommune;
