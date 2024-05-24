@@ -84,9 +84,11 @@ public class ViewMainPage extends Application {
         // Hyperliens
         Hyperlink linkSignUp = new Hyperlink("S'inscrire");
         Label linkPasDeCompte = new Label("Pas de compte ?");
-        Hyperlink linkForgotPassword = new Hyperlink("mot de passe oublié");
-        linkSignUp.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
-        linkForgotPassword.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
+        Hyperlink linkForgotPassword = new Hyperlink("mot de passe oubli\u00E9");
+        linkPasDeCompte.setStyle("-fx-font-size: 16px; -fx-text-fill: #000000; -fx-font-family: 'Arial';");
+        linkSignUp.setStyle("-fx-font-size: 16px; -fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
+        linkForgotPassword.setStyle("-fx-font-size: 16px; -fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
+
 
         // HBox pour linkPasDeCompte et linkSignUp
         HBox signUpBox = new HBox(5, linkPasDeCompte, linkSignUp);
