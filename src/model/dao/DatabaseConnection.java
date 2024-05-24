@@ -17,7 +17,7 @@ public class DatabaseConnection {
 
         // Informations de connexion à la base de données
         String url = props.getProperty("db.url");
-        String utilisateur = props.getProperty("db.user");
+        String utilisateur = props.getProperty("db.user"); 
         String motDePasse = props.getProperty("db.password");
         
         // Requête SQL
