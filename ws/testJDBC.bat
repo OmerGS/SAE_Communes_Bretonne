@@ -1,5 +1,5 @@
-javac --module-path "C:\Users\omerf\Desktop\SAE\SAE 2.0 - Communes\App\lib\" --add-modules mysql-connector-j-8.4.0 -d ../class ../src/model/dao/DatabaseConnection.java
+javac -d ../class ..\src\model\dao\DatabaseConnection.java
 
-java --module-path "C:\Users\omerf\Desktop\SAE\SAE 2.0 - Communes\App\lib\" --add-modules mysql-connector-j-8.4.0 -cp ../class model.dao.DatabaseConnection
+java --module-path "..\lib\mysql-connector-j-8.4.0\mysql-connector-j-8.4.0.jar" -cp ../class dao.DatabaseConnection
 
 pause
