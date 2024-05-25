@@ -1,4 +1,6 @@
 package view;
+
+import controller.Controller;
 import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -15,10 +17,20 @@ import javafx.util.Duration;
 
 public class ConnectionPage extends Application {
 
+    private Controller controller;
+
+    private Hyperlink linkSignUp;
+    private Hyperlink linkForgotPassword;
+    private TextField emailField;
+    private PasswordField passwordField;
+    private Button btnLogin;
+
     @Override
     public void start(Stage primaryStage) {
+        this.controller = new Controller(this);
+
         // Image pour le logo
-        ImageView logo = new ImageView(new Image("file:logo_bretagne.png")); // Assurez-vous que le fichier logo_bretagne.png est dans le bon répertoire
+        ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
         logo.setFitWidth(100);
         logo.setFitHeight(100);
         logo.setClip(new Circle(50, 50, 50)); // Rendre l'image circulaire
@@ -40,17 +52,17 @@ public class ConnectionPage extends Application {
         lblConnection.setStyle("-fx-font-size: 35px; -fx-font-family: 'Arial'; -fx-text-fill: #333333;");
 
         // Champs avec placeholders
-        TextField emailField = new TextField();
-        emailField.setPromptText("e-mail");
-        emailField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
+        this.emailField = new TextField();
+        this.emailField.setPromptText("e-mail");
+        this.emailField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
-        PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("mot de passe");
-        passwordField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
+        this.passwordField = new PasswordField();
+        this.passwordField.setPromptText("mot de passe");
+        this.passwordField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
         // Bouton de connexion
-        Button btnLogin = new Button("Connexion");
-        btnLogin.setStyle("-fx-pref-width: 350px; -fx-background-color: linear-gradient(to right, #FF512F 0%, #F09819 51%, #FF512F 100%);"
+        this.btnLogin = new Button("Connexion");
+        this.btnLogin.setStyle("-fx-pref-width: 350px; -fx-background-color: linear-gradient(to right, #FF512F 0%, #F09819 51%, #FF512F 100%);"
                 + "-fx-padding: 15px 45px;"
                 + "-fx-text-fill: white;"
                 + "-fx-background-radius: 10px;"
@@ -59,32 +71,32 @@ public class ConnectionPage extends Application {
                 + "-fx-box-shadow: 0 0 20px #eee;"
                 + "-fx-background-size: 200% auto;");
 
-                ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(200), btnLogin);
-                scaleTransition.setToX(1.1);
-                scaleTransition.setToY(1.1);
-            
-                btnLogin.setOnMouseEntered(event -> {
-                    // Arrêter l'animation si elle est en cours
-                    scaleTransition.stop();
-                    // Réinitialiser l'échelle du bouton à sa valeur par défaut
-                    btnLogin.setScaleX(1);
-                    btnLogin.setScaleY(1);
-                    // Lancer l'animation
-                    scaleTransition.play();
-                });
-            
-                btnLogin.setOnMouseExited(event -> {
-                    // Arrêter l'animation si elle est en cours
-                    scaleTransition.stop();
-                    // Réinitialiser l'échelle du bouton à sa valeur par défaut
-                    btnLogin.setScaleX(1);
-                    btnLogin.setScaleY(1);
-                });
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(200), btnLogin);
+        scaleTransition.setToX(1.1);
+        scaleTransition.setToY(1.1);
+
+        this.btnLogin.setOnMouseEntered(event -> {
+            // Arrêter l'animation si elle est en cours
+            scaleTransition.stop();
+            // Réinitialiser l'échelle du bouton à sa valeur par défaut
+            btnLogin.setScaleX(1);
+            btnLogin.setScaleY(1);
+            // Lancer l'animation
+            scaleTransition.play();
+        });
+
+        this.btnLogin.setOnMouseExited(event -> {
+            // Arrêter l'animation si elle est en cours
+            scaleTransition.stop();
+            // Réinitialiser l'échelle du bouton à sa valeur par défaut
+            btnLogin.setScaleX(1);
+            btnLogin.setScaleY(1);
+        });
 
         // Hyperliens
-        Hyperlink linkSignUp = new Hyperlink("S'inscrire");
+        this.linkSignUp = new Hyperlink("S'inscrire");
         Label linkPasDeCompte = new Label("Pas de compte ?");
-        Hyperlink linkForgotPassword = new Hyperlink("mot de passe oublié");
+        this.linkForgotPassword = new Hyperlink("mot de passe oublié");
         linkSignUp.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
         linkForgotPassword.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
 
@@ -127,6 +139,35 @@ public class ConnectionPage extends Application {
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
         primaryStage.show();
+
+        // Liaison des événements
+        this.linkSignUp.setOnAction(this.controller);
+        this.linkForgotPassword.setOnAction(this.controller);
+        this.emailField.setOnAction(this.controller);
+        this.passwordField.setOnAction(this.controller);
+        this.btnLogin.setOnAction(this.controller);
+    }
+
+    /* ----- Getters ----- */
+
+    public Hyperlink getLinkSignUp() {
+        return linkSignUp;
+    }
+
+    public Hyperlink getLinkForgotPassword() {
+        return linkForgotPassword;
+    }
+
+    public TextField getEmailField() {
+        return emailField;
+    }
+
+    public PasswordField getPasswordField() {
+        return passwordField;
+    }
+
+    public Button getBtnLogin() {
+        return btnLogin;
     }
 
     public static void main(String[] args) {
