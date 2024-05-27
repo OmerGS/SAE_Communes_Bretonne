@@ -24,6 +24,7 @@ public class ConnectionPage extends Application {
     private TextField emailField;
     private PasswordField passwordField;
     private Button btnLogin;
+    private Label errorMessageLabel;
 
     @Override
     public void start(Stage primaryStage) {
@@ -109,8 +110,14 @@ public class ConnectionPage extends Application {
         linksBox.setPadding(new Insets(20, 0, 0, 0));
         linksBox.setAlignment(Pos.CENTER);
 
+        // Label pour les messages d'erreur
+        this.errorMessageLabel = new Label();
+        this.errorMessageLabel.setTextFill(Color.RED);
+        this.errorMessageLabel.setStyle("-fx-font-size: 14px;");
+        this.errorMessageLabel.setVisible(false);
+
         // VBox pour les champs et les boutons
-        VBox fieldBox = new VBox(15, lblConnection, emailField, passwordField, btnLogin);
+        VBox fieldBox = new VBox(15, lblConnection, emailField, passwordField, btnLogin, errorMessageLabel);
         fieldBox.setPadding(new Insets(20));
         fieldBox.setAlignment(Pos.CENTER);
 
@@ -168,6 +175,10 @@ public class ConnectionPage extends Application {
 
     public Button getBtnLogin() {
         return btnLogin;
+    }
+
+    public Label getErrorMessageLabel() {
+        return errorMessageLabel;
     }
 
     public static void main(String[] args) {
