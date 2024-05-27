@@ -35,12 +35,13 @@ public class DatabaseConnection {
             
             // Parcours et affichage des résultats
             while (resultat.next()) {
+                int id = resultat.getInt("id");
                 String nom = resultat.getString("nom");
                 String prenom = resultat.getString("prenom");
                 String email = resultat.getString("email");
                 String mot2Passe = resultat.getString("motDePasse");
 
-                
+                System.out.println("ID : " + id);
                 System.out.println("Nom : " + nom);
                 System.out.println("Prenom : " + prenom);
                 System.out.println("Email : " + email);

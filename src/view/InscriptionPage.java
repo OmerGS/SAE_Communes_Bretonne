@@ -23,13 +23,13 @@ public class InscriptionPage extends Application {
     private PasswordField confirmPasswordField;
     private Button btnSignUp;
     private Hyperlink linkLogin;
+    private Label errorMessageLabel; // Ajout du label pour les messages d'erreur
 
     private Controller controller;
 
     public InscriptionPage(Controller controller){
         this.controller = controller;
     }
-
 
     @Override
     public void start(Stage primaryStage) {
@@ -78,6 +78,10 @@ public class InscriptionPage extends Application {
         this.confirmPasswordField.setPromptText("mot de passe");
         this.confirmPasswordField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
+        // Label pour les messages d'erreur
+        this.errorMessageLabel = new Label();
+        this.errorMessageLabel.setStyle("-fx-text-fill: red;");
+
         // Bouton de connexion
         this.btnSignUp = new Button("Inscription");
         this.btnSignUp.setStyle("-fx-pref-width: 350px; -fx-background-color: #8ecae6;"
@@ -111,7 +115,7 @@ public class InscriptionPage extends Application {
 
         // Hyperliens
         this.linkLogin = new Hyperlink("Connectez-vous !");
-        Label linkAlreadyAccount = new Label("D\u00E9j\u00e0 inscrit ?");
+        Label linkAlreadyAccount = new Label("D\u00E9j\u00E0 inscrit ?");
         linkAlreadyAccount.setStyle("-fx-font-size: 16px; -fx-text-fill: #000000; -fx-font-family: 'Arial';");
         this.linkLogin.setStyle("-fx-font-size: 16px; -fx-text-fill: #ffca10; -fx-font-family: 'Arial';");
 
@@ -120,7 +124,7 @@ public class InscriptionPage extends Application {
         loginBox.setAlignment(Pos.CENTER);
 
         // VBox pour les champs et les boutons
-        VBox fieldBox = new VBox(15, lblConnection, nameBox, emailField, passwordField, confirmPasswordField, btnSignUp);
+        VBox fieldBox = new VBox(15, lblConnection, nameBox, emailField, passwordField, confirmPasswordField, btnSignUp, errorMessageLabel); // Ajout du label d'erreur ici
         fieldBox.setPadding(new Insets(20));
         fieldBox.setAlignment(Pos.CENTER);
         fieldBox.setStyle("-fx-background-color: #e0f7fa; -fx-background-radius: 30px;");
@@ -156,37 +160,42 @@ public class InscriptionPage extends Application {
         this.emailField.setOnAction(this.controller);
         this.passwordField.setOnAction(this.controller);
         this.btnSignUp.setOnAction(this.controller);
+        this.linkLogin.setOnAction(this.controller);
     }
 
-        public TextField getFirstNameField(){
-            return this.firstNameField;
-        }
+    public TextField getFirstNameField(){
+        return this.firstNameField;
+    }
 
-        public TextField getLastNameField() {
-            return this.lastNameField;
-        }
+    public TextField getLastNameField() {
+        return this.lastNameField;
+    }
 
-        public TextField getEmailField() {
-            return this.emailField;
-        }
+    public TextField getEmailField() {
+        return this.emailField;
+    }
 
-        public PasswordField getPasswordField() {
-            return this.passwordField;
-        }
+    public PasswordField getPasswordField() {
+        return this.passwordField;
+    }
 
-        public PasswordField getConfirmPasswordField() {
-            return this.confirmPasswordField;
-        }
+    public PasswordField getConfirmPasswordField() {
+        return this.confirmPasswordField;
+    }
 
-        public Button getBtnSignUp() {
-            return this.btnSignUp;
-        }
+    public Button getBtnSignUp() {
+        return this.btnSignUp;
+    }
 
-        public Hyperlink getLinkLogin() {
-            return this.linkLogin;
-        }
+    public Hyperlink getLinkLogin() {
+        return this.linkLogin;
+    }
 
-        public static void main(String[] args) {
-            launch(args);
-        }
+    public Label getErrorMessageLabel() {
+        return this.errorMessageLabel;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
