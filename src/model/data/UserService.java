@@ -42,6 +42,16 @@ public class UserService {
         }
     }
 
+    private int userIsAdmin(String email){
+        int valeurReturn = 0;
+
+        if(email.contains("@univ-ubs.fr")){
+            valeurReturn = 1;
+        }
+
+        return(valeurReturn);
+    }
+
     private void saveToDatabase(Utilisateur utilisateur) {
         Properties props = loadDatabaseProperties();
         String url = props.getProperty("db.url");
@@ -49,7 +59,7 @@ public class UserService {
         String motDePasseDB = props.getProperty("db.password");
 
         try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
-            String requeteSQL = "INSERT INTO Utilisateur (nom, prenom, email, motDePasse, salt) VALUES (?, ?, ?, ?, ?)";
+            String requeteSQL = "INSERT INTO Utilisateur (nom, prenom, email, motDePasse, salt, isAdmin) VALUES (?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
                 // Définir les valeurs des paramètres
@@ -58,6 +68,7 @@ public class UserService {
                 preparedStatement.setString(3, utilisateur.getEmail());
                 preparedStatement.setString(4, utilisateur.getMotDePasse());
                 preparedStatement.setString(5, utilisateur.getSalt());
+                preparedStatement.setInt(6, userIsAdmin(utilisateur.getEmail()));
 
                 // Exécuter la requête d'insertion
                 preparedStatement.executeUpdate();
