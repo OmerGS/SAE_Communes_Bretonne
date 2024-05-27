@@ -40,12 +40,14 @@ public class DatabaseConnection {
                 String prenom = resultat.getString("prenom");
                 String email = resultat.getString("email");
                 String mot2Passe = resultat.getString("motDePasse");
+                int admin = resultat.getInt("isAdmin");
 
                 System.out.println("ID : " + id);
                 System.out.println("Nom : " + nom);
                 System.out.println("Prenom : " + prenom);
                 System.out.println("Email : " + email);
                 System.out.println("mot2Passe : " + mot2Passe);
+                System.out.println("Admin : " + admin);
                 System.out.println("------------------------------------------");
             }
             

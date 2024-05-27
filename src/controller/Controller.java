@@ -72,7 +72,9 @@ public class Controller implements EventHandler<ActionEvent> {
             } else {
                 UserService userService = new UserService();
                 if (userService.validateLogin(email, password)) {
-                    System.out.println("Connexion réussie.");
+                    this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
+                    this.connectionPage.getErrorMessageLabel().setText("Connexion Reussi !");
+                    this.connectionPage.getErrorMessageLabel().setVisible(true);
                     // Redirection ou actions après la connexion réussie
                 } else {
                     this.connectionPage.getErrorMessageLabel().setText("Identifiants incorrects.");
@@ -119,7 +121,9 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.inscriptionPage.getErrorMessageLabel().setVisible(true);
                 } else {
                     creationUtilisateur.createUser(lastName, firstName, email, password);
-                    System.out.println("Utilisateur cru\00e9\u00e9 avec succ\u00e8s.");
+                    this.inscriptionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
+                    this.inscriptionPage.getErrorMessageLabel().setText("Compte cr\u00e9e avec succ\u00e8s !");
+                    this.inscriptionPage.getErrorMessageLabel().setVisible(true);
                 }
             }
         }
@@ -133,6 +137,17 @@ public class Controller implements EventHandler<ActionEvent> {
                 ex.printStackTrace();
             }
         }
+
+
+
+
+
+
+
+
+
+
+        
         
     }
 
