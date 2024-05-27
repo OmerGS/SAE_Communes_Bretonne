@@ -69,9 +69,8 @@ public class ConnectionPage extends Application {
                 + "-fx-background-radius: 10px;"
                 + "-fx-font-family: 'Arial';"
                 + "-fx-font-size: 20px;"
-                + "-fx-box-shadow: 0 0 20px #eee;"
                 + "-fx-background-size: 200% auto;");
-
+                
         ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(200), btnLogin);
         scaleTransition.setToX(1.1);
         scaleTransition.setToY(1.1);
@@ -97,7 +96,7 @@ public class ConnectionPage extends Application {
         // Hyperliens
         this.linkSignUp = new Hyperlink("S'inscrire");
         Label linkPasDeCompte = new Label("Pas de compte ?");
-        this.linkForgotPassword = new Hyperlink("mot de passe oublié");
+        this.linkForgotPassword = new Hyperlink("Mot de passe oubli\u00e9");
         linkSignUp.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
         linkForgotPassword.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
 
