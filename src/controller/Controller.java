@@ -64,7 +64,7 @@ public class Controller implements EventHandler<ActionEvent> {
             this.connectionPage.getErrorMessageLabel().setVisible(false);
 
             if (email.isEmpty() || password.isEmpty()) {
-                this.connectionPage.getErrorMessageLabel().setText("Tous les champs doivent être remplis.");
+                this.connectionPage.getErrorMessageLabel().setText("Tous les champs doivent \u00eatre remplis.");
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
             } else if (!isValidEmail(email)) {
                 this.connectionPage.getErrorMessageLabel().setText("L'adresse e-mail n'est pas valide.");
@@ -104,7 +104,7 @@ public class Controller implements EventHandler<ActionEvent> {
             this.inscriptionPage.getErrorMessageLabel().setVisible(false);
 
             if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                this.inscriptionPage.getErrorMessageLabel().setText("Tous les champs doivent être remplis.");
+                this.inscriptionPage.getErrorMessageLabel().setText("Tous les champs doivent \u00eatre remplis.");
                 this.inscriptionPage.getErrorMessageLabel().setVisible(true);
             } else if (!isValidEmail(email)) {
                 this.inscriptionPage.getErrorMessageLabel().setText("L'adresse e-mail n'est pas valide.");
@@ -115,11 +115,11 @@ public class Controller implements EventHandler<ActionEvent> {
             } else {
                 UserService creationUtilisateur = new UserService();
                 if (creationUtilisateur.emailExists(email)) {
-                    this.inscriptionPage.getErrorMessageLabel().setText("L'adresse e-mail est déjà utilisée.");
+                    this.inscriptionPage.getErrorMessageLabel().setText("L'adresse e-mail est d\u00e9j\u00e0 utilis\u00e9e.");
                     this.inscriptionPage.getErrorMessageLabel().setVisible(true);
                 } else {
                     creationUtilisateur.createUser(lastName, firstName, email, password);
-                    System.out.println("Utilisateur créé avec succès.");
+                    System.out.println("Utilisateur cru\00e9\u00e9 avec succ\u00e8s.");
                 }
             }
         }
