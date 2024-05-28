@@ -83,26 +83,6 @@ public class UserService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
-            String requeteSQL = "INSERT INTO Utilisateur (nom, prenom, email, motDePasse, salt, isAdmin) VALUES (?, ?, ?, ?, ?, ?)";
-
-            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
-                // Définir les valeurs des paramètres
-                preparedStatement.setString(1, utilisateur.getNom());
-                preparedStatement.setString(2, utilisateur.getPrenom());
-                preparedStatement.setString(3, utilisateur.getEmail());
-                preparedStatement.setString(4, utilisateur.getMotDePasse());
-                preparedStatement.setString(5, utilisateur.getSalt());
-                preparedStatement.setInt(6, userIsAdmin(utilisateur.getEmail()));
-
-                // Exécuter la requête d'insertion
-                preparedStatement.executeUpdate();
-                System.out.println("Utilisateur enregistré avec succès dans la base de données.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
