@@ -21,8 +21,8 @@ public class ResetPassword extends Application {
 
     private Hyperlink linkForgotPassword;
     private Hyperlink linkConnectez;
-    private TextField firstPassword;
-    private TextField secondPassword;
+    private PasswordField firstPassword;
+    private PasswordField secondPassword;
     private Button btnLogin;
     private Label errorMessageLabel;
 
@@ -57,11 +57,11 @@ public class ResetPassword extends Application {
         lblConnection.setStyle("-fx-font-size: 35px; -fx-font-family: 'Arial'; -fx-text-fill: #333333;");
 
         // Champs avec placeholders
-        this.firstPassword = new TextField();
+        this.firstPassword = new PasswordField();
         this.firstPassword.setPromptText("Nouveau mot de passe");
         this.firstPassword.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
-        this.secondPassword = new TextField();
+        this.secondPassword = new PasswordField();
         this.secondPassword.setPromptText("Nouveau mot de passe");
         this.secondPassword.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
@@ -161,11 +161,11 @@ public class ResetPassword extends Application {
 
 
 
-    public TextField getFirstPassword(){
+    public PasswordField getFirstPassword(){
         return(this.firstPassword);
     }
 
-    public TextField getSecondPassword(){
+    public PasswordField getSecondPassword(){
         return(this.secondPassword);
     }
 
