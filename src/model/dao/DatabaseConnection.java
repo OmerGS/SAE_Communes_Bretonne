@@ -8,7 +8,7 @@ import java.util.Properties;
 public class DatabaseConnection {
     public static void main(String[] args) {
         Properties props = new Properties();
-        try (FileInputStream fis = new FileInputStream("../config.properties")) {
+        try (FileInputStream fis = new FileInputStream("../properties/config.properties")) {
             props.load(fis);
         } catch (IOException e) {
             e.printStackTrace();
