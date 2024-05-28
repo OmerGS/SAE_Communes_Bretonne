@@ -1,5 +1,7 @@
 package data;
 
+import dao.EmailService;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -10,6 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Properties;
+import java.util.Random;
+
+import javax.mail.MessagingException;
 
 import dao.PasswordUtil;
 
@@ -17,7 +22,7 @@ public class UserService {
 
     private Properties loadDatabaseProperties() {
         Properties props = new Properties();
-        try (FileInputStream fis = new FileInputStream("../config.properties")) {
+        try (FileInputStream fis = new FileInputStream("../properties/config.properties")) {
             props.load(fis);
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,10 +60,30 @@ public class UserService {
     private void saveToDatabase(Utilisateur utilisateur) {
         Properties props = loadDatabaseProperties();
         String url = props.getProperty("db.url");
-        String userDB = props.getProperty("db.user"); 
+        String userDB = props.getProperty("db.user");
         String motDePasseDB = props.getProperty("db.password");
 
         try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
+            String requeteSQL = "INSERT INTO Utilisateur (nom, prenom, email, motDePasse, salt, isAdmin) VALUES (?, ?, ?, ?, ?, ?)";
+
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                // Définir les valeurs des paramètres
+                preparedStatement.setString(1, utilisateur.getNom());
+                preparedStatement.setString(2, utilisateur.getPrenom());
+                preparedStatement.setString(3, utilisateur.getEmail());
+                preparedStatement.setString(4, utilisateur.getMotDePasse());
+                preparedStatement.setString(5, utilisateur.getSalt());
+                preparedStatement.setInt(6, userIsAdmin(utilisateur.getEmail()));
+
+                // Exécuter la requête d'insertion
+                preparedStatement.executeUpdate();
+                System.out.println("Utilisateur enregistré avec succès dans la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
             String requeteSQL = "INSERT INTO Utilisateur (nom, prenom, email, motDePasse, salt, isAdmin) VALUES (?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
@@ -84,7 +109,7 @@ public class UserService {
     public boolean emailExists(String email) {
         Properties props = loadDatabaseProperties();
         String url = props.getProperty("db.url");
-        String userDB = props.getProperty("db.user"); 
+        String userDB = props.getProperty("db.user");
         String motDePasseDB = props.getProperty("db.password");
 
         try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
@@ -109,7 +134,7 @@ public class UserService {
     public boolean validateLogin(String email, String plainPassword) {
         Properties props = loadDatabaseProperties();
         String url = props.getProperty("db.url");
-        String userDB = props.getProperty("db.user"); 
+        String userDB = props.getProperty("db.user");
         String motDePasseDB = props.getProperty("db.password");
 
         try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
@@ -132,4 +157,25 @@ public class UserService {
         }
         return false;
     }
+
+    public void sendVerificationEmail(String email, String code) throws IOException {
+        EmailService emailService = new EmailService();
+
+        String subject = "Votre code de vérification";
+        String message = "Votre code de vérification est : " + code;
+
+        try {
+            emailService.sendEmail(email, subject, message);
+            System.out.println("Email de vérification envoyé avec succès.");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int generateVerificationCode(){
+        Random random = new Random();
+        int code = random.nextInt(900000) + 100000;
+        return code;
+    }
+    
 }

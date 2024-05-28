@@ -117,7 +117,7 @@ public class InscriptionPage extends Application {
         this.linkLogin = new Hyperlink("Connectez-vous !");
         Label linkAlreadyAccount = new Label("D\u00E9j\u00E0 inscrit ?");
         linkAlreadyAccount.setStyle("-fx-font-size: 16px; -fx-text-fill: #000000; -fx-font-family: 'Arial';");
-        this.linkLogin.setStyle("-fx-font-size: 16px; -fx-text-fill: #ffca10; -fx-font-family: 'Arial';");
+        this.linkLogin.setStyle("-fx-font-size: 16px; -fx-text-fill: #ffca10; -fx-font-family: 'Arial';-fx-font-weight: bold");
 
         // HBox pour linkAlreadyAccount et linkLogin
         HBox loginBox = new HBox(5, linkAlreadyAccount, linkLogin);

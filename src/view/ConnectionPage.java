@@ -70,7 +70,7 @@ public class ConnectionPage extends Application {
                 + "-fx-font-family: 'Arial';"
                 + "-fx-font-size: 20px;"
                 + "-fx-background-size: 200% auto;");
-                
+
         ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(200), btnLogin);
         scaleTransition.setToX(1.1);
         scaleTransition.setToY(1.1);
@@ -97,8 +97,8 @@ public class ConnectionPage extends Application {
         this.linkSignUp = new Hyperlink("S'inscrire");
         Label linkPasDeCompte = new Label("Pas de compte ?");
         this.linkForgotPassword = new Hyperlink("Mot de passe oubli\u00e9");
-        linkSignUp.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
-        linkForgotPassword.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';");
+        linkSignUp.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';-fx-font-weight: bold");
+        linkForgotPassword.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';-fx-font-weight: bold");
 
         // HBox pour linkPasDeCompte et linkSignUp
         HBox signUpBox = new HBox(5, linkPasDeCompte, linkSignUp);
