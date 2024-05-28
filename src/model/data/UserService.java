@@ -86,6 +86,38 @@ public class UserService {
         }
     }
 
+    public void updatePassword(String email, String newPassword) throws SQLException {
+        Properties props = loadDatabaseProperties();
+        String url = props.getProperty("db.url");
+        String userDB = props.getProperty("db.user");
+        String motDePasseDB = props.getProperty("db.password");
+
+        try {
+            byte[] newSalt = PasswordUtil.getSalt();
+            String hashedPassword = PasswordUtil.hashPassword(newPassword, newSalt);
+            String encodedSalt = Base64.getEncoder().encodeToString(newSalt);
+
+            try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
+                String updateSQL = "UPDATE Utilisateur SET motDePasse = ?, salt = ? WHERE email = ?";
+
+                try (PreparedStatement preparedStatement = connexion.prepareStatement(updateSQL)) {
+                    preparedStatement.setString(1, hashedPassword);
+                    preparedStatement.setString(2, encodedSalt);
+                    preparedStatement.setString(3, email);
+
+                    int rowsUpdated = preparedStatement.executeUpdate();
+                    if (rowsUpdated > 0) {
+                        System.out.println("Mot de passe mis à jour avec succès.");
+                    } else {
+                        System.out.println("Aucun utilisateur trouvé avec cet email.");
+                    }
+                }
+            }
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
     public boolean emailExists(String email) {
         Properties props = loadDatabaseProperties();
         String url = props.getProperty("db.url");
@@ -110,6 +142,7 @@ public class UserService {
         }
         return false;
     }
+
 
     public boolean validateLogin(String email, String plainPassword) {
         Properties props = loadDatabaseProperties();
