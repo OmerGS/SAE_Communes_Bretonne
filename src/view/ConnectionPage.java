@@ -31,7 +31,7 @@ public class ConnectionPage extends Application {
         this.controller = new Controller(this);
 
         // Image pour le logo
-        ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
+        ImageView logo = new ImageView(new Image("file:../resources/image/personnageH.png"));
         logo.setFitWidth(100);
         logo.setFitHeight(100);
         logo.setClip(new Circle(50, 50, 50)); // Rendre l'image circulaire
