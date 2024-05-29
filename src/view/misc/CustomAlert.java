@@ -9,8 +9,19 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+* CustomAlert is a class who display a notification.
+* @author O.Gunes
+*/
 public class CustomAlert {
 
+    /**
+    * This constructor allow to display a window title, header and the content
+    *
+    * @param title The title of notification
+    * @param header The header of notification
+    * @param content The content of notification
+    */
     public static void showAlert(String title, String header, String content) {
         Stage alertStage = new Stage();
         alertStage.initModality(Modality.APPLICATION_MODAL);
@@ -40,7 +51,15 @@ public class CustomAlert {
         alertStage.showAndWait();
     }
 
-    // Méthode surchargée pour afficher l'alerte sans en-tête
+
+
+    
+    /**
+    * This constructor allow to display a window title and the content
+    *
+    * @param title The title of notification
+    * @param content The content of notification
+    */
     public static void showAlert(String title, String content) {
         Stage alertStage = new Stage();
         alertStage.initModality(Modality.APPLICATION_MODAL);

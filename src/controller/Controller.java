@@ -30,13 +30,40 @@ import javax.mail.MessagingException;
 */
 public class Controller implements EventHandler<ActionEvent> {
 
+    /**
+    * An instance of ConnectionPage 
+    */
     private ConnectionPage connectionPage;
+
+    /**
+    * An instance of InscriptionPage
+    */
     private InscriptionPage inscriptionPage;
+
+    /**
+    * An instance of forgotPassword page.
+    */
     private ForgotPassword forgotPassword;
+
+    /**
+    * An instance of ResetPassword page. 
+    */
     private ResetPassword resetPassword;
+
+    /**
+    * A boolean check if a mail code is sent or not
+    */
     private boolean codeSent;
+
+    /**
+    * A String which contain the verification code. 
+    */
     private String codeString;
 
+    /**
+    * The constructor of Controller. 
+    * @param connectionPage
+    */
     public Controller(ConnectionPage connectionPage) {
         this.connectionPage = connectionPage;
         this.inscriptionPage = new InscriptionPage(this);
@@ -44,6 +71,9 @@ public class Controller implements EventHandler<ActionEvent> {
         this.resetPassword = new ResetPassword(this);
     }    
 
+    /**
+    * The Empty constructor of controller 
+    */
     public Controller() {
         this.connectionPage = new ConnectionPage();
         this.inscriptionPage = new InscriptionPage(this);
@@ -51,14 +81,12 @@ public class Controller implements EventHandler<ActionEvent> {
         this.resetPassword = new ResetPassword(this);
     }
 
-    public void setConnectionPage(ConnectionPage connectionPage) {
-        this.connectionPage = connectionPage;
-    }
 
-    public void setInscriptionPage(InscriptionPage inscriptionPage) {
-        this.inscriptionPage = inscriptionPage;
-    }
-
+    /**
+    * Method which check if an event is realized.
+    *
+    * @param ActionEvent Check if an action is executed 
+    */
     @Override
     public void handle(ActionEvent e) {
         /* PAGE DE CONNEXION */
@@ -321,7 +349,9 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-
+    /**
+    * Private method, which change the state of the btnLogin present in forgotPassword page.
+    */
     private void updateButtonState() {
         if (this.codeSent) {
             this.forgotPassword.getBtnLogin().setText("V\u00e9rifier");
@@ -331,6 +361,12 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
+    /**
+    * Check if a mail is valid with the format mail@subdomain.extension 
+    *
+    * @param email The checked mail
+    * @return True if valid mail, else return false.
+    */
     private boolean isValidEmail(String email) {
         String emailPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(emailPattern);

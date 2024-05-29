@@ -7,7 +7,7 @@ import data.exceptions.*;
 /**
 * Class who represents a commune with different parameters, we can manipulate it with different method. 
 * 
-* @author O.Gunes, R.Peron, C.Brayan
+* @author O.Gunes
 */
 public class Commune {
     /**
