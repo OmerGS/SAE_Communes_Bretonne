@@ -29,12 +29,14 @@ public class Commune {
     * The number of appartment. 
     */
     private int nbAppart;
+
+
     private double prixMoyen;
     private double prixM2Moyen;
     private double surfaceMoy;
     private double depCulturellesTotales;
     private double budgetTotal;
-    private double population;
+    private int population;
 
     /**
     * List of airport.
@@ -66,13 +68,7 @@ public class Commune {
     
 
 
-
-
-
-
-    
-
-    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, double population, Departement departement) {
+    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
         this.aeroports = new ArrayList<Aeroport>();
         this.gares = new ArrayList<Gare>();
         this.communesVoisines = new ArrayList<Commune>();
@@ -82,28 +78,33 @@ public class Commune {
         if (isValidIdCommune(idCommune)) {
             this.idCommune = idCommune;
         } else {
-            throw new InvalidCommuneIdException("Numéro de commune invalide : " + idCommune);
+            throw new InvalidIdException("Numéro de commune invalide : " + idCommune);
         }
 
         //nomCommune
         if (nomCommune != null && !nomCommune.trim().isEmpty()) {
             this.nomCommune = nomCommune;
         } else {
-            throw new InvalidCommuneNameException("Nom de commune invalide : " + nomCommune);
+            throw new InvalidNameException("Nom de commune invalide : " + nomCommune);
+        }
+
+        if(departement != null && departement.getIdDep() == 29 && departement.getIdDep() == 56 && departement.getIdDep() == 35 && departement.getIdDep() == 22){
+            this.departement= departement;
+        } else {
+            throw new InvalidNameException("Déparement invalide : " + departement.getNomDep());
         }
 
 
-        this.nbMaison = validateNonNegativeValue(nbMaison, "Nombre de maisons");
-        this.nbAppart = validateNonNegativeValue(nbAppart, "Nombre d'appartement");
-        this.prixMoyen = validateNonNegativeValue(prixMoyen, "Prix moyen");
-        this.prixM2Moyen = validateNonNegativeValue(prixM2Moyen, "Prix m2 moyen");
-        this.surfaceMoy = validateNonNegativeValue(surfaceMoy, "Surface moyenne");
-        this.depCulturellesTotales = validateNonNegativeValue(depCulturellesTotales, "Dépenses culturelles totales");
-        this.budgetTotal = validateNonNegativeValue(budgetTotal, "Budget total");
-        this.population = validateNonNegativeValue(population, "Population");
+        this.nbMaison = validateNonNegativeValueInt(nbMaison, "Nombre de maisons");
+        this.nbAppart = validateNonNegativeValueInt(nbAppart, "Nombre d'appartement");
+        this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Prix moyen");
+        this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Prix m2 moyen");
+        this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Surface moyenne");
+        this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Dépenses culturelles totales");
+        this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Budget total");
+        this.population = validateNonNegativeValueInt(population, "Population");
 
-
-        this.departement = departement;
+        
     }
 
     /**
@@ -115,7 +116,7 @@ public class Commune {
     * @return double
     * @throws IllegalArgumentException if provided value is negative
     */
-    private double validateNonNegativeValue(double value, String fieldName) {
+    private double validateNonNegativeValueDouble(double value, String fieldName) {
         double ret = -1;
         if (value >= 0) {
             ret = value;
@@ -134,7 +135,7 @@ public class Commune {
     * @return int
     * @throws IllegalArgumentException if provided value is negative
     */
-    private int validateNonNegativeValue(int value, String fieldName) {
+    private int validateNonNegativeValueInt(int value, String fieldName) {
         int ret = -1;
         if (value >= 0) {
             ret = value;
@@ -165,6 +166,9 @@ public class Commune {
 
         return ret;
     }
+
+
+
 
 
 
@@ -258,7 +262,7 @@ public class Commune {
      *
      * @return The population.
      */
-    public double getPopulation() {
+    public int getPopulation() {
         return population;
     }
 
@@ -313,7 +317,7 @@ public class Commune {
         if (isValidIdCommune(idCommune)) {
             this.idCommune = idCommune;
         } else {
-            throw new InvalidCommuneIdException("Invalid commune ID: " + idCommune);
+            throw new InvalidIdException("Invalid commune ID: " + idCommune);
         }
     }
 
@@ -327,7 +331,7 @@ public class Commune {
         if (nomCommune != null && !nomCommune.trim().isEmpty()) {
             this.nomCommune = nomCommune;
         } else {
-            throw new InvalidCommuneNameException("Invalid commune name: " + nomCommune);
+            throw new InvalidNameException("Invalid commune name: " + nomCommune);
         }
     }
 
@@ -337,7 +341,7 @@ public class Commune {
      * @param nbMaison The number of houses.
      */
     public void setNbMaison(int nbMaison) {
-        this.nbMaison = validateNonNegativeValue(nbMaison, "Number of houses");
+        this.nbMaison = validateNonNegativeValueInt(nbMaison, "Number of houses");
     }
 
     /**
@@ -346,7 +350,7 @@ public class Commune {
      * @param nbAppart The number of apartments.
      */
     public void setNbAppart(int nbAppart) {
-        this.nbAppart = validateNonNegativeValue(nbAppart, "Number of apartments");
+        this.nbAppart = validateNonNegativeValueInt(nbAppart, "Number of apartments");
     }
 
     /**
@@ -355,7 +359,7 @@ public class Commune {
      * @param prixMoyen The average price.
      */
     public void setPrixMoyen(double prixMoyen) {
-        this.prixMoyen = validateNonNegativeValue(prixMoyen, "Average price");
+        this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Average price");
     }
 
     /**
@@ -364,7 +368,7 @@ public class Commune {
      * @param prixM2Moyen The average price per square meter.
      */
     public void setPrixM2Moyen(double prixM2Moyen) {
-        this.prixM2Moyen = validateNonNegativeValue(prixM2Moyen, "Average price per square meter");
+        this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Average price per square meter");
     }
 
     /**
@@ -373,7 +377,7 @@ public class Commune {
      * @param surfaceMoy The average surface area.
      */
     public void setSurfaceMoy(double surfaceMoy) {
-        this.surfaceMoy = validateNonNegativeValue(surfaceMoy, "Average surface area");
+        this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Average surface area");
     }
 
     /**
@@ -382,7 +386,7 @@ public class Commune {
      * @param depCulturellesTotales The total cultural expenses.
      */
     public void setDepCulturellesTotales(double depCulturellesTotales) {
-        this.depCulturellesTotales = validateNonNegativeValue(depCulturellesTotales, "Total cultural expenses");
+        this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Total cultural expenses");
     }
 
     /**
@@ -391,7 +395,7 @@ public class Commune {
      * @param budgetTotal The total budget.
      */
     public void setBudgetTotal(double budgetTotal) {
-        this.budgetTotal = validateNonNegativeValue(budgetTotal, "Total budget");
+        this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Total budget");
     }
 
     /**
@@ -399,8 +403,8 @@ public class Commune {
      *
      * @param population The population.
      */
-    public void setPopulation(double population) {
-        this.population = validateNonNegativeValue(population, "Population");
+    public void setPopulation(int population) {
+        this.population = validateNonNegativeValueInt(population, "Population");
     }
 
     /**
