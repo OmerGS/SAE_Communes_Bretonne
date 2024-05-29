@@ -1,5 +1,6 @@
-javac --module-path "C:\COURS\P4\SAE\SAE_Communes_Bretonne\lib\javafx-sdk-22.0.1\lib" --add-modules javafx.controls -d ../class ../src/view/*.java ../src/controller/*.java ../src/model/*.java ../src/*.java
+javac --module-path %JavaGithubSAE% --add-modules javafx.controls,java.mail -d ../class ../src/view/*.java ../src/controller/*.java ../src/model/data/exceptions/*.java ../src/model/dao/*.java ../src/model/data/*.java ../src/*.java
 
-java --module-path "C:\COURS\P4\SAE\SAE_Communes_Bretonne\lib\javafx-sdk-22.0.1\lib" --add-modules javafx.controls -cp ../class Main
+java --module-path %JavaGithubSAE% --add-modules javafx.controls,java.mail -cp ../class Main
+
 
 pause
