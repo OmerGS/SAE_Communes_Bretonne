@@ -22,7 +22,11 @@ public class ConnectionPage extends Application {
     private Hyperlink linkSignUp;
     private Hyperlink linkForgotPassword;
     private TextField emailField;
+    
     private PasswordField passwordField;
+    private TextField passwordText;
+    private CheckBox mdpVisibilite;
+
     private Button btnLogin;
     private Label errorMessageLabel;
 
@@ -60,6 +64,11 @@ public class ConnectionPage extends Application {
         this.passwordField = new PasswordField();
         this.passwordField.setPromptText("mot de passe");
         this.passwordField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
+
+        this.passwordText = new TextField();
+        this.passwordText.setVisible(false);
+
+        this.mdpVisibilite = new CheckBox();
 
         // Bouton de connexion
         this.btnLogin = new Button("Connexion");
@@ -116,7 +125,7 @@ public class ConnectionPage extends Application {
         this.errorMessageLabel.setVisible(false);
 
         // VBox pour les champs et les boutons
-        VBox fieldBox = new VBox(15, lblConnection, emailField, passwordField, btnLogin, errorMessageLabel);
+        VBox fieldBox = new VBox(15, lblConnection, emailField, passwordField, passwordText, mdpVisibilite, btnLogin, errorMessageLabel);
         fieldBox.setPadding(new Insets(20));
         fieldBox.setAlignment(Pos.CENTER);
 
@@ -152,9 +161,20 @@ public class ConnectionPage extends Application {
         this.emailField.setOnAction(this.controller);
         this.passwordField.setOnAction(this.controller);
         this.btnLogin.setOnAction(this.controller);
+
+        this.mdpVisibilite.setOnAction(this.controller);
+        this.passwordText.setOnAction(this.controller);
     }
 
     /* ----- Getters ----- */
+
+    public CheckBox getCheckBox(){
+        return(this.mdpVisibilite);
+    }
+
+    public TextField getPasswordText(){
+        return(this.passwordText);
+    }
 
     public Hyperlink getLinkSignUp() {
         return linkSignUp;
