@@ -24,8 +24,6 @@ public class ConnectionPage extends Application {
     private TextField emailField;
     
     private PasswordField passwordField;
-    private TextField passwordText;
-    private CheckBox mdpVisibilite;
 
     private Button btnLogin;
     private Label errorMessageLabel;
@@ -38,7 +36,7 @@ public class ConnectionPage extends Application {
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
         logo.setFitWidth(100);
         logo.setFitHeight(100);
-        logo.setClip(new Circle(50, 50, 50)); // Rendre l'image circulaire
+        logo.setClip(new Circle(50, 50, 50));
 
         // Label pour la région
         Label lblRegion = new Label("Region");
@@ -49,7 +47,6 @@ public class ConnectionPage extends Application {
         // Layout pour le logo et le label
         VBox logoBox = new VBox(10, logo, lblRegion, lblBretagne);
         logoBox.setAlignment(Pos.CENTER);
-        // Ajustement du padding pour déplacer le logoBox vers la gauche
         logoBox.setPadding(new Insets(20, 200, 20, 0));
 
         // Titre pour la section de connexion
@@ -64,11 +61,6 @@ public class ConnectionPage extends Application {
         this.passwordField = new PasswordField();
         this.passwordField.setPromptText("mot de passe");
         this.passwordField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
-
-        this.passwordText = new TextField();
-        this.passwordText.setVisible(false);
-
-        this.mdpVisibilite = new CheckBox();
 
         // Bouton de connexion
         this.btnLogin = new Button("Connexion");
@@ -85,19 +77,14 @@ public class ConnectionPage extends Application {
         scaleTransition.setToY(1.1);
 
         this.btnLogin.setOnMouseEntered(event -> {
-            // Arrêter l'animation si elle est en cours
             scaleTransition.stop();
-            // Réinitialiser l'échelle du bouton à sa valeur par défaut
             btnLogin.setScaleX(1);
             btnLogin.setScaleY(1);
-            // Lancer l'animation
             scaleTransition.play();
         });
 
         this.btnLogin.setOnMouseExited(event -> {
-            // Arrêter l'animation si elle est en cours
             scaleTransition.stop();
-            // Réinitialiser l'échelle du bouton à sa valeur par défaut
             btnLogin.setScaleX(1);
             btnLogin.setScaleY(1);
         });
@@ -125,7 +112,7 @@ public class ConnectionPage extends Application {
         this.errorMessageLabel.setVisible(false);
 
         // VBox pour les champs et les boutons
-        VBox fieldBox = new VBox(15, lblConnection, emailField, passwordField, passwordText, mdpVisibilite, btnLogin, errorMessageLabel);
+        VBox fieldBox = new VBox(15, lblConnection, emailField, passwordField, btnLogin, errorMessageLabel);
         fieldBox.setPadding(new Insets(20));
         fieldBox.setAlignment(Pos.CENTER);
 
@@ -161,20 +148,9 @@ public class ConnectionPage extends Application {
         this.emailField.setOnAction(this.controller);
         this.passwordField.setOnAction(this.controller);
         this.btnLogin.setOnAction(this.controller);
-
-        this.mdpVisibilite.setOnAction(this.controller);
-        this.passwordText.setOnAction(this.controller);
     }
 
     /* ----- Getters ----- */
-
-    public CheckBox getCheckBox(){
-        return(this.mdpVisibilite);
-    }
-
-    public TextField getPasswordText(){
-        return(this.passwordText);
-    }
 
     public Hyperlink getLinkSignUp() {
         return linkSignUp;
