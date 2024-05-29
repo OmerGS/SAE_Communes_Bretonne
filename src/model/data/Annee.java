@@ -30,7 +30,4 @@ public class Annee {
         return "Annee [annee=" + annee + ", tauxInflation=" + tauxInflation + "]";
     }
 
-    public void adjustTauxInflation(float newTaux) {
-        this.tauxInflation = newTaux;
-    }
 }

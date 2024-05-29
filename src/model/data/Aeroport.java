@@ -40,7 +40,5 @@ public class Aeroport {
         return "Aeroport [nom=" + nom + ", adresse=" + adresse + "]";
     }
 
-    public void changeAddress(String newAddress) {
-        this.adresse = newAddress;
-    }
+
 }
