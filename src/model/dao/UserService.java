@@ -1,6 +1,8 @@
-package data;
+package dao;
 
-import dao.EmailService;
+import data.Utilisateur;
+import view.misc.EmailService;
+import view.misc.PasswordUtil;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,8 +18,6 @@ import java.util.Random;
 
 import javax.mail.MessagingException;
 
-import dao.PasswordUtil;
-
 public class UserService {
 
     private Properties loadDatabaseProperties() {
@@ -32,10 +32,8 @@ public class UserService {
 
     public void createUser(String nom, String prenom, String email, String plainPassword) {
         try {
-            // Générer le sel
             byte[] salt = PasswordUtil.getSalt();
 
-            // Hacher le mot de passe
             String hashedPassword = PasswordUtil.hashPassword(plainPassword, salt);
 
             // Créer une instance d'utilisateur
@@ -75,7 +73,6 @@ public class UserService {
                 preparedStatement.setString(5, utilisateur.getSalt());
                 preparedStatement.setInt(6, userIsAdmin(utilisateur.getEmail()));
 
-                // Exécuter la requête d'insertion
                 preparedStatement.executeUpdate();
                 System.out.println("Utilisateur enregistré avec succès dans la base de données.");
             } catch (SQLException e) {
@@ -118,6 +115,9 @@ public class UserService {
         }
     }
 
+
+
+
     public boolean emailExists(String email) {
         Properties props = loadDatabaseProperties();
         String url = props.getProperty("db.url");
@@ -144,6 +144,7 @@ public class UserService {
     }
 
 
+
     public boolean validateLogin(String email, String plainPassword) {
         Properties props = loadDatabaseProperties();
         String url = props.getProperty("db.url");
@@ -168,21 +169,17 @@ public class UserService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return(false);
     }
 
-    public void sendVerificationEmail(String email, String code) throws IOException {
+
+    public void sendVerificationEmail(String email, String code) throws IOException, MessagingException {
         EmailService emailService = new EmailService();
 
-        String subject = "Votre code de vérification";
-        String message = "Votre code de vérification est : " + code;
+        String subject = "Code de v\u00e9rification";
+        String message = "Votre code de v\u00e9rification est : " + code;
 
-        try {
-            emailService.sendEmail(email, subject, message);
-            System.out.println("Email de vérification envoyé avec succès.");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        emailService.sendEmail(email, subject, message);
     }
 
     public int generateVerificationCode(){

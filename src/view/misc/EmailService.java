@@ -1,4 +1,4 @@
-package dao;
+package view.misc;
 
 import java.io.FileInputStream;
 import java.io.IOException;

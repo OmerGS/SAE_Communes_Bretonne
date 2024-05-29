@@ -1,4 +1,4 @@
-package dao;
+package view.misc;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

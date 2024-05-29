@@ -1,25 +1,33 @@
 package controller;
 
+
+import java.util.Timer;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import dao.UserService;
 import view.ConnectionPage;
 import view.InscriptionPage;
 import view.ResetPassword;
 import view.misc.CustomAlert;
 import view.ForgotPassword;
-import data.UserService;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import javafx.util.Duration;
+
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.mail.MessagingException;
 
 /**
 * Class which allows linking the view and the model and controlling the information transiting between them.
@@ -37,14 +45,14 @@ public class Controller implements EventHandler<ActionEvent> {
     public Controller(ConnectionPage connectionPage) {
         this.connectionPage = connectionPage;
         this.inscriptionPage = new InscriptionPage(this);
-        this.forgotPassword = new ForgotPassword(this); // Initialize here
+        this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
     }    
 
     public Controller() {
         this.connectionPage = new ConnectionPage();
         this.inscriptionPage = new InscriptionPage(this);
-        this.forgotPassword = new ForgotPassword(this); // Initialize here
+        this.forgotPassword = new ForgotPassword(this);
         this.resetPassword = new ResetPassword(this);
     }
 
@@ -64,22 +72,18 @@ public class Controller implements EventHandler<ActionEvent> {
                 Stage stage = (Stage) this.connectionPage.getBtnLogin().getScene().getWindow();
                 Pane root = (Pane) stage.getScene().getRoot();
 
-                // Redimensionnement en X et Y
                 ScaleTransition transition = new ScaleTransition(Duration.millis(500), root);
                 transition.setToX(1.1);
                 transition.setToY(1.1);
-                transition.setAutoReverse(true); // Animation en retour
+                transition.setAutoReverse(true);
 
-                // Animation en fondu
                 FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), root);
                 fadeTransition.setFromValue(1.0);
                 fadeTransition.setToValue(0.0);
 
-                // Regroupement des transitions
                 ParallelTransition parallelTransition = new ParallelTransition(transition, fadeTransition);
                 parallelTransition.setOnFinished(event -> {
                     try {
-                        // Appel à la page d'inscription
                         this.inscriptionPage = new InscriptionPage(this);
                         this.inscriptionPage.start(stage);
                     } catch (Exception ex) {
@@ -112,9 +116,11 @@ public class Controller implements EventHandler<ActionEvent> {
             this.connectionPage.getErrorMessageLabel().setVisible(false);
 
             if (email.isEmpty() || password.isEmpty()) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.connectionPage.getErrorMessageLabel().setText("Tous les champs doivent \u00eatre remplis.");
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
             } else if (!isValidEmail(email)) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.connectionPage.getErrorMessageLabel().setText("L'adresse e-mail n'est pas valide.");
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
             } else {
@@ -124,9 +130,21 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.connectionPage.getErrorMessageLabel().setText("Connexion Reussi !");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
                 } else {
+                    this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                     this.connectionPage.getErrorMessageLabel().setText("Identifiants incorrects.");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
                 }
+            }
+        }
+
+        if(e.getSource() == this.connectionPage.getCheckBox()){
+            if(this.connectionPage.getCheckBox().isSelected()){
+                this.connectionPage.getPasswordText().setVisible(true);
+                this.connectionPage.getPasswordText().setText(this.connectionPage.getPasswordField().getText());
+                this.connectionPage.getPasswordField().setVisible(false);
+            } else {
+                this.connectionPage.getPasswordText().setVisible(false);
+                this.connectionPage.getPasswordField().setVisible(true);
             }
         }
 
@@ -158,17 +176,21 @@ public class Controller implements EventHandler<ActionEvent> {
             this.inscriptionPage.getErrorMessageLabel().setVisible(false);
 
             if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.inscriptionPage.getErrorMessageLabel().setText("Tous les champs doivent \u00eatre remplis.");
                 this.inscriptionPage.getErrorMessageLabel().setVisible(true);
             } else if (!isValidEmail(email)) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.inscriptionPage.getErrorMessageLabel().setText("L'adresse e-mail n'est pas valide.");
                 this.inscriptionPage.getErrorMessageLabel().setVisible(true);
             } else if (!password.equals(confirmPassword)) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.inscriptionPage.getErrorMessageLabel().setText("Les mots de passe ne correspondent pas.");
                 this.inscriptionPage.getErrorMessageLabel().setVisible(true);
             } else {
                 UserService creationUtilisateur = new UserService();
                 if (creationUtilisateur.emailExists(email)) {
+                    this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                     this.inscriptionPage.getErrorMessageLabel().setText("L'adresse e-mail est d\u00e9j\u00e0 utilis\u00e9e.");
                     this.inscriptionPage.getErrorMessageLabel().setVisible(true);
                 } else {
@@ -223,17 +245,17 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.forgotPassword.getErrorMessageLabel().setText("Un mail deja renseignee dans la bdd doit etre entrer");
                     this.forgotPassword.getErrorMessageLabel().setVisible(true);
                 } else {
-                    this.forgotPassword.getCodeField().setDisable(false);
-                    this.forgotPassword.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
-                    this.forgotPassword.getErrorMessageLabel().setText("Un Mail vous a etait envoye ! ");
-                    
+
                     email = this.forgotPassword.getEmailField().getText();
                     int code = serviceUtilisateur.generateVerificationCode();
                     this.codeString = String.valueOf(code);
+
                     try {
                         serviceUtilisateur.sendVerificationEmail(email, codeString);
                     } catch (IOException e1) {
                         System.out.println(e1.getMessage());
+                    } catch (MessagingException e2){
+                        System.out.println(e2.getMessage());
                     }
                     this.codeSent = true;
                     updateButtonState();
@@ -276,15 +298,30 @@ public class Controller implements EventHandler<ActionEvent> {
 
             if (newPassword.equals(confirmPassword)) {
                 if (!newPassword.isEmpty() && !confirmPassword.isEmpty()) {
-                    String email = this.forgotPassword.getEmailField().getText();  // Récupérer l'email de l'utilisateur
+                    String email = this.forgotPassword.getEmailField().getText();
                     UserService userService = new UserService();
-                    
 
-                    try{
+                    try {
                         userService.updatePassword(email, newPassword);
-                        this.resetPassword.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
-                        this.resetPassword.getErrorMessageLabel().setText("Mot de passe changé avec succès !");
+
+                        this.resetPassword.getErrorMessageLabel().setStyle("-fx-text-fill: green; -fx-font-size: 15px;");
                         this.resetPassword.getErrorMessageLabel().setVisible(true);
+
+                        this.resetPassword.getErrorMessageLabel().setText("Redirection...");
+                        
+                        CustomAlert.showAlert("Reinitialisation du mot de passe", "Votre mot de passe est change.");
+
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Platform.runLater(() -> {
+                                    Stage stage = (Stage) resetPassword.getBtnValidate().getScene().getWindow();
+                                    connectionPage.start(stage);
+                                });
+                            }
+                        }, 3000);
+
                     } catch (SQLException ex) {
                         this.resetPassword.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                         this.resetPassword.getErrorMessageLabel().setText("Connexion au service momentanément impossible.");
@@ -304,6 +341,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+
         if(e.getSource() == this.resetPassword.getLinkWrongMail()){
             Stage stage = (Stage) this.resetPassword.getBtnValidate().getScene().getWindow();
             this.forgotPassword.start(stage);
@@ -313,12 +351,12 @@ public class Controller implements EventHandler<ActionEvent> {
             Stage stage = (Stage) this.resetPassword.getBtnValidate().getScene().getWindow();
             this.connectionPage.start(stage);
         }
-
     }
 
     private void updateButtonState() {
         if (this.codeSent) {
             this.forgotPassword.getBtnLogin().setText("V\u00e9rifier");
+            this.forgotPassword.getCodeField().setDisable(false);
         } else {
             this.forgotPassword.getBtnLogin().setText("Recevoir Code");
         }
