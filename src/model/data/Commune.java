@@ -2,14 +2,32 @@ package data;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
 import data.exceptions.*;
 
+/**
+* Class who represents a commune with different parameters, we can manipulate it with different method. 
+* 
+* @author O.Gunes, R.Peron, C.Brayan
+*/
 public class Commune {
+    /**
+    * The unique number which represent the commune. 
+    */
     private int idCommune;
+
+    /**
+    * The name of the commune. 
+    */
     private String nomCommune;
+
+    /**
+    * The number of house. 
+    */
     private int nbMaison;
+
+    /**
+    * The number of appartment. 
+    */
     private int nbAppart;
     private double prixMoyen;
     private double prixM2Moyen;
@@ -19,21 +37,29 @@ public class Commune {
     private double population;
 
     /**
+    * List of airport.
+    * 
     * Allow connection with Aeroport.java 
     */
     private List<Aeroport> aeroports;
 
     /**
+    * List of trainstation.
+    *
     * Allow conneciton with Gare.java 
     */
     private List<Gare> gares;
 
     /**
+    * The department of the commune. 
+    * 
     * Allow connection with Departement.java 
     */
     private Departement departement;  
     
     /**
+    * List of neighbours communes. 
+    * 
     * Allow a connection with itself (Commune.java) 
     */
     private List<Commune> communesVoisines;
