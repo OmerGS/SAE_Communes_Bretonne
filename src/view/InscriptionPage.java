@@ -194,6 +194,7 @@ public class InscriptionPage extends Application {
     public Label getErrorMessageLabel() {
         return this.errorMessageLabel;
     }
+    
 
     public static void main(String[] args) {
         launch(args);

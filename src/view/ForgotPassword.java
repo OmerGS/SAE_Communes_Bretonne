@@ -157,6 +157,15 @@ public class ForgotPassword extends Application {
         this.btnLogin.setOnAction(this.controller);
     }
 
+    public void showAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    
+
     public Hyperlink getLinkForgotPassword(){
         return(this.linkForgotPassword);
     }
