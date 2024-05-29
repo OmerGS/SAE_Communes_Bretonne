@@ -137,17 +137,6 @@ public class Controller implements EventHandler<ActionEvent> {
             }
         }
 
-        if(e.getSource() == this.connectionPage.getCheckBox()){
-            if(this.connectionPage.getCheckBox().isSelected()){
-                this.connectionPage.getPasswordText().setVisible(true);
-                this.connectionPage.getPasswordText().setText(this.connectionPage.getPasswordField().getText());
-                this.connectionPage.getPasswordField().setVisible(false);
-            } else {
-                this.connectionPage.getPasswordText().setVisible(false);
-                this.connectionPage.getPasswordField().setVisible(true);
-            }
-        }
-
 
 
 
@@ -339,9 +328,6 @@ public class Controller implements EventHandler<ActionEvent> {
             }
         }
 
-
-
-
         if(e.getSource() == this.resetPassword.getLinkWrongMail()){
             Stage stage = (Stage) this.resetPassword.getBtnValidate().getScene().getWindow();
             this.forgotPassword.start(stage);
@@ -352,6 +338,13 @@ public class Controller implements EventHandler<ActionEvent> {
             this.connectionPage.start(stage);
         }
     }
+
+
+
+
+
+
+
 
     private void updateButtonState() {
         if (this.codeSent) {
