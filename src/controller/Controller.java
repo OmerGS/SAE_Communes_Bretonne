@@ -3,13 +3,9 @@ package controller;
 
 import java.util.Timer;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import dao.UserService;
@@ -21,7 +17,6 @@ import view.ForgotPassword;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import javafx.util.Duration;
 
 import java.util.TimerTask;
 import java.util.regex.Matcher;
@@ -70,31 +65,9 @@ public class Controller implements EventHandler<ActionEvent> {
         if (e.getSource() == this.connectionPage.getLinkSignUp()) {
             try {
                 Stage stage = (Stage) this.connectionPage.getBtnLogin().getScene().getWindow();
-                Pane root = (Pane) stage.getScene().getRoot();
-
-                ScaleTransition transition = new ScaleTransition(Duration.millis(500), root);
-                transition.setToX(1.1);
-                transition.setToY(1.1);
-                transition.setAutoReverse(true);
-
-                FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), root);
-                fadeTransition.setFromValue(1.0);
-                fadeTransition.setToValue(0.0);
-
-                ParallelTransition parallelTransition = new ParallelTransition(transition, fadeTransition);
-                parallelTransition.setOnFinished(event -> {
-                    try {
-                        this.inscriptionPage = new InscriptionPage(this);
-                        this.inscriptionPage.start(stage);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                });
-
-                // Lancement des transitions
-                parallelTransition.play();
+                this.inscriptionPage.start(stage);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                System.out.println(ex.getMessage());
             }
 
             
@@ -129,6 +102,9 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
                     this.connectionPage.getErrorMessageLabel().setText("Connexion Reussi !");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
+
+                    //CONNEXION A LA PAGE PRINCIPAL
+
                 } else {
                     this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                     this.connectionPage.getErrorMessageLabel().setText("Identifiants incorrects.");
