@@ -1,13 +1,12 @@
 package data;
 
-import java.util.ArrayList;
 import java.util.List;
 import data.exceptions.*;
 
 /**
 * Class who represents a commune with different parameters, we can manipulate it with different method. 
 * 
-* @author O.Gunes, R.Peron, C.Brayan
+* @author O.Gunes
 */
 public class Commune {
     /**
@@ -104,38 +103,32 @@ public class Commune {
     * @param population
     * @param departement
     */
-    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, float prixMoyen, float prixM2Moyen, float surfaceMoy, float depCulturellesTotales, float budgetTotal, float population, Departement departement) {
-        this.aeroports = new ArrayList<Aeroport>();
-        this.gares = new ArrayList<Gare>();
-        this.communesVoisines = new ArrayList<Commune>();
-
-
-        //idCommune
-        if (isValidIdCommune(idCommune)) {
-            this.idCommune = idCommune;
-        } else {
-            throw new InvalidCommuneIdException("Numéro de commune invalide : " + idCommune);
+    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, float prixMoyen, float prixM2Moyen, 
+                   float surfaceMoyenne, float depensesCulturellesTotales, float budgetTotal, float population, Departement departement) 
+            throws InvalidCommuneIdException, InvalidCommuneNameException {
+        if (idCommune <= 0) {
+            throw new InvalidCommuneIdException("Invalid commune ID");
         }
-
-        //nomCommune
-        if (nomCommune != null && !nomCommune.trim().isEmpty()) {
-            this.nomCommune = nomCommune;
-        } else {
-            throw new InvalidCommuneNameException("Nom de commune invalide : " + nomCommune);
+        if (nomCommune == null || nomCommune.isEmpty()) {
+            throw new InvalidCommuneNameException("Invalid commune name");
         }
-
-
-        this.nbMaison = validateNonNegativeValue(nbMaison, "Nombre de maisons");
-        this.nbAppart = validateNonNegativeValue(nbAppart, "Nombre d'appartement");
-        this.prixMoyen = validateNonNegativeValue(prixMoyen, "Prix moyen");
-        this.prixM2Moyen = validateNonNegativeValue(prixM2Moyen, "Prix m2 moyen");
-        this.surfaceMoy = validateNonNegativeValue(surfaceMoy, "Surface moyenne");
-        this.depCulturellesTotales = validateNonNegativeValue(depCulturellesTotales, "Dépenses culturelles totales");
-        this.budgetTotal = validateNonNegativeValue(budgetTotal, "Budget total");
-        this.population = validateNonNegativeValue(population, "Population");
-
-
+        this.idCommune = idCommune;
+        this.nomCommune = nomCommune;
+        this.nbMaison = nbMaison;
+        this.nbAppart = nbAppart;
+        this.prixMoyen = prixMoyen;
+        this.prixM2Moyen = prixM2Moyen;
+        this.surfaceMoy = surfaceMoyenne;
+        this.depCulturellesTotales = depensesCulturellesTotales;
+        this.budgetTotal = budgetTotal;
+        this.population = population;
         this.departement = departement;
+    }
+
+
+    public Commune(int idCommune, String nomCommune){
+        this.idCommune = idCommune;
+        this.nomCommune = nomCommune;
     }
 
     /**
