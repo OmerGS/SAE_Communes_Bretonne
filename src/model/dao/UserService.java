@@ -1,44 +1,43 @@
-package data;
+package dao;
 
-import dao.EmailService;
+import data.Utilisateur;
+import view.misc.EmailService;
+import view.misc.PasswordUtil;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
-import java.util.Properties;
 import java.util.Random;
-
 import javax.mail.MessagingException;
 
-import dao.PasswordUtil;
-
+/**
+* Class which contains userService, this class allows manipulating Utilisateur class.
+* We can add the Utilisateur to the database, check if user is in database, add user in database.
+*
+* @author O.Gunes
+*/
 public class UserService {
 
-    private Properties loadDatabaseProperties() {
-        Properties props = new Properties();
-        try (FileInputStream fis = new FileInputStream("../properties/config.properties")) {
-            props.load(fis);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return props;
-    }
-
+    /**
+    * This method creates Utilisateur and hashes the password.
+    * The hash of password allows security from database breaches.
+    *
+    * @param nom The surname of user
+    * @param prenom The name of user
+    * @param email The email of user
+    * @param plainPassword The password (without hash)
+    */
     public void createUser(String nom, String prenom, String email, String plainPassword) {
         try {
-            // Générer le sel
             byte[] salt = PasswordUtil.getSalt();
 
-            // Hacher le mot de passe
             String hashedPassword = PasswordUtil.hashPassword(plainPassword, salt);
 
-            // Créer une instance d'utilisateur
+            // Create an instance of Utilisateur
             Utilisateur utilisateur = new Utilisateur(nom, prenom, email, hashedPassword, Base64.getEncoder().encodeToString(salt));
 
             saveToDatabase(utilisateur);
@@ -47,27 +46,31 @@ public class UserService {
         }
     }
 
+    /**
+    * Private method which checks if the user is an admin
+    * 
+    * @param email The email of the user
+    * @return 1 if admin, else return 0.
+    */
     private int userIsAdmin(String email){
-        int valeurReturn = 0;
-
-        if(email.contains("@univ-ubs.fr")){
-            valeurReturn = 1;
-        }
-
-        return(valeurReturn);
+        return email.contains("@univ-ubs.fr") ? 1 : 0;
     }
 
+    /**
+    * Saves the user to the database.
+    *
+    * @param utilisateur The user to save into the database.
+    */
     private void saveToDatabase(Utilisateur utilisateur) {
-        Properties props = loadDatabaseProperties();
-        String url = props.getProperty("db.url");
-        String userDB = props.getProperty("db.user");
-        String motDePasseDB = props.getProperty("db.password");
-
-        try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
+        // Connection to the database
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            // The SQL query
             String requeteSQL = "INSERT INTO Utilisateur (nom, prenom, email, motDePasse, salt, isAdmin) VALUES (?, ?, ?, ?, ?, ?)";
 
+            // Sending the SQL query, replacing "?" with the values
             try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
-                // Définir les valeurs des paramètres
+                
+                // The parameters to send into the database.
                 preparedStatement.setString(1, utilisateur.getNom());
                 preparedStatement.setString(2, utilisateur.getPrenom());
                 preparedStatement.setString(3, utilisateur.getEmail());
@@ -75,7 +78,6 @@ public class UserService {
                 preparedStatement.setString(5, utilisateur.getSalt());
                 preparedStatement.setInt(6, userIsAdmin(utilisateur.getEmail()));
 
-                // Exécuter la requête d'insertion
                 preparedStatement.executeUpdate();
                 System.out.println("Utilisateur enregistré avec succès dans la base de données.");
             } catch (SQLException e) {
@@ -86,18 +88,26 @@ public class UserService {
         }
     }
 
+    /**
+    * Public method which allows updating the password of the user.
+    *
+    * @param email The email of the user
+    * @param newPassword The plain password of the user
+    * @throws SQLException We can throw SQL exception if the connection doesn't establish
+    */
     public void updatePassword(String email, String newPassword) throws SQLException {
-        Properties props = loadDatabaseProperties();
-        String url = props.getProperty("db.url");
-        String userDB = props.getProperty("db.user");
-        String motDePasseDB = props.getProperty("db.password");
-
         try {
+            // We get a new salt (it allows to hash the password)
             byte[] newSalt = PasswordUtil.getSalt();
+
+            // We hash the new password
             String hashedPassword = PasswordUtil.hashPassword(newPassword, newSalt);
+
+            // We encode the salt to transform it into a String.
             String encodedSalt = Base64.getEncoder().encodeToString(newSalt);
 
-            try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
+            try (Connection connexion = ConnectionManager.getConnection()) {
+                // SQL query
                 String updateSQL = "UPDATE Utilisateur SET motDePasse = ?, salt = ? WHERE email = ?";
 
                 try (PreparedStatement preparedStatement = connexion.prepareStatement(updateSQL)) {
@@ -106,6 +116,7 @@ public class UserService {
                     preparedStatement.setString(3, email);
 
                     int rowsUpdated = preparedStatement.executeUpdate();
+                    // If a row is updated then we print "Mot de passe mis à jour avec succès"
                     if (rowsUpdated > 0) {
                         System.out.println("Mot de passe mis à jour avec succès.");
                     } else {
@@ -118,20 +129,25 @@ public class UserService {
         }
     }
 
+    /**
+    * Public method, checks if the email is in the database.
+    * 
+    * @param email The email of the user to check if it exists in the database
+    * @return True if exists, else false.
+    */
     public boolean emailExists(String email) {
-        Properties props = loadDatabaseProperties();
-        String url = props.getProperty("db.url");
-        String userDB = props.getProperty("db.user");
-        String motDePasseDB = props.getProperty("db.password");
+        boolean returnValue = false;
 
-        try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "SELECT COUNT(*) FROM Utilisateur WHERE email = ?";
             try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
                 preparedStatement.setString(1, email);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                    // If we have one user with the email then return true.
                     if (resultSet.next()) {
                         int count = resultSet.getInt(1);
-                        return count > 0;
+                        returnValue = count > 0;
                     }
                 }
             } catch (SQLException e) {
@@ -140,26 +156,37 @@ public class UserService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return returnValue;
     }
 
-
+    /**
+    * Checks if the information is valid or not.
+    * 
+    * @param email The email of the user
+    * @param plainPassword The plain password of the user
+    * @return True if valid, else false.
+    */
     public boolean validateLogin(String email, String plainPassword) {
-        Properties props = loadDatabaseProperties();
-        String url = props.getProperty("db.url");
-        String userDB = props.getProperty("db.user");
-        String motDePasseDB = props.getProperty("db.password");
+        boolean returnValue = false;
 
-        try (Connection connexion = DriverManager.getConnection(url, userDB, motDePasseDB)) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            // We get the password and the salt which was in the database.
             String requeteSQL = "SELECT motDePasse, salt FROM Utilisateur WHERE email = ?";
             try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
                 preparedStatement.setString(1, email);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
+                        // We get the hashed password from the database.
                         String storedHashedPassword = resultSet.getString("motDePasse");
+
+                        // We get the salt
                         String storedSalt = resultSet.getString("salt");
+
+                        // We hash the password entered by the user.
                         String hashedPassword = PasswordUtil.hashPassword(plainPassword, Base64.getDecoder().decode(storedSalt));
-                        return storedHashedPassword.equals(hashedPassword);
+
+                        // We check if the user entries match with the database.
+                        returnValue = storedHashedPassword.equals(hashedPassword);
                     }
                 }
             } catch (SQLException | NoSuchAlgorithmException e) {
@@ -168,27 +195,32 @@ public class UserService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return returnValue;
     }
 
-    public void sendVerificationEmail(String email, String code) throws IOException {
+    /**
+    * Sends a verification email with a code.
+    * 
+    * @param email The email of the user
+    * @param code The code to send
+    * @throws IOException 
+    * @throws MessagingException
+    */
+    public void sendVerificationEmail(String email, String code) throws IOException, MessagingException {
         EmailService emailService = new EmailService();
 
-        String subject = "Votre code de vérification";
+        String subject = "Code de vérification";
         String message = "Votre code de vérification est : " + code;
 
-        try {
-            emailService.sendEmail(email, subject, message);
-            System.out.println("Email de vérification envoyé avec succès.");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        emailService.sendEmail(email, subject, message);
     }
 
+    /**
+    * Generates a random code with 6 digits.
+    * @return the code
+    */
     public int generateVerificationCode(){
         Random random = new Random();
-        int code = random.nextInt(900000) + 100000;
-        return code;
+        return random.nextInt(900000) + 100000;
     }
-    
 }

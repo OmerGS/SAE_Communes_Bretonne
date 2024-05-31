@@ -50,6 +50,7 @@ public class Departement {
         this.aeroports = new ArrayList<Aeroport>();
     }
 
+<<<<<<< HEAD
     /* ----- Getters ----- */
 
     /**
@@ -57,6 +58,13 @@ public class Departement {
      *
      * @return the unique id of the department
      */
+=======
+    public Departement(int idDep, String nomDep) {
+        this.idDep = idDep;
+        this.nomDep = nomDep;
+    }
+
+>>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
     public int getIdDep() {
         return this.idDep;
     }
@@ -70,6 +78,7 @@ public class Departement {
         return this.nomDep;
     }
 
+<<<<<<< HEAD
     /**
      * Returns the investment in culture for 2019.
      *
@@ -113,6 +122,13 @@ public class Departement {
         if (nomDep == null || nomDep.trim().isEmpty()) {
             throw new RuntimeException("The name of the department cannot be null or empty.");
         }
+=======
+    public Departement getDepartement(int id) {
+        return this;
+    }
+
+    public void setNomDep(String nomDep) {
+>>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
         this.nomDep = nomDep;
     }
 

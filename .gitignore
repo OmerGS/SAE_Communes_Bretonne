@@ -2,4 +2,9 @@
 config.properties
 mail.properties
 properties
+<<<<<<< HEAD
 SAE_Communes_Bretonne
+=======
+ControllerAModifier.java
+MainPageAModif.java
+>>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec

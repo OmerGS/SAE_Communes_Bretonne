@@ -533,9 +533,12 @@ public void setDepartement(Departement departement) {
 
         return getDepCulturellesTotales() / getPopulation();
     }
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
 }

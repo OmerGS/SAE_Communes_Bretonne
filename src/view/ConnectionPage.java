@@ -22,19 +22,25 @@ public class ConnectionPage extends Application {
     private Hyperlink linkSignUp;
     private Hyperlink linkForgotPassword;
     private TextField emailField;
+    
     private PasswordField passwordField;
+
     private Button btnLogin;
     private Label errorMessageLabel;
 
+    public ConnectionPage(Controller controller){
+        this.controller = controller;
+    }
+
     @Override
     public void start(Stage primaryStage) {
-        this.controller = new Controller(this);
+        this.controller = new Controller();
 
         // Image pour le logo
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
         logo.setFitWidth(100);
         logo.setFitHeight(100);
-        logo.setClip(new Circle(50, 50, 50)); // Rendre l'image circulaire
+        logo.setClip(new Circle(50, 50, 50));
 
         // Label pour la région
         Label lblRegion = new Label("Region");
@@ -45,7 +51,6 @@ public class ConnectionPage extends Application {
         // Layout pour le logo et le label
         VBox logoBox = new VBox(10, logo, lblRegion, lblBretagne);
         logoBox.setAlignment(Pos.CENTER);
-        // Ajustement du padding pour déplacer le logoBox vers la gauche
         logoBox.setPadding(new Insets(20, 200, 20, 0));
 
         // Titre pour la section de connexion
@@ -76,19 +81,14 @@ public class ConnectionPage extends Application {
         scaleTransition.setToY(1.1);
 
         this.btnLogin.setOnMouseEntered(event -> {
-            // Arrêter l'animation si elle est en cours
             scaleTransition.stop();
-            // Réinitialiser l'échelle du bouton à sa valeur par défaut
             btnLogin.setScaleX(1);
             btnLogin.setScaleY(1);
-            // Lancer l'animation
             scaleTransition.play();
         });
 
         this.btnLogin.setOnMouseExited(event -> {
-            // Arrêter l'animation si elle est en cours
             scaleTransition.stop();
-            // Réinitialiser l'échelle du bouton à sa valeur par défaut
             btnLogin.setScaleX(1);
             btnLogin.setScaleY(1);
         });

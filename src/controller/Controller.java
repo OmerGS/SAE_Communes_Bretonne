@@ -1,25 +1,32 @@
 package controller;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import dao.CommuneService;
+import dao.UserService;
+import data.Commune;
 import view.ConnectionPage;
 import view.InscriptionPage;
+import view.MainPage;
 import view.ResetPassword;
 import view.misc.CustomAlert;
 import view.ForgotPassword;
-import data.UserService;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import javafx.util.Duration;
+
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.mail.MessagingException;
 
 /**
 * Class which allows linking the view and the model and controlling the information transiting between them.
@@ -27,70 +34,107 @@ import java.util.regex.Pattern;
 */
 public class Controller implements EventHandler<ActionEvent> {
 
+    /**
+    * An instance of ConnectionPage 
+    */
     private ConnectionPage connectionPage;
+
+    /**
+    * An instance of InscriptionPage
+    */
     private InscriptionPage inscriptionPage;
+
+    /**
+    * An instance of forgotPassword page.
+    */
     private ForgotPassword forgotPassword;
+
+    /**
+    * An instance of ResetPassword page. 
+    */
     private ResetPassword resetPassword;
+
+    /**
+    * A boolean check if a mail code is sent or not
+    */
     private boolean codeSent;
+
+    /**
+    * A String which contain the verification code. 
+    */
     private String codeString;
 
-    public Controller(ConnectionPage connectionPage) {
-        this.connectionPage = connectionPage;
+    private MainPage mainPage;
+
+
+    private ArrayList<Commune> communes;
+
+    /**
+    * The constructor of Controller. 
+    * @param connectionPage
+    */
+    public Controller(MainPage mainPage) {
+        this.connectionPage = new ConnectionPage(this);
         this.inscriptionPage = new InscriptionPage(this);
-        this.forgotPassword = new ForgotPassword(this); // Initialize here
+        this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
+        this.mainPage = mainPage;
+
     }    
 
+    /**
+    * The Empty constructor of controller 
+    */
     public Controller() {
-        this.connectionPage = new ConnectionPage();
+        this.connectionPage = new ConnectionPage(this);
         this.inscriptionPage = new InscriptionPage(this);
-        this.forgotPassword = new ForgotPassword(this); // Initialize here
+        this.forgotPassword = new ForgotPassword(this);
         this.resetPassword = new ResetPassword(this);
+        this.mainPage = new MainPage();
     }
 
-    public void setConnectionPage(ConnectionPage connectionPage) {
-        this.connectionPage = connectionPage;
-    }
 
-    public void setInscriptionPage(InscriptionPage inscriptionPage) {
-        this.inscriptionPage = inscriptionPage;
-    }
-
+    /**
+    * Method which check if an event is realized.
+    *
+    * @param ActionEvent Check if an action is executed 
+    */
     @Override
     public void handle(ActionEvent e) {
-        /* PAGE DE CONNEXION */
+        // Gestion des actions de la page de connexion
+        handleConnectionPageActions(e);
+
+        // Gestion des actions de la page d'inscription
+        handleInscriptionPageActions(e);
+
+        // Gestion des actions de la page mot de passe oublié
+        handleForgotPasswordPageActions(e);
+
+        // Gestion des actions de la page réinitialisation du mot de passe
+        handleResetPasswordPageActions(e);
+
+        //Gestion des actions de la page principal
+        handleMainPageActions(e);
+    }
+
+    private void handleMainPageActions(ActionEvent e) {
+        if(e.getSource() == this.mainPage.getSearchField()){
+            String searchText = this.mainPage.getSearchField().getText().trim();
+            handleSearchEvent(searchText);
+        }
+    }
+
+    /**
+    * Handle action of the Connection Page. 
+    * @param e The Action Event
+    */
+    private void handleConnectionPageActions(ActionEvent e) {
         if (e.getSource() == this.connectionPage.getLinkSignUp()) {
             try {
                 Stage stage = (Stage) this.connectionPage.getBtnLogin().getScene().getWindow();
-                Pane root = (Pane) stage.getScene().getRoot();
-
-                // Redimensionnement en X et Y
-                ScaleTransition transition = new ScaleTransition(Duration.millis(500), root);
-                transition.setToX(1.1);
-                transition.setToY(1.1);
-                transition.setAutoReverse(true); // Animation en retour
-
-                // Animation en fondu
-                FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), root);
-                fadeTransition.setFromValue(1.0);
-                fadeTransition.setToValue(0.0);
-
-                // Regroupement des transitions
-                ParallelTransition parallelTransition = new ParallelTransition(transition, fadeTransition);
-                parallelTransition.setOnFinished(event -> {
-                    try {
-                        // Appel à la page d'inscription
-                        this.inscriptionPage = new InscriptionPage(this);
-                        this.inscriptionPage.start(stage);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                });
-
-                // Lancement des transitions
-                parallelTransition.play();
+                this.inscriptionPage.start(stage);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                System.out.println(ex.getMessage());
             }
 
             
@@ -112,9 +156,11 @@ public class Controller implements EventHandler<ActionEvent> {
             this.connectionPage.getErrorMessageLabel().setVisible(false);
 
             if (email.isEmpty() || password.isEmpty()) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.connectionPage.getErrorMessageLabel().setText("Tous les champs doivent \u00eatre remplis.");
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
             } else if (!isValidEmail(email)) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.connectionPage.getErrorMessageLabel().setText("L'adresse e-mail n'est pas valide.");
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
             } else {
@@ -123,31 +169,24 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
                     this.connectionPage.getErrorMessageLabel().setText("Connexion Reussi !");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
+
+                    //CONNEXION A LA PAGE PRINCIPAL
+
                 } else {
+                    this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                     this.connectionPage.getErrorMessageLabel().setText("Identifiants incorrects.");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
                 }
             }
         }
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /* PAGE D'INSCRIPTION */
-
+    /**
+    * Handle the action of the Inscription Page. 
+    * @param e The Action Event
+    */
+    private void handleInscriptionPageActions(ActionEvent e){
         if (this.inscriptionPage != null && e.getSource() == this.inscriptionPage.getBtnSignUp()) {
             String firstName = this.inscriptionPage.getFirstNameField().getText();
             String lastName = this.inscriptionPage.getLastNameField().getText();
@@ -158,17 +197,21 @@ public class Controller implements EventHandler<ActionEvent> {
             this.inscriptionPage.getErrorMessageLabel().setVisible(false);
 
             if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.inscriptionPage.getErrorMessageLabel().setText("Tous les champs doivent \u00eatre remplis.");
                 this.inscriptionPage.getErrorMessageLabel().setVisible(true);
             } else if (!isValidEmail(email)) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.inscriptionPage.getErrorMessageLabel().setText("L'adresse e-mail n'est pas valide.");
                 this.inscriptionPage.getErrorMessageLabel().setVisible(true);
             } else if (!password.equals(confirmPassword)) {
+                this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.inscriptionPage.getErrorMessageLabel().setText("Les mots de passe ne correspondent pas.");
                 this.inscriptionPage.getErrorMessageLabel().setVisible(true);
             } else {
                 UserService creationUtilisateur = new UserService();
                 if (creationUtilisateur.emailExists(email)) {
+                    this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                     this.inscriptionPage.getErrorMessageLabel().setText("L'adresse e-mail est d\u00e9j\u00e0 utilis\u00e9e.");
                     this.inscriptionPage.getErrorMessageLabel().setVisible(true);
                 } else {
@@ -188,18 +231,13 @@ public class Controller implements EventHandler<ActionEvent> {
                 ex.printStackTrace();
             }
         }
+    }
 
-
-
-
-
-
-
-
-
-
-        /* PAGE MOT DE PASSE OUBLIE */
-
+    /**
+    * Handle the action of ForgotPassword page.
+    * @param e The Action Event
+    */
+    private void handleForgotPasswordPageActions(ActionEvent e){
         if (e.getSource() == this.forgotPassword.getLinkForgotPassword()) {
             try {
                 Stage stage = (Stage) this.forgotPassword.getBtnLogin().getScene().getWindow();
@@ -223,17 +261,17 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.forgotPassword.getErrorMessageLabel().setText("Un mail deja renseignee dans la bdd doit etre entrer");
                     this.forgotPassword.getErrorMessageLabel().setVisible(true);
                 } else {
-                    this.forgotPassword.getCodeField().setDisable(false);
-                    this.forgotPassword.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
-                    this.forgotPassword.getErrorMessageLabel().setText("Un Mail vous a etait envoye ! ");
-                    
+
                     email = this.forgotPassword.getEmailField().getText();
                     int code = serviceUtilisateur.generateVerificationCode();
                     this.codeString = String.valueOf(code);
+
                     try {
                         serviceUtilisateur.sendVerificationEmail(email, codeString);
                     } catch (IOException e1) {
                         System.out.println(e1.getMessage());
+                    } catch (MessagingException e2){
+                        System.out.println(e2.getMessage());
                     }
                     this.codeSent = true;
                     updateButtonState();
@@ -257,34 +295,43 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
             }
         }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-        /* REINITIALISATION DU MOT DE PASSE */
+    /**
+    * Handle the action of ResetPassword page. 
+    * @param e The Action Event
+    */
+    private void handleResetPasswordPageActions(ActionEvent e){
         if (e.getSource() == this.resetPassword.getBtnValidate()) {
             String newPassword = this.resetPassword.getFirstPassword().getText();
             String confirmPassword = this.resetPassword.getSecondPassword().getText();
 
             if (newPassword.equals(confirmPassword)) {
                 if (!newPassword.isEmpty() && !confirmPassword.isEmpty()) {
-                    String email = this.forgotPassword.getEmailField().getText();  // Récupérer l'email de l'utilisateur
+                    String email = this.forgotPassword.getEmailField().getText();
                     UserService userService = new UserService();
-                    
 
-                    try{
+                    try {
                         userService.updatePassword(email, newPassword);
-                        this.resetPassword.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
-                        this.resetPassword.getErrorMessageLabel().setText("Mot de passe changé avec succès !");
+
+                        this.resetPassword.getErrorMessageLabel().setStyle("-fx-text-fill: green; -fx-font-size: 15px;");
                         this.resetPassword.getErrorMessageLabel().setVisible(true);
+
+                        this.resetPassword.getErrorMessageLabel().setText("Redirection...");
+                        
+                        CustomAlert.showAlert("Reinitialisation du mot de passe", "Votre mot de passe est change.");
+
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Platform.runLater(() -> {
+                                    Stage stage = (Stage) resetPassword.getBtnValidate().getScene().getWindow();
+                                    connectionPage.start(stage);
+                                });
+                            }
+                        }, 3000);
+
                     } catch (SQLException ex) {
                         this.resetPassword.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                         this.resetPassword.getErrorMessageLabel().setText("Connexion au service momentanément impossible.");
@@ -302,8 +349,6 @@ public class Controller implements EventHandler<ActionEvent> {
             }
         }
 
-
-
         if(e.getSource() == this.resetPassword.getLinkWrongMail()){
             Stage stage = (Stage) this.resetPassword.getBtnValidate().getScene().getWindow();
             this.forgotPassword.start(stage);
@@ -313,21 +358,73 @@ public class Controller implements EventHandler<ActionEvent> {
             Stage stage = (Stage) this.resetPassword.getBtnValidate().getScene().getWindow();
             this.connectionPage.start(stage);
         }
-
     }
 
+
+
+
+
+    /**
+    * Private method, which change the state of the btnLogin present in forgotPassword page.
+    */
     private void updateButtonState() {
         if (this.codeSent) {
             this.forgotPassword.getBtnLogin().setText("V\u00e9rifier");
+            this.forgotPassword.getCodeField().setDisable(false);
         } else {
             this.forgotPassword.getBtnLogin().setText("Recevoir Code");
         }
     }
 
+    /**
+    * Check if a mail is valid with the format mail@subdomain.extension 
+    *
+    * @param email The checked mail
+    * @return True if valid mail, else return false.
+    */
     private boolean isValidEmail(String email) {
         String emailPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(emailPattern);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    public void handleSearchEvent(String searchText) {
+        List<Commune> filteredCommunes = getFilteredCommunes(searchText);
+        this.mainPage.updateCommunesListView(filteredCommunes);
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+    }    
+
+
+    /**
+     * Méthode pour récupérer la liste des communes depuis la base de données.
+     * @return Une liste de noms de communes.
+     */
+    public ArrayList<Commune> getCommunes() {
+        this.communes = new ArrayList<Commune>();
+        CommuneService communeService = new CommuneService();
+
+        try {
+            this.communes = (ArrayList) communeService.getAllCommunes();
+            this.mainPage.getNumberOfRow().setText(this.communes.size() + " resultat");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return communes;
+    }
+
+    public ArrayList<Commune> getFilteredCommunes(String searchText) {
+        ArrayList<Commune> allCommunes = this.communes;
+        ArrayList<Commune> filteredCommunes = new ArrayList<>();
+        
+        
+        String lowerCaseSearchText = searchText.toLowerCase();
+        for (Commune commune : allCommunes) {
+            if (commune.getNomCommune().toLowerCase().startsWith(lowerCaseSearchText)) {
+                filteredCommunes.add(commune);
+            }
+        }
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+        return filteredCommunes;
     }
 }

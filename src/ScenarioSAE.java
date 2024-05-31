@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import data.Commune;
 import data.Departement;
 
@@ -29,3 +30,5 @@ public class ScenarioSAE {
 
     }
 }
+=======
+>>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec

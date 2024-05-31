@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
-public class DatabaseConnection {
+/**
+* Class of debbuging which display the users present in the database
+* @author O.Gunes 
+*/
+public class printUserDatabase {
     public static void main(String[] args) {
         Properties props = new Properties();
         try (FileInputStream fis = new FileInputStream("../properties/config.properties")) {
