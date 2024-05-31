@@ -74,7 +74,7 @@ public class Commune {
             throw new RuntimeException("Nom de commune invalide : " + nomCommune);
         }
 
-        if(departement != null && departement.getIdDep() == 29 && departement.getIdDep() == 56 && departement.getIdDep() == 35 && departement.getIdDep() == 22){
+        if(departement != null && (departement.getIdDep() == 29 || departement.getIdDep() == 56 || departement.getIdDep() == 35 || departement.getIdDep() == 22)){
             this.departement= departement;
         } else {
             throw new RuntimeException("Département invalide : " + departement.getNomDep());
@@ -105,7 +105,7 @@ public class Commune {
     */
     private double validateNonNegativeValueDouble(double value, String fieldName) {
         double ret = -1;
-        if (value >= 0) {
+        if (value >= 0 || value == -1) {
             ret = value;
         } else {
             throw new IllegalArgumentException(fieldName + " invalide : " + value);
@@ -124,7 +124,7 @@ public class Commune {
     */
     private int validateNonNegativeValueInt(int value, String fieldName) {
         int ret = -1;
-        if (value >= 0) {
+        if (value >= 0 || value == -1) {
             ret = value;
         } else {
             throw new IllegalArgumentException(fieldName + " invalide : " + value);
