@@ -16,8 +16,13 @@ public class Main extends Application {
 
         primaryStage.getIcons().add(new Image("file:../resources/image/logo_bretagne.png"));
 
-
+        MainPage mainPage = new MainPage();
+        mainPage.start(primaryStage);
+        
+        /*
         ConnectionPage connectionPage = new ConnectionPage();
         connectionPage.start(primaryStage);
+        */
+        
     }
 }

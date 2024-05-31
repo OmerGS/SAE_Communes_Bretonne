@@ -28,9 +28,13 @@ public class ConnectionPage extends Application {
     private Button btnLogin;
     private Label errorMessageLabel;
 
+    public ConnectionPage(Controller controller){
+        this.controller = controller;
+    }
+
     @Override
     public void start(Stage primaryStage) {
-        this.controller = new Controller(this);
+        this.controller = new Controller();
 
         // Image pour le logo
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));

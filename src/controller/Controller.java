@@ -1,16 +1,20 @@
 package controller;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
-
+import dao.CommuneService;
 import dao.UserService;
+import data.Commune;
 import view.ConnectionPage;
 import view.InscriptionPage;
+import view.MainPage;
 import view.ResetPassword;
 import view.misc.CustomAlert;
 import view.ForgotPassword;
@@ -60,25 +64,33 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     private String codeString;
 
+    private MainPage mainPage;
+
+
+    private ArrayList<Commune> communes;
+
     /**
     * The constructor of Controller. 
     * @param connectionPage
     */
-    public Controller(ConnectionPage connectionPage) {
-        this.connectionPage = connectionPage;
+    public Controller(MainPage mainPage) {
+        this.connectionPage = new ConnectionPage(this);
         this.inscriptionPage = new InscriptionPage(this);
         this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
+        this.mainPage = mainPage;
+
     }    
 
     /**
     * The Empty constructor of controller 
     */
     public Controller() {
-        this.connectionPage = new ConnectionPage();
+        this.connectionPage = new ConnectionPage(this);
         this.inscriptionPage = new InscriptionPage(this);
         this.forgotPassword = new ForgotPassword(this);
         this.resetPassword = new ResetPassword(this);
+        this.mainPage = new MainPage();
     }
 
 
@@ -341,6 +353,31 @@ public class Controller implements EventHandler<ActionEvent> {
             Stage stage = (Stage) this.resetPassword.getBtnValidate().getScene().getWindow();
             this.connectionPage.start(stage);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* PAGE PRINCIPAL AVEC LES VILLES */
     }
 
 
@@ -373,4 +410,57 @@ public class Controller implements EventHandler<ActionEvent> {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    public void handleSearchEvent(String searchText) {
+        List<Commune> filteredCommunes = getFilteredCommunes(searchText);
+        this.mainPage.updateCommunesListView(filteredCommunes);
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+    }    
+
+
+    /**
+     * Méthode pour récupérer la liste des communes depuis la base de données.
+     * @return Une liste de noms de communes.
+     */
+    public ArrayList<Commune> getCommunes() {
+        this.communes = new ArrayList<Commune>();
+        CommuneService communeService = new CommuneService();
+
+        try {
+            this.communes = (ArrayList) communeService.getAllCommunes();
+            this.mainPage.getNumberOfRow().setText(this.communes.size() + " resultat");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return communes;
+    }
+
+    public ArrayList<Commune> getFilteredCommunes(String searchText) {
+        ArrayList<Commune> allCommunes = this.communes;
+        ArrayList<Commune> filteredCommunes = new ArrayList<>();
+        
+        
+        String lowerCaseSearchText = searchText.toLowerCase();
+        for (Commune commune : allCommunes) {
+            if (commune.getNomCommune().toLowerCase().startsWith(lowerCaseSearchText)) {
+                filteredCommunes.add(commune);
+            }
+        }
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+        return filteredCommunes;
+    }
+    
+    
+    
 }
