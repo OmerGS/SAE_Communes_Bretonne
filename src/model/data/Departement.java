@@ -15,6 +15,11 @@ public class Departement {
         this.invesCulture2019 = invesCulture2019;
     }
 
+    public Departement(int idDep, String nomDep) {
+        this.idDep = idDep;
+        this.nomDep = nomDep;
+    }
+
     public int getIdDep() {
         return idDep;
     }
@@ -25,6 +30,10 @@ public class Departement {
 
     public String getNomDep() {
         return nomDep;
+    }
+
+    public Departement getDepartement(int id) {
+        return this;
     }
 
     public void setNomDep(String nomDep) {
