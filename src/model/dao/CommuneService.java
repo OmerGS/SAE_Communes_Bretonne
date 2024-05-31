@@ -45,12 +45,12 @@ public class CommuneService {
                 // Récupération des données annuelles
                 int nbMaison = resultSet.getInt("nbMaison");
                 int nbAppart = resultSet.getInt("nbAppart");
-                float prixMoyen = resultSet.getFloat("prixMoyen");
-                float prixM2Moyen = resultSet.getFloat("prixM2Moyen");
-                float surfaceMoyenne = resultSet.getFloat("SurfaceMoy");
-                float depensesCulturellesTotales = resultSet.getFloat("depensesCulturellesTotales");
-                float budgetTotal = resultSet.getFloat("budgetTotal");
-                float population = resultSet.getFloat("population");
+                double prixMoyen = resultSet.getDouble("prixMoyen");
+                double prixM2Moyen = resultSet.getDouble("prixM2Moyen");
+                double surfaceMoyenne = resultSet.getDouble("SurfaceMoy");
+                double depensesCulturellesTotales = resultSet.getDouble("depensesCulturellesTotales");
+                double budgetTotal = resultSet.getDouble("budgetTotal");
+                int population = resultSet.getInt("population");
 
                 try {
                     Commune commune = new Commune(idCommune, nomCommune, nbMaison, nbAppart, prixMoyen, 

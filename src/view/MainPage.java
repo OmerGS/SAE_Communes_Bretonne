@@ -1,6 +1,7 @@
 package view;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -116,13 +117,17 @@ public class MainPage extends Application {
         primaryStage.show();
 
         // Ajout de l'écouteur d'événements sur le champ de recherche
+        //this.searchField.setOnKeyTyped(this.controller);
+
+        
         this.searchField.setOnKeyTyped(event -> {
             String searchText = searchField.getText().trim();
             this.controller.handleSearchEvent(searchText);
         });
+        
     }
 
-    private HBox createResultRow(String cityName, float priceM2, float averagePrice, boolean isAvailable) {
+    private HBox createResultRow(String cityName, double priceM2, double averagePrice, boolean isAvailable) {
         HBox row = new HBox(10);
         row.setPadding(new Insets(10));
         row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 10; -fx-border-color: #d3d3d3; -fx-border-radius: 10;");
@@ -169,8 +174,7 @@ public class MainPage extends Application {
                 };
             }
         });
-    
-        
+
         
         // Pour le débogage
         //System.out.println("\033[H\033[2J");

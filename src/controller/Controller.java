@@ -101,7 +101,34 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     @Override
     public void handle(ActionEvent e) {
-        /* PAGE DE CONNEXION */
+        // Gestion des actions de la page de connexion
+        handleConnectionPageActions(e);
+
+        // Gestion des actions de la page d'inscription
+        handleInscriptionPageActions(e);
+
+        // Gestion des actions de la page mot de passe oublié
+        handleForgotPasswordPageActions(e);
+
+        // Gestion des actions de la page réinitialisation du mot de passe
+        handleResetPasswordPageActions(e);
+
+        //Gestion des actions de la page principal
+        handleMainPageActions(e);
+    }
+
+    private void handleMainPageActions(ActionEvent e) {
+        if(e.getSource() == this.mainPage.getSearchField()){
+            String searchText = this.mainPage.getSearchField().getText().trim();
+            handleSearchEvent(searchText);
+        }
+    }
+
+    /**
+    * Handle action of the Connection Page. 
+    * @param e The Action Event
+    */
+    private void handleConnectionPageActions(ActionEvent e) {
         if (e.getSource() == this.connectionPage.getLinkSignUp()) {
             try {
                 Stage stage = (Stage) this.connectionPage.getBtnLogin().getScene().getWindow();
@@ -152,25 +179,14 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
             }
         }
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /* PAGE D'INSCRIPTION */
-
+    /**
+    * Handle the action of the Inscription Page. 
+    * @param e The Action Event
+    */
+    private void handleInscriptionPageActions(ActionEvent e){
         if (this.inscriptionPage != null && e.getSource() == this.inscriptionPage.getBtnSignUp()) {
             String firstName = this.inscriptionPage.getFirstNameField().getText();
             String lastName = this.inscriptionPage.getLastNameField().getText();
@@ -215,18 +231,13 @@ public class Controller implements EventHandler<ActionEvent> {
                 ex.printStackTrace();
             }
         }
+    }
 
-
-
-
-
-
-
-
-
-
-        /* PAGE MOT DE PASSE OUBLIE */
-
+    /**
+    * Handle the action of ForgotPassword page.
+    * @param e The Action Event
+    */
+    private void handleForgotPasswordPageActions(ActionEvent e){
         if (e.getSource() == this.forgotPassword.getLinkForgotPassword()) {
             try {
                 Stage stage = (Stage) this.forgotPassword.getBtnLogin().getScene().getWindow();
@@ -284,19 +295,13 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
             }
         }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-        /* REINITIALISATION DU MOT DE PASSE */
+    /**
+    * Handle the action of ResetPassword page. 
+    * @param e The Action Event
+    */
+    private void handleResetPasswordPageActions(ActionEvent e){
         if (e.getSource() == this.resetPassword.getBtnValidate()) {
             String newPassword = this.resetPassword.getFirstPassword().getText();
             String confirmPassword = this.resetPassword.getSecondPassword().getText();
@@ -353,34 +358,7 @@ public class Controller implements EventHandler<ActionEvent> {
             Stage stage = (Stage) this.resetPassword.getBtnValidate().getScene().getWindow();
             this.connectionPage.start(stage);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /* PAGE PRINCIPAL AVEC LES VILLES */
     }
-
-
 
 
 
@@ -410,17 +388,6 @@ public class Controller implements EventHandler<ActionEvent> {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-
-
-
-
-
-
-
-
-
-
-
 
     public void handleSearchEvent(String searchText) {
         List<Commune> filteredCommunes = getFilteredCommunes(searchText);
@@ -460,7 +427,4 @@ public class Controller implements EventHandler<ActionEvent> {
         this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
         return filteredCommunes;
     }
-    
-    
-    
 }
