@@ -19,10 +19,6 @@ public class ScenarioSAE {
         commune1.addVoisine(commune2);
         commune1.addVoisine(commune3);
 
-        // Estimation du PIB de la commune
-        double estimatedGDP = commune1.estimateGDP();
-        System.out.println("Estimation du PIB de la commune de " + commune1.getNomCommune() + ": " + estimatedGDP);
-
         // Vérification si la commune est la plus importante parmi ses voisines
         boolean isMostImportant = commune1.isMostImportant();
         System.out.println("Est-ce que la commune de " + commune1.getNomCommune() + " est la plus importante parmi ses voisines ? " + isMostImportant);
@@ -31,12 +27,5 @@ public class ScenarioSAE {
         String highestPriceCommune = commune1.highestNeighboursPrice();
         System.out.println("La commune avec le prix moyen le plus élevé par propriété parmi les voisines de " + commune1.getNomCommune() + " est : " + highestPriceCommune);
 
-        // Calcul du ratio de dépenses culturelles par habitant
-        float culturalExpensesPerInhabitant = commune1.culturalExpensesPerInhabitant();
-        System.out.println("Ratio de dépenses culturelles par habitant pour la commune de " + commune1.getNomCommune() + ": " + culturalExpensesPerInhabitant);
-
-        // Estimation de la croissance économique potentielle de la commune
-        double potentialEconomicGrowth = commune1.estimatePotentialEconomicGrowth();
-        System.out.println("Estimation de la croissance économique potentielle de la commune de " + commune1.getNomCommune() + ": " + potentialEconomicGrowth);
     }
 }

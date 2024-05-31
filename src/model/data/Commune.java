@@ -1,8 +1,9 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.List;
 import data.exceptions.*;
+import exceptions.InvalidCommuneIdException;
+import exceptions.InvalidCommuneNameException;
 
 /**
 * Class who represents a commune with different parameters, we can manipulate it with different method. 
@@ -38,19 +39,6 @@ public class Commune {
     private double budgetTotal;
     private int population;
 
-    /**
-    * List of airport.
-    * 
-    * Allow connection with Aeroport.java 
-    */
-    private List<Aeroport> aeroports;
-
-    /**
-    * List of trainstation.
-    *
-    * Allow conneciton with Gare.java 
-    */
-    private List<Gare> gares;
 
     /**
     * The department of the commune. 
@@ -58,19 +46,18 @@ public class Commune {
     * Allow connection with Departement.java 
     */
     private Departement departement;  
+
     
     /**
     * List of neighbours communes. 
     * 
     * Allow a connection with itself (Commune.java) 
     */
-    private List<Commune> communesVoisines;
+    private ArrayList<Commune> communesVoisines;
     
 
 
     public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
-        this.aeroports = new ArrayList<Aeroport>();
-        this.gares = new ArrayList<Gare>();
         this.communesVoisines = new ArrayList<Commune>();
 
 
@@ -91,7 +78,7 @@ public class Commune {
         if(departement != null && departement.getIdDep() == 29 && departement.getIdDep() == 56 && departement.getIdDep() == 35 && departement.getIdDep() == 22){
             this.departement= departement;
         } else {
-            throw new InvalidNameException("Déparement invalide : " + departement.getNomDep());
+            throw new InvalidNameException("Département invalide : " + departement.getNomDep());
         }
 
 
@@ -103,6 +90,7 @@ public class Commune {
         this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Dépenses culturelles totales");
         this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Budget total");
         this.population = validateNonNegativeValueInt(population, "Population");
+
 
         
     }
@@ -266,23 +254,6 @@ public class Commune {
         return population;
     }
 
-    /**
-     * Returns the list of airports in the commune.
-     *
-     * @return The list of airports.
-     */
-    public List<Aeroport> getAeroports() {
-        return aeroports;
-    }
-
-    /**
-     * Returns the list of train stations in the commune.
-     *
-     * @return The list of train stations.
-     */
-    public List<Gare> getGares() {
-        return gares;
-    }
 
     /**
      * Returns the department to which the commune belongs.
@@ -298,7 +269,7 @@ public class Commune {
      *
      * @return The list of neighboring communes.
      */
-    public List<Commune> getCommunesVoisines() {
+    public ArrayList<Commune> getCommunesVoisines() {
         return communesVoisines;
     }
 
@@ -307,153 +278,133 @@ public class Commune {
 
 /* ------ Setters ------ */
 
-    /**
-    * Sets the ID of the commune.
-    *
-    * @param idCommune The ID of the commune.
-    * @throws InvalidCommuneIdException If the provided ID is invalid.
-    */
-    public void setIdCommune(int idCommune) {
-        if (isValidIdCommune(idCommune)) {
-            this.idCommune = idCommune;
+/**
+ * Sets the ID of the commune.
+ *
+ * @param idCommune The ID of the commune.
+ * @throws InvalidCommuneIdException If the provided ID is invalid.
+ */
+public void setIdCommune(int idCommune) {
+    if (isValidIdCommune(idCommune)) {
+        this.idCommune = idCommune;
+    } else {
+        throw new InvalidCommuneIdException("Invalid commune ID: " + idCommune);
+    }
+}
+
+/**
+ * Sets the name of the commune.
+ *
+ * @param nomCommune The name of the commune.
+ * @throws InvalidCommuneNameException If the provided name is invalid.
+ */
+public void setNomCommune(String nomCommune) {
+    if (nomCommune != null && !nomCommune.trim().isEmpty()) {
+        this.nomCommune = nomCommune;
+    } else {
+        throw new InvalidCommuneNameException("Invalid commune name: " + nomCommune);
+    }
+}
+
+/**
+ * Sets the number of houses in the commune.
+ *
+ * @param nbMaison The number of houses.
+ * @throws InvalidValueException If the number of houses is negative.
+ */
+public void setNbMaison(int nbMaison) {
+    this.nbMaison = validateNonNegativeValueInt(nbMaison, "Number of houses");
+}
+
+/**
+ * Sets the number of apartments in the commune.
+ *
+ * @param nbAppart The number of apartments.
+ * @throws InvalidValueException If the number of apartments is negative.
+ */
+public void setNbAppart(int nbAppart) {
+    this.nbAppart = validateNonNegativeValueInt(nbAppart, "Number of apartments");
+}
+
+/**
+ * Sets the average price of properties in the commune.
+ *
+ * @param prixMoyen The average price.
+ * @throws InvalidValueException If the average price is negative.
+ */
+public void setPrixMoyen(double prixMoyen) {
+    this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Average price");
+}
+
+/**
+ * Sets the average price per square meter in the commune.
+ *
+ * @param prixM2Moyen The average price per square meter.
+ * @throws InvalidValueException If the average price per square meter is negative.
+ */
+public void setPrixM2Moyen(double prixM2Moyen) {
+    this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Average price per square meter");
+}
+
+/**
+ * Sets the average surface area in the commune.
+ *
+ * @param surfaceMoy The average surface area.
+ * @throws InvalidValueException If the average surface area is negative.
+ */
+public void setSurfaceMoy(double surfaceMoy) {
+    this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Average surface area");
+}
+
+/**
+ * Sets the total cultural expenses in the commune.
+ *
+ * @param depCulturellesTotales The total cultural expenses.
+ * @throws InvalidValueException If the total cultural expenses are negative.
+ */
+public void setDepCulturellesTotales(double depCulturellesTotales) {
+    this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Total cultural expenses");
+}
+
+/**
+ * Sets the total budget of the commune.
+ *
+ * @param budgetTotal The total budget.
+ * @throws InvalidValueException If the total budget is negative.
+ */
+public void setBudgetTotal(double budgetTotal) {
+    this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Total budget");
+}
+
+/**
+ * Sets the population of the commune.
+ *
+ * @param population The population.
+ * @throws InvalidValueException If the population is negative.
+ */
+public void setPopulation(int population) {
+    this.population = validateNonNegativeValueInt(population, "Population");
+}
+
+/**
+ * Sets the department to which the commune belongs.
+ *
+ * @param departement The department.
+ * @throws IllegalArgumentException If the provided department code is invalid.
+ */
+public void setDepartement(Departement departement) {
+    String departementString = String.valueOf(departement);
+    if (departementString.length() == 2) {
+        String prefix = departementString.substring(0, 2);
+        if (prefix.equals("29") || prefix.equals("22") || prefix.equals("56") || prefix.equals("35")) {
+            this.departement = departement;
         } else {
-            throw new InvalidIdException("Invalid commune ID: " + idCommune);
+            throw new IllegalArgumentException("The department code must be 29, 22, 56, or 35.");
         }
+    } else {
+        throw new IllegalArgumentException("The department code must be a two-digit number.");
     }
-
-    /**
-     * Sets the name of the commune.
-     *
-     * @param nomCommune The name of the commune.
-     * @throws InvalidCommuneNameException If the provided name is invalid.
-     */
-    public void setNomCommune(String nomCommune) {
-        if (nomCommune != null && !nomCommune.trim().isEmpty()) {
-            this.nomCommune = nomCommune;
-        } else {
-            throw new InvalidNameException("Invalid commune name: " + nomCommune);
-        }
-    }
-
-    /**
-     * Sets the number of houses in the commune.
-     *
-     * @param nbMaison The number of houses.
-     */
-    public void setNbMaison(int nbMaison) {
-        this.nbMaison = validateNonNegativeValueInt(nbMaison, "Number of houses");
-    }
-
-    /**
-     * Sets the number of apartments in the commune.
-     *
-     * @param nbAppart The number of apartments.
-     */
-    public void setNbAppart(int nbAppart) {
-        this.nbAppart = validateNonNegativeValueInt(nbAppart, "Number of apartments");
-    }
-
-    /**
-     * Sets the average price of properties in the commune.
-     *
-     * @param prixMoyen The average price.
-     */
-    public void setPrixMoyen(double prixMoyen) {
-        this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Average price");
-    }
-
-    /**
-     * Sets the average price per square meter in the commune.
-     *
-     * @param prixM2Moyen The average price per square meter.
-     */
-    public void setPrixM2Moyen(double prixM2Moyen) {
-        this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Average price per square meter");
-    }
-
-    /**
-     * Sets the average surface area in the commune.
-     *
-     * @param surfaceMoy The average surface area.
-     */
-    public void setSurfaceMoy(double surfaceMoy) {
-        this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Average surface area");
-    }
-
-    /**
-     * Sets the total cultural expenses in the commune.
-     *
-     * @param depCulturellesTotales The total cultural expenses.
-     */
-    public void setDepCulturellesTotales(double depCulturellesTotales) {
-        this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Total cultural expenses");
-    }
-
-    /**
-     * Sets the total budget of the commune.
-     *
-     * @param budgetTotal The total budget.
-     */
-    public void setBudgetTotal(double budgetTotal) {
-        this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Total budget");
-    }
-
-    /**
-     * Sets the population of the commune.
-     *
-     * @param population The population.
-     */
-    public void setPopulation(int population) {
-        this.population = validateNonNegativeValueInt(population, "Population");
-    }
-
-    /**
-    * Sets the list of airports in the commune.
-    *
-    * @param aeroports The list of airports.
-    * @throws IllegalArgumentException If the provided list is null.
-    */
-    public void setAeroports(List<Aeroport> aeroports) {
-        if (aeroports != null) {
-            this.aeroports = aeroports;
-        } else {
-            throw new IllegalArgumentException("The list of airports cannot be null.");
-        }
-    }
-
-    /**
-     * Sets the list of train stations in the commune.
-     *
-     * @param gares The list of train stations.
-     * @throws IllegalArgumentException If the provided list is null.
-     */
-    public void setGares(List<Gare> gares) {
-        if (gares != null) {
-            this.gares = gares;
-        } else {
-            throw new IllegalArgumentException("The list of train stations cannot be null.");
-        }
-    }
-
-    /**
-    * Sets the department to which the commune belongs.
-    *
-    * @param departement The department.
-    * @throws RuntimeException If the provided department code is invalid.
-    */
-    public void setDepartement(Departement departement) {
-        String departementString = String.valueOf(departement);
-        if (departementString.length() == 2) {
-            String prefix = departementString.substring(0, 2);
-            if (prefix.equals("29") || prefix.equals("22") || prefix.equals("56") || prefix.equals("35")) {
-                this.departement = departement;
-            } else {
-                throw new IllegalArgumentException("The department code must be 29, 22, 56, or 35.");
-            }
-        } else {
-            throw new IllegalArgumentException("The department code must be a two-digit number.");
-        }
-    }
+}
 
     
 
@@ -489,26 +440,23 @@ public class Commune {
     }
     
     public double prixMoyenParPropriete() {
+        double ret;
         int totalProprietes = getNbMaison() + getNbAppart();
         if (totalProprietes == 0) {
-            return 0;
+            ret = 0;
         } else {
-            return (getPrixMoyen() + getPrixM2Moyen()) / totalProprietes;
+            ret = (getPrixMoyen() + getPrixM2Moyen()) / totalProprietes;
         }
+        return ret;
     }
     
     
-    public boolean hasAirports() {
-        return aeroports != null && !aeroports.isEmpty();
-    }
     
     public boolean hasNeighboringCommunes() {
         return communesVoisines != null && !communesVoisines.isEmpty();
     }
 
-    public boolean hasTrainStation() {
-        return gares != null && !gares.isEmpty();
-    }    
+   
     
 
 
@@ -519,25 +467,28 @@ public class Commune {
     * @return True if the commune is the most significant among its neighbors, otherwise false.
     */
     public boolean isMostImportant() {
+        boolean ret = true;
         // Check if the commune has neighboring communes
         if (!hasNeighboringCommunes()) {
-            return false;
+            ret = false;
         }
+        if(ret){
+            // Initialize variables to keep track of the maximum values
+            int maxProperties = 0;
+            double maxBudget = 0;
+            double maxPopulation = 0;
 
-        // Initialize variables to keep track of the maximum values
-        int maxProperties = 0;
-        double maxBudget = 0;
-        double maxPopulation = 0;
-
-        // Iterate through neighboring communes to find the maximum values
-        for (Commune neighbor : communesVoisines) {
-            maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
-            maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
-            maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
+            // Iterate through neighboring communes to find the maximum values
+            for (Commune neighbor : communesVoisines) {
+                maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
+                maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
+                maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
+            }
+            ret = (getProprieteTotal() >= maxProperties) && (getBudgetTotal() >= maxBudget) && (getPopulation() >= maxPopulation);
         }
 
         // Check if the current commune has the maximum values
-        return (getProprieteTotal() >= maxProperties) && (getBudgetTotal() >= maxBudget) && (getPopulation() >= maxPopulation);
+        return ret;
     }
 
 
@@ -548,9 +499,10 @@ public class Commune {
     *         or null if there are no neighboring communes.
     */
     public String highestNeighboursPrice() {
+        String ret = null; 
         // Check if the commune has neighboring communes
         if (!hasNeighboringCommunes()) {
-            return null;
+            return ret;
         }
 
         String highestPriceCommune = null;
@@ -562,10 +514,11 @@ public class Commune {
             if (neighborAveragePrice > highestAveragePrice) {
                 highestAveragePrice = neighborAveragePrice;
                 highestPriceCommune = neighbor.getNomCommune();
+                ret = highestPriceCommune;
             }
         }
 
-        return highestPriceCommune;
+        return ret;
     }
 
 

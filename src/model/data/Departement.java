@@ -3,9 +3,7 @@ package data;
 import data.exceptions.InvalidNameException;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 /**
  * Represents a department (Departement) with a unique id, name, investment in culture for 2019,
@@ -33,6 +31,11 @@ public class Departement {
     private ArrayList<Commune> communes;
 
     /**
+     * The list of communes associated with the department.
+     */
+    private ArrayList<Aeroport> aeroports;
+
+    /**
      * Constructs a new Departement with the specified parameters.
      *
      * @param idDep             the unique id of the department
@@ -44,7 +47,8 @@ public class Departement {
         setIdDep(idDep);
         setNomDep(nomDep);
         setInvesCulture2019(invesCulture2019);
-        communes = new ArrayList<Commune>();
+        this.communes = new ArrayList<Commune>();
+        this.aeroports = new ArrayList<Aeroport>();
     }
 
     /* ----- Getters ----- */
@@ -55,7 +59,7 @@ public class Departement {
      * @return the unique id of the department
      */
     public int getIdDep() {
-        return idDep;
+        return this.idDep;
     }
 
     /**
@@ -64,7 +68,7 @@ public class Departement {
      * @return the name of the department
      */
     public String getNomDep() {
-        return nomDep;
+        return this.nomDep;
     }
 
     /**
@@ -73,7 +77,7 @@ public class Departement {
      * @return the investment in culture for 2019
      */
     public double getInvesCulture2019() {
-        return invesCulture2019;
+        return this.invesCulture2019;
     }
 
     /**
@@ -81,8 +85,12 @@ public class Departement {
      *
      * @return the list of communes associated with the department
      */
-    public List<Commune> getCommunes() {
-        return communes;
+    public ArrayList<Commune> getCommunes() {
+        return this.communes;
+    }
+
+    public ArrayList<Aeroport> getAeroport() {
+        return this.aeroports;
     }
 
     /* ----- Setters ----- */
@@ -127,6 +135,10 @@ public class Departement {
         this.communes = communes;
     }
 
+    public void setAeroport(ArrayList<Aeroport> aeroports) {
+        this.aeroports = aeroports;
+    }
+
     /**
      * Adds a commune to the list of communes associated with the department.
      *
@@ -134,6 +146,12 @@ public class Departement {
      */
     public void addCommune(Commune commune) {
         this.communes.add(commune);
+    }
+
+
+
+    public void addAeroport(Aeroport aeroport) {
+        this.aeroports.add(aeroport);
     }
 
     /* ----- Other Methods ----- */
