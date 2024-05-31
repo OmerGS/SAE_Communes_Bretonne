@@ -13,6 +13,7 @@ public class Departement {
      * The unique id of the department.
      */
     private int idDep;
+<<<<<<< HEAD
 
     /**
      * The name of the department.
@@ -20,6 +21,15 @@ public class Departement {
     private String nomDep;
 
     /**
+=======
+
+    /**
+     * The name of the department.
+     */
+    private String nomDep;
+
+    /**
+>>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
      * The investment in culture for 2019.
      */
     private double invesCulture2019;
@@ -51,6 +61,7 @@ public class Departement {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     /* ----- Getters ----- */
 
     /**
@@ -65,6 +76,15 @@ public class Departement {
     }
 
 >>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
+=======
+    /* ----- Getters ----- */
+
+    /**
+     * Returns the unique id of the department.
+     *
+     * @return the unique id of the department
+     */
+>>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
     public int getIdDep() {
         return this.idDep;
     }
@@ -79,6 +99,9 @@ public class Departement {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
     /**
      * Returns the investment in culture for 2019.
      *
@@ -86,6 +109,7 @@ public class Departement {
      */
     public double getInvesCulture2019() {
         return this.invesCulture2019;
+<<<<<<< HEAD
     }
 
     /**
@@ -129,6 +153,44 @@ public class Departement {
 
     public void setNomDep(String nomDep) {
 >>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
+=======
+    }
+
+    /**
+     * Returns the list of communes associated with the department.
+     *
+     * @return the list of communes associated with the department
+     */
+    public ArrayList<Commune> getCommunes() {
+        return this.communes;
+    }
+
+    public ArrayList<Aeroport> getAeroport() {
+        return this.aeroports;
+    }
+
+    /* ----- Setters ----- */
+
+    /**
+     * Sets the unique id of the department.
+     *
+     * @param idDep the new unique id of the department
+     */
+    public void setIdDep(int idDep) {
+        validateNonNegativeValueInt(idDep,"id Départment");
+    }
+
+    /**
+     * Sets the name of the department.
+     *
+     * @param nomDep the new name of the department
+     * @throws InvalidNameException if the name is null or empty
+     */
+    public void setNomDep(String nomDep) throws RuntimeException {
+        if (nomDep == null || nomDep.trim().isEmpty()) {
+            throw new RuntimeException("The name of the department cannot be null or empty.");
+        }
+>>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
         this.nomDep = nomDep;
     }
 
@@ -234,4 +296,8 @@ public class Departement {
 
 
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a

@@ -218,4 +218,8 @@ public class Gare {
         }
         return ret;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
