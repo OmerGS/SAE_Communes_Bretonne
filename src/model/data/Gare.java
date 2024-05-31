@@ -1,7 +1,6 @@
 package data;
 
-import data.exceptions.InvalidNameException;
-import data.exceptions.InvalidIdException;
+import javax.naming.InvalidNameException;
 
 /**
  * Represents a train station (Gare) with a unique code, name, and information 
@@ -44,7 +43,7 @@ public class Gare {
      * @throws InvalidNameException if the name of the train station is null or empty
      * @throws InvalidIdException   if the id of the commune is invalid
      */
-    public Gare(int codeGare, String nomGare, boolean estFret, boolean estVoyageur, Commune commune) throws InvalidNameException, InvalidIdException {
+    public Gare(int codeGare, String nomGare, boolean estFret, boolean estVoyageur, Commune commune){
         setCodeGare(codeGare);
         setNomGare(nomGare);
         setEstFret(estFret);
@@ -116,9 +115,9 @@ public class Gare {
      * @param nomGare the new name of the train station
      * @throws InvalidNameException if the name is null or empty
      */
-    public void setNomGare(String nomGare) throws InvalidNameException {
+    public void setNomGare(String nomGare){
         if (nomGare == null || nomGare.trim().isEmpty()) {
-            throw new InvalidNameException("The name of the train station cannot be null or empty.");
+            throw new RuntimeException("The name of the train station cannot be null or empty.");
         }
         this.nomGare = nomGare;
     }
@@ -147,9 +146,9 @@ public class Gare {
      * @param commune the new commune of the train station
      * @throws InvalidIdException if the id of the commune is invalid
      */
-    public void setCommune(Commune commune) throws InvalidIdException {
+    public void setCommune(Commune commune){
         if (!isValidIdCommune(commune.getIdCommune())) {
-            throw new InvalidIdException("Invalid commune ID: " + commune.getIdCommune());
+            throw new RuntimeException("Invalid commune ID: " + commune.getIdCommune());
         }
         this.commune = commune;
     }

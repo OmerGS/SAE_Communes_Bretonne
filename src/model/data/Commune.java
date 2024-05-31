@@ -1,7 +1,8 @@
 package data;
 
 import java.util.ArrayList;
-import data.exceptions.*;
+
+
 
 /**
 * Class who represents a commune with different parameters, we can manipulate it with different method. 
@@ -63,20 +64,20 @@ public class Commune {
         if (isValidIdCommune(idCommune)) {
             this.idCommune = idCommune;
         } else {
-            throw new InvalidIdException("Numéro de commune invalide : " + idCommune);
+            throw new RuntimeException("Numéro de commune invalide : " + idCommune);
         }
 
         //nomCommune
         if (nomCommune != null && !nomCommune.trim().isEmpty()) {
             this.nomCommune = nomCommune;
         } else {
-            throw new InvalidNameException("Nom de commune invalide : " + nomCommune);
+            throw new RuntimeException("Nom de commune invalide : " + nomCommune);
         }
 
         if(departement != null && departement.getIdDep() == 29 && departement.getIdDep() == 56 && departement.getIdDep() == 35 && departement.getIdDep() == 22){
             this.departement= departement;
         } else {
-            throw new InvalidNameException("Département invalide : " + departement.getNomDep());
+            throw new RuntimeException("Département invalide : " + departement.getNomDep());
         }
 
 
@@ -285,7 +286,7 @@ public void setIdCommune(int idCommune) {
     if (isValidIdCommune(idCommune)) {
         this.idCommune = idCommune;
     } else {
-        throw new InvalidIdException("Invalid commune ID: " + idCommune);
+        throw new RuntimeException("Invalid commune ID: " + idCommune);
     }
 }
 
@@ -298,7 +299,7 @@ public void setNomCommune(String nomCommune) {
     if (nomCommune != null && !nomCommune.trim().isEmpty()) {
         this.nomCommune = nomCommune;
     } else {
-        throw new InvalidNameException("Invalid commune name: " + nomCommune);
+        throw new RuntimeException("Invalid commune name: " + nomCommune);
     }
 }
 

@@ -1,7 +1,5 @@
 package data;
 
-import data.exceptions.InvalidDoubleException;
-import data.exceptions.InvalidIdException;
 
 /**
  * Represents a year with an associated inflation rate.
@@ -25,7 +23,7 @@ public class Annee {
      * @throws InvalidIdException      if the year is not positive
      * @throws InvalidDoubleException  if the inflation rate is not between 0 and 100
      */
-    public Annee(int annee, double tauxInflation) throws InvalidIdException, InvalidDoubleException {
+    public Annee(int annee, double tauxInflation){
         setAnnee(annee);
         setTauxInflation(tauxInflation);
     }
@@ -58,11 +56,11 @@ public class Annee {
      * @param annee the new year
      * @throws InvalidIdException if the year is not positive
      */
-    public void setAnnee(int annee) throws InvalidIdException {
+    public void setAnnee(int annee){
         if (annee > 0) {
             this.annee = annee;
         } else {
-            throw new InvalidIdException("The year must be positive: " + annee);
+            throw new RuntimeException("The year must be positive: " + annee);
         }
     }
 
@@ -72,7 +70,7 @@ public class Annee {
      * @param tauxInflation the new inflation rate
      * @throws InvalidDoubleException if the inflation rate is not between 0 and 100
      */
-    public void setTauxInflation(double tauxInflation) throws InvalidDoubleException {
+    public void setTauxInflation(double tauxInflation){
         if (isValidTauxInflation(tauxInflation)) {
             this.tauxInflation = tauxInflation;
         }
@@ -98,9 +96,9 @@ public class Annee {
      * @return true if the rate is valid, false otherwise
      * @throws InvalidDoubleException if the inflation rate is not between 0 and 100
      */
-    private boolean isValidTauxInflation(double tauxInflation) throws InvalidDoubleException {
+    private boolean isValidTauxInflation(double tauxInflation){
         if (tauxInflation < 0 || tauxInflation > 100) {
-            throw new InvalidDoubleException("Invalid inflation rate: " + tauxInflation);
+            throw new RuntimeException("Invalid inflation rate: " + tauxInflation);
         }
         return true;
     }

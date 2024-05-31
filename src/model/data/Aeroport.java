@@ -1,7 +1,6 @@
 package data;
 
-import data.exceptions.InvalidIdException;
-import data.exceptions.InvalidNameException;
+
 
 /**
  * Represents an airport with a name, address, and a commune.
@@ -19,11 +18,10 @@ public class Aeroport {
      * @param nom     the name of the airport
      * @param adresse the address of the airport
      * @param commune the commune associated with the airport
-     * @throws InvalidCommuneIdException if the commune ID is not valid
-     * @throws InvalidNameException      if the name is null or empty
-     * @throws InvalidAddressException   if the address is null or empty
+
+
      */
-    public Aeroport(String nom, String adresse, Commune commune) throws InvalidIdException, InvalidNameException{
+    public Aeroport(String nom, String adresse, Commune commune) {
         setNom(nom);
         setAdresse(adresse);
         setCommune(commune);
@@ -44,11 +42,10 @@ public class Aeroport {
      * Sets the name of the airport.
      *
      * @param nom the new name of the airport
-     * @throws InvalidNameException if the name is null or empty
      */
-    public void setNom(String nom) throws InvalidNameException {
+    public void setNom(String nom){
         if (nom == null || nom.trim().isEmpty()) {
-            throw new InvalidNameException("The name of the airport cannot be null or empty.");
+            throw new RuntimeException("The name of the airport cannot be null or empty.");
         }
         this.nom = nom;
     }
@@ -68,9 +65,9 @@ public class Aeroport {
      * @param adresse the new address of the airport
      * @throws InvalidAddressException if the address is null or empty
      */
-    public void setAdresse(String adresse) throws InvalidNameException {
+    public void setAdresse(String adresse){
         if (adresse == null || adresse.trim().isEmpty()) {
-            throw new InvalidNameException("The address of the airport cannot be null or empty.");
+            throw new RuntimeException("The address of the airport cannot be null or empty.");
         }
         this.adresse = adresse;
     }
@@ -90,11 +87,11 @@ public class Aeroport {
      * @param commune the new commune associated with the airport
      * @throws InvalidCommuneIdException if the commune ID is not valid
      */
-    public void setCommune(Commune commune) throws InvalidIdException {
+    public void setCommune(Commune commune){
         if (isValidIdCommune(commune.getIdCommune())) {
             this.commune = commune;
         } else {
-            throw new InvalidIdException("Invalid Commune ID: " + commune.getIdCommune());
+            throw new RuntimeException("Invalid Commune ID: " + commune.getIdCommune());
         }
     }
 

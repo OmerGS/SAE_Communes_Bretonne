@@ -1,6 +1,5 @@
 package data;
 
-import data.exceptions.InvalidNameException;
 
 import java.util.ArrayList;
 
@@ -43,7 +42,7 @@ public class Departement {
      * @param invesCulture2019  the investment in culture for 2019
      * @throws InvalidNameException       if the name of the department is null or empty
      */
-    public Departement(int idDep, String nomDep, double invesCulture2019) throws InvalidNameException{
+    public Departement(int idDep, String nomDep, double invesCulture2019){
         setIdDep(idDep);
         setNomDep(nomDep);
         setInvesCulture2019(invesCulture2019);
@@ -110,9 +109,9 @@ public class Departement {
      * @param nomDep the new name of the department
      * @throws InvalidNameException if the name is null or empty
      */
-    public void setNomDep(String nomDep) throws InvalidNameException {
+    public void setNomDep(String nomDep) throws RuntimeException {
         if (nomDep == null || nomDep.trim().isEmpty()) {
-            throw new InvalidNameException("The name of the department cannot be null or empty.");
+            throw new RuntimeException("The name of the department cannot be null or empty.");
         }
         this.nomDep = nomDep;
     }
@@ -212,7 +211,7 @@ public class Departement {
         if (value >= 0) {
             ret = value;
         } else {
-            throw new IllegalArgumentException(fieldName + " invalide : " + value);
+            throw new RuntimeException(fieldName + " invalide : " + value);
         }
         return ret;
     }
