@@ -40,7 +40,7 @@ public class CommuneService {
 
                 // Récupération des données du département
                 String nomDepartement = resultSet.getString("nomDep");
-                Departement departement = new Departement(leDepartement, nomDepartement);
+                Departement departement = new Departement(leDepartement, nomDepartement, 0);
 
                 // Récupération des données annuelles
                 int nbMaison = resultSet.getInt("nbMaison");
@@ -61,7 +61,6 @@ public class CommuneService {
                 }
             }
         }
-        
         return communes;
     }
 }
