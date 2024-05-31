@@ -11,7 +11,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import controller.Controller;
 import data.Commune;
@@ -25,29 +29,39 @@ public class MainPage extends Application {
     private Controller controller;
     private Label resultsLabel;
 
-
     @Override
     public void start(Stage primaryStage) {
         this.controller = new Controller(this);
 
+        // Image pour le logo
+        ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
+        logo.setFitWidth(50);
+        logo.setFitHeight(50);
+        logo.setClip(new Circle(25, 25, 25));
+
         // Barre de recherche en haut
         HBox searchBox = new HBox(10);
         searchBox.setPadding(new Insets(10));
+        searchBox.setStyle("-fx-background-color: #000000; -fx-padding: 10; -fx-border-radius: 10px; -fx-background-radius: 10px;");
         this.searchField = new TextField();
         this.searchField.setPromptText("Rechercher une ville");
         this.searchField.setPrefWidth(300);
+        this.searchField.setStyle("-fx-background-color: #fff; -fx-border-color: #FFFFFF; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
         ImageView searchIcon = null;
         try {
-            searchIcon = new ImageView(new Image("file:../resources/image/search.png"));
+            searchIcon = new ImageView(new Image("file:../resources/image/search2.png"));
             searchIcon.setFitHeight(20);
             searchIcon.setFitWidth(20);
         } catch (NullPointerException e) {
             System.out.println("search.png not found");
         }
 
+        Region SpacerBar = new Region();
+        SpacerBar.setPrefWidth(60);
+
         if (searchIcon != null) {
-            searchBox.getChildren().addAll(this.searchField, searchIcon);
+            searchBox.getChildren().addAll(SpacerBar,searchIcon,this.searchField);
         } else {
             searchBox.getChildren().add(this.searchField);
         }
@@ -55,33 +69,55 @@ public class MainPage extends Application {
         // Barre d'utilisateur en haut à droite
         HBox userBox = new HBox(10);
         userBox.setPadding(new Insets(10));
+        userBox.setStyle("-fx-padding: 10;");
 
         ImageView userIcon = null;
         try {
             userIcon = new ImageView(new Image("file:../resources/image/user.png"));
-            userIcon.setFitHeight(20);
-            userIcon.setFitWidth(20);
+            userIcon.setFitHeight(30);
+            userIcon.setFitWidth(30);
+        } catch (NullPointerException e) {
+            System.out.println("user.png not found");
+        }
+
+        ImageView menuIcon = null;
+        try {
+            menuIcon = new ImageView(new Image("file:../resources/image/menu.png"));
+            menuIcon.setFitHeight(30);
+            menuIcon.setFitWidth(30);
         } catch (NullPointerException e) {
             System.out.println("user.png not found");
         }
 
         Button filterButton = new Button("Filtrer");
+        filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
         if (userIcon != null) {
-            userBox.getChildren().addAll(userIcon, filterButton);
+            userBox.getChildren().addAll(userIcon, menuIcon);
         } else {
             userBox.getChildren().add(filterButton);
         }
 
+        // Region to push the filter button to the right
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
         // Combiner la barre de recherche et la barre d'utilisateur
         HBox topBar = new HBox(10);
-        topBar.getChildren().addAll(searchBox, userBox);
+        topBar.setStyle("-fx-padding: 10; -fx-background-color: #000000; -fx-text-fill: #fff;");
+        topBar.getChildren().addAll(logo,searchBox, spacer, userBox);
 
         // Résultats
-        VBox resultsBox = new VBox(10);
+        HBox resultsBox = new HBox(10);
         resultsBox.setPadding(new Insets(10));
-        resultsBox.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-background-radius: 10;");
+        resultsBox.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-background-radius: 10px;");
         this.resultsLabel = new Label();
-        resultsBox.getChildren().add(resultsLabel);
+        resultsLabel.setStyle("-fx-text-fill: #333;");
+        
+        // Region to push the filter button to the right
+        Region spacerFilter = new Region();
+        HBox.setHgrow(spacerFilter, Priority.ALWAYS);
+
+        resultsBox.getChildren().addAll(resultsLabel, spacerFilter, filterButton);
 
         // ListView pour afficher les communes
         communeListView.setPrefSize(400, 400);
@@ -96,6 +132,7 @@ public class MainPage extends Application {
                         super.updateItem(commune, empty);
                         if (commune != null) {
                             HBox row = createResultRow(commune.getNomCommune(), commune.getPrixM2Moyen(), commune.getPrixMoyen(), commune.isMostImportant());
+                            row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 10px; -fx-border-color: #d3d3d3; -fx-border-radius: 10px;");
                             setGraphic(row);
                         }
                     }
@@ -125,13 +162,18 @@ public class MainPage extends Application {
     private HBox createResultRow(String cityName, float priceM2, float averagePrice, boolean isAvailable) {
         HBox row = new HBox(10);
         row.setPadding(new Insets(10));
-        row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 10; -fx-border-color: #d3d3d3; -fx-border-radius: 10;");
 
         Label cityLabel = new Label(cityName);
         Label priceM2Label = new Label("Prix m² " + priceM2 + "€");
         Label averagePriceLabel = new Label("Prix moyen " + averagePrice + "€");
         Label availableLabel = new Label(isAvailable ? "Oui" : "Non");
         Button detailsButton = new Button("Voir plus");
+        detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
+
+        cityLabel.setStyle("-fx-text-fill: #333;");
+        priceM2Label.setStyle("-fx-text-fill: #333;");
+        averagePriceLabel.setStyle("-fx-text-fill: #333;");
+        availableLabel.setStyle("-fx-text-fill: #333;");
 
         row.getChildren().addAll(cityLabel, priceM2Label, averagePriceLabel, availableLabel, detailsButton);
         return row;
@@ -150,7 +192,7 @@ public class MainPage extends Application {
         System.out.println("Updating ListView with " + communes.size() + " communes.");
         this.communeListView.getItems().clear();
         this.communeListView.getItems().addAll(communes);
-    
+
         // Redéfinir la CellFactory pour s'assurer qu'elle est appliquée
         communeListView.setCellFactory(new Callback<ListView<Commune>, ListCell<Commune>>() {
             @Override
@@ -161,6 +203,7 @@ public class MainPage extends Application {
                         super.updateItem(commune, empty);
                         if (commune != null) {
                             HBox row = createResultRow(commune.getNomCommune(), commune.getPrixM2Moyen(), commune.getPrixMoyen(), commune.isMostImportant());
+                            row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 10px; -fx-border-color: #d3d3d3; -fx-border-radius: 10px;");
                             setGraphic(row);
                         } else {
                             setGraphic(null);
@@ -169,22 +212,13 @@ public class MainPage extends Application {
                 };
             }
         });
-    
-        
-        
-        // Pour le débogage
-        //System.out.println("\033[H\033[2J");
-        //for (Commune commune : communes) {
-        //    System.out.println(commune.getNomCommune());
-        //}
     }
-    
 
     public TextField getSearchField() {
         return this.searchField;
     }
 
-    public Label getNumberOfRow(){
-        return(this.resultsLabel);
+    public Label getNumberOfRow() {
+        return this.resultsLabel;
     }
 }
