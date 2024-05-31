@@ -34,8 +34,6 @@ public class ConnectionPage extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        this.controller = new Controller();
-
         // Image pour le logo
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
         logo.setFitWidth(100);

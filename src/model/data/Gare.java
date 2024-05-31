@@ -211,7 +211,7 @@ public class Gare {
     */
     private int validateNonNegativeValueInt(int value, String fieldName) {
         int ret = -1;
-        if (value >= 0) {
+        if (value >= 0 || value == -1) {
             ret = value;
         } else {
             throw new IllegalArgumentException(fieldName + " invalide : " + value);

@@ -8,6 +8,7 @@ import java.util.Timer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import dao.CommuneService;
 import dao.UserService;
@@ -122,7 +123,21 @@ public class Controller implements EventHandler<ActionEvent> {
             String searchText = this.mainPage.getSearchField().getText().trim();
             handleSearchEvent(searchText);
         }
+
+        if(e.getSource() == this.mainPage.getImageUserIcon()){
+            System.out.println("aaaa");
+        }
     }
+
+    public void connectionClicked(){
+        try {
+            Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
+            this.connectionPage.start(stage);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
 
     /**
     * Handle action of the Connection Page. 
@@ -169,6 +184,20 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
                     this.connectionPage.getErrorMessageLabel().setText("Connexion Reussi !");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
+
+                    
+                    CustomAlert.showAlert("Connexion Reussi", "Vous vous etes connecté avec succès. Redirection dans 3 secondes");
+
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Platform.runLater(() -> {
+                                    Stage stage = (Stage) connectionPage.getBtnLogin().getScene().getWindow();
+                                    mainPage.start(stage);
+                                });
+                            }
+                        }, 3000);
 
                     //CONNEXION A LA PAGE PRINCIPAL
 
