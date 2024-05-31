@@ -2,8 +2,6 @@ package data;
 
 import java.util.ArrayList;
 import data.exceptions.*;
-import exceptions.InvalidCommuneIdException;
-import exceptions.InvalidCommuneNameException;
 
 /**
 * Class who represents a commune with different parameters, we can manipulate it with different method. 
@@ -282,13 +280,12 @@ public class Commune {
  * Sets the ID of the commune.
  *
  * @param idCommune The ID of the commune.
- * @throws InvalidCommuneIdException If the provided ID is invalid.
  */
 public void setIdCommune(int idCommune) {
     if (isValidIdCommune(idCommune)) {
         this.idCommune = idCommune;
     } else {
-        throw new InvalidCommuneIdException("Invalid commune ID: " + idCommune);
+        throw new InvalidIdException("Invalid commune ID: " + idCommune);
     }
 }
 
@@ -296,13 +293,12 @@ public void setIdCommune(int idCommune) {
  * Sets the name of the commune.
  *
  * @param nomCommune The name of the commune.
- * @throws InvalidCommuneNameException If the provided name is invalid.
  */
 public void setNomCommune(String nomCommune) {
     if (nomCommune != null && !nomCommune.trim().isEmpty()) {
         this.nomCommune = nomCommune;
     } else {
-        throw new InvalidCommuneNameException("Invalid commune name: " + nomCommune);
+        throw new InvalidNameException("Invalid commune name: " + nomCommune);
     }
 }
 
