@@ -100,7 +100,12 @@ public class Departement {
      * @param idDep the new unique id of the department
      */
     public void setIdDep(int idDep) {
-        validateNonNegativeValueInt(idDep,"id Départment");
+        if(idDep != 29 || idDep != 35 || idDep != 22 || idDep != 56){
+            this.idDep = idDep;
+        } else {
+            throw new IllegalArgumentException("The id of Department isn't correct");
+        }
+        
     }
 
     /**
@@ -189,7 +194,7 @@ public class Departement {
     */
     private double validateNonNegativeValueDouble(double value, String fieldName) {
         double ret = -1;
-        if (value >= 0) {
+        if (value >= 0 || value == -1) {
             ret = value;
         } else {
             throw new IllegalArgumentException(fieldName + " invalide : " + value);
@@ -208,7 +213,7 @@ public class Departement {
     */
     private int validateNonNegativeValueInt(int value, String fieldName) {
         int ret = -1;
-        if (value >= 0) {
+        if (value >= 0 || value == -1) {
             ret = value;
         } else {
             throw new RuntimeException(fieldName + " invalide : " + value);
