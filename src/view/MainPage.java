@@ -12,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -35,6 +34,9 @@ public class MainPage extends Application {
     public void start(Stage primaryStage) {
         this.controller = new Controller(this);
 
+        // Initialiser resultsLabel
+        this.resultsLabel = new Label();
+        
         // Image pour le logo
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
         logo.setFitWidth(50);
@@ -59,11 +61,11 @@ public class MainPage extends Application {
             System.out.println("search.png not found");
         }
 
-        Region SpacerBar = new Region();
-        SpacerBar.setPrefWidth(60);
+        Region spacerBar = new Region();
+        spacerBar.setPrefWidth(60);
 
         if (searchIcon != null) {
-            searchBox.getChildren().addAll(SpacerBar,searchIcon,this.searchField);
+            searchBox.getChildren().addAll(spacerBar, searchIcon, this.searchField);
         } else {
             searchBox.getChildren().add(this.searchField);
         }
@@ -106,35 +108,21 @@ public class MainPage extends Application {
         // Combiner la barre de recherche et la barre d'utilisateur
         HBox topBar = new HBox(10);
         topBar.setStyle("-fx-padding: 10; -fx-background-color: #000000; -fx-text-fill: #fff;");
-        topBar.getChildren().addAll(logo,searchBox, spacer, userBox);
-
-        // Résultats
-        HBox resultsBox = new HBox(10);
-        resultsBox.setPadding(new Insets(10));
-        resultsBox.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-background-radius: 10px;");
-        this.resultsLabel = new Label();
-        resultsLabel.setStyle("-fx-text-fill: #333;");
-        
-        // Region to push the filter button to the right
-        Region spacerFilter = new Region();
-        HBox.setHgrow(spacerFilter, Priority.ALWAYS);
-
-        resultsBox.getChildren().addAll(resultsLabel, spacerFilter, filterButton);
+        topBar.getChildren().addAll(logo, searchBox, spacer, userBox);
 
         // ListView pour afficher les communes
         communeListView.setPrefSize(400, 400);
 
         // Custom cell factory to display Commune objects
-        communeListView.setCellFactory(new Callback<ListView<Commune>, ListCell<Commune>>() {
+        communeListView.setCellFactory(new Callback<>() {
             @Override
             public ListCell<Commune> call(ListView<Commune> listView) {
-                return new ListCell<Commune>() {
+                return new ListCell<>() {
                     @Override
                     protected void updateItem(Commune commune, boolean empty) {
                         super.updateItem(commune, empty);
                         if (commune != null) {
-                            HBox row = createResultRow(commune.getNomCommune(), commune.getPrixM2Moyen(), commune.getPrixMoyen(), commune.isMostImportant());
-                            row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 10px; -fx-border-color: #d3d3d3; -fx-border-radius: 10px;");
+                            HBox row = createResultRow(commune);
                             setGraphic(row);
                         }
                     }
@@ -146,7 +134,7 @@ public class MainPage extends Application {
         loadCommunes();
 
         VBox mainBox = new VBox(10);
-        mainBox.getChildren().addAll(topBar, resultsBox, communeListView);
+        mainBox.getChildren().addAll(topBar, resultsLabel, communeListView);
 
         Scene scene = new Scene(mainBox, 800, 600);
 
@@ -165,14 +153,14 @@ public class MainPage extends Application {
         });
     }
 
-    private HBox createResultRow(String cityName, double d, double e, boolean isAvailable) {
+    private HBox createResultRow(Commune commune) {
         HBox row = new HBox(10);
         row.setPadding(new Insets(10));
 
-        Label cityLabel = new Label(cityName);
-        Label priceM2Label = new Label("Prix m² " + d + "€");
-        Label averagePriceLabel = new Label("Prix moyen " + e + "€");
-        Label availableLabel = new Label(isAvailable ? "Oui" : "Non");
+        Label cityLabel = new Label(commune.getNomCommune());
+        Label priceM2Label = new Label("Prix m² " + commune.getPrixM2Moyen() + "€");
+        Label averagePriceLabel = new Label("Prix moyen " + commune.getPrixMoyen() + "€");
+        Label availableLabel = new Label(commune.isMostImportant() ? "Oui" : "Non");
         Button detailsButton = new Button("Voir plus");
         detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
 
@@ -180,6 +168,11 @@ public class MainPage extends Application {
         priceM2Label.setStyle("-fx-text-fill: #333;");
         averagePriceLabel.setStyle("-fx-text-fill: #333;");
         availableLabel.setStyle("-fx-text-fill: #333;");
+
+        // Ajouter un gestionnaire d'événements au bouton "Voir plus"
+        detailsButton.setOnAction(event -> {
+            this.controller.showCommuneDetails(commune); // Appeler une méthode du contrôleur
+        });
 
         row.getChildren().addAll(cityLabel, priceM2Label, averagePriceLabel, availableLabel, detailsButton);
         return row;
@@ -208,7 +201,7 @@ public class MainPage extends Application {
                     protected void updateItem(Commune commune, boolean empty) {
                         super.updateItem(commune, empty);
                         if (commune != null) {
-                            HBox row = createResultRow(commune.getNomCommune(), commune.getPrixM2Moyen(), commune.getPrixMoyen(), commune.isMostImportant());
+                            HBox row = createResultRow(commune);
                             row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 10px; -fx-border-color: #d3d3d3; -fx-border-radius: 10px;");
                             setGraphic(row);
                         } else {

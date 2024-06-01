@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import dao.CommuneService;
 import dao.UserService;
 import data.Commune;
+import view.CommuneDetailsPage;
 import view.ConnectionPage;
 import view.InscriptionPage;
 import view.MainPage;
@@ -124,8 +125,13 @@ public class Controller implements EventHandler<ActionEvent> {
             handleSearchEvent(searchText);
         }
 
-        if(e.getSource() == this.mainPage.getImageUserIcon()){
-            System.out.println("aaaa");
+    }
+
+    public void showCommuneDetails(Commune commune){
+        try {
+            CommuneDetailsPage.showCommune(commune);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
