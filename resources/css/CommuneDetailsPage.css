@@ -1,0 +1,34 @@
+.name-label {
+    -fx-font-size: 24pt;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow( one-pass-box , black , 8 , 0.0 , 2 , 0 );
+}
+
+.detail-label {
+    -fx-font-size: 12pt;  /* Reduced font size */
+    -fx-text-fill: black;
+}
+
+.section-label {
+    -fx-font-size: 18pt;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 0;
+}
+
+.neighbor-button {
+    -fx-background-color: #4CAF50; 
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;  /* Reduced padding */
+    -fx-font-size: 10pt;  /* Reduced font size */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.close-button {
+    -fx-background-color: #ff4c4c; 
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}

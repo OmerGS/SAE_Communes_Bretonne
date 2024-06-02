@@ -20,6 +20,7 @@ public class CommuneService {
     public List<Commune> getAllCommunes() throws SQLException {
         Map<Integer, Commune> communes = new HashMap<>();
 
+        // Étape 1 : Récupérer toutes les communes et leurs données
         String query = "SELECT c.idCommune, c.nomCommune, c.leDepartement, " +
                "da.nbMaison, da.nbAppart, da.prixMoyen, da.prixM2Moyen, da.SurfaceMoy, " +
                "da.depensesCulturellesTotales, da.budgetTotal, da.population, " +
@@ -53,7 +54,7 @@ public class CommuneService {
                 int population = resultSet.getInt("population");
 
                 try {
-                    Commune commune = new Commune(idCommune, nomCommune, nbMaison, nbAppart, prixMoyen, 
+                    Commune commune = new Commune(idCommune, nomCommune, nbMaison, nbAppart, prixMoyen,
                                                   prixM2Moyen, surfaceMoyenne, depensesCulturellesTotales, budgetTotal, population, departement);
                     communes.put(idCommune, commune);
                 } catch (InvalidCommuneIdException | InvalidCommuneNameException e) {
@@ -62,8 +63,10 @@ public class CommuneService {
             }
         }
 
-        
+        // Étape 2 : Récupérer toutes les relations de voisinage
         String voisinageQuery = "SELECT commune, communeVoisine FROM Voisinage";
+        List<int[]> voisinages = new ArrayList<>();
+
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(voisinageQuery);
              ResultSet resultSet = statement.executeQuery()) {
@@ -71,13 +74,16 @@ public class CommuneService {
             while (resultSet.next()) {
                 int idCommune = resultSet.getInt("commune");
                 int idCommuneVoisine = resultSet.getInt("communeVoisine");
+                voisinages.add(new int[]{idCommune, idCommuneVoisine});
+            }
+        }
 
-                Commune commune = communes.get(idCommune);
-                Commune communeVoisine = communes.get(idCommuneVoisine);
+        for (int[] voisinage : voisinages) {
+            Commune commune = communes.get(voisinage[0]);
+            Commune communeVoisine = communes.get(voisinage[1]);
 
-                if (commune != null && communeVoisine != null) {
-                    commune.addVoisine(communeVoisine);
-                }
+            if (commune != null && communeVoisine != null) {
+                commune.addVoisine(communeVoisine);
             }
         }
 
