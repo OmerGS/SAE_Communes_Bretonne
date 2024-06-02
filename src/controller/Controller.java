@@ -436,17 +436,19 @@ public class Controller implements EventHandler<ActionEvent> {
      * @return Une liste de noms de communes.
      */
     public ArrayList<Commune> getCommunes() {
-        this.communes = new ArrayList<Commune>();
+        this.communes = new ArrayList<>();
         CommuneService communeService = new CommuneService();
 
         try {
-            this.communes = (ArrayList) communeService.getAllCommunes();
-            this.mainPage.getNumberOfRow().setText(this.communes.size() + " resultat");
+            List<Commune> communesList = communeService.getAllCommunes();
+            this.communes = new ArrayList<>(communesList);
+            this.mainPage.getNumberOfRow().setText(this.communes.size() + " résultat");
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return communes;
     }
+
 
     public ArrayList<Commune> getFilteredCommunes(String searchText) {
         ArrayList<Commune> allCommunes = this.communes;
