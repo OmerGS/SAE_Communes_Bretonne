@@ -169,9 +169,9 @@ public class MainPage extends Application {
         averagePriceLabel.setStyle("-fx-text-fill: #333;");
         availableLabel.setStyle("-fx-text-fill: #333;");
 
-        // Ajouter un gestionnaire d'événements au bouton "Voir plus"
+
         detailsButton.setOnAction(event -> {
-            this.controller.showCommuneDetails(commune); // Appeler une méthode du contrôleur
+            this.controller.showCommuneDetails(commune);
         });
 
         row.getChildren().addAll(cityLabel, priceM2Label, averagePriceLabel, availableLabel, detailsButton);

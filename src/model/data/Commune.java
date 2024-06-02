@@ -269,139 +269,139 @@ public class Commune {
      * @return The list of neighboring communes.
      */
     public ArrayList<Commune> getCommunesVoisines() {
-        return communesVoisines;
+        return this.communesVoisines;
     }
 
 
 
 
-/* ------ Setters ------ */
+    /* ------ Setters ------ */
 
-/**
- * Sets the ID of the commune.
- *
- * @param idCommune The ID of the commune.
- */
-public void setIdCommune(int idCommune) {
-    if (isValidIdCommune(idCommune)) {
-        this.idCommune = idCommune;
-    } else {
-        throw new RuntimeException("Invalid commune ID: " + idCommune);
-    }
-}
-
-/**
- * Sets the name of the commune.
- *
- * @param nomCommune The name of the commune.
- */
-public void setNomCommune(String nomCommune) {
-    if (nomCommune != null && !nomCommune.trim().isEmpty()) {
-        this.nomCommune = nomCommune;
-    } else {
-        throw new RuntimeException("Invalid commune name: " + nomCommune);
-    }
-}
-
-/**
- * Sets the number of houses in the commune.
- *
- * @param nbMaison The number of houses.
- * @throws InvalidValueException If the number of houses is negative.
- */
-public void setNbMaison(int nbMaison) {
-    this.nbMaison = validateNonNegativeValueInt(nbMaison, "Number of houses");
-}
-
-/**
- * Sets the number of apartments in the commune.
- *
- * @param nbAppart The number of apartments.
- * @throws InvalidValueException If the number of apartments is negative.
- */
-public void setNbAppart(int nbAppart) {
-    this.nbAppart = validateNonNegativeValueInt(nbAppart, "Number of apartments");
-}
-
-/**
- * Sets the average price of properties in the commune.
- *
- * @param prixMoyen The average price.
- * @throws InvalidValueException If the average price is negative.
- */
-public void setPrixMoyen(double prixMoyen) {
-    this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Average price");
-}
-
-/**
- * Sets the average price per square meter in the commune.
- *
- * @param prixM2Moyen The average price per square meter.
- * @throws InvalidValueException If the average price per square meter is negative.
- */
-public void setPrixM2Moyen(double prixM2Moyen) {
-    this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Average price per square meter");
-}
-
-/**
- * Sets the average surface area in the commune.
- *
- * @param surfaceMoy The average surface area.
- * @throws InvalidValueException If the average surface area is negative.
- */
-public void setSurfaceMoy(double surfaceMoy) {
-    this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Average surface area");
-}
-
-/**
- * Sets the total cultural expenses in the commune.
- *
- * @param depCulturellesTotales The total cultural expenses.
- * @throws InvalidValueException If the total cultural expenses are negative.
- */
-public void setDepCulturellesTotales(double depCulturellesTotales) {
-    this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Total cultural expenses");
-}
-
-/**
- * Sets the total budget of the commune.
- *
- * @param budgetTotal The total budget.
- * @throws InvalidValueException If the total budget is negative.
- */
-public void setBudgetTotal(double budgetTotal) {
-    this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Total budget");
-}
-
-/**
- * Sets the population of the commune.
- *
- * @param population The population.
- * @throws InvalidValueException If the population is negative.
- */
-public void setPopulation(int population) {
-    this.population = validateNonNegativeValueInt(population, "Population");
-}
-
-/**
- * Sets the department to which the commune belongs.
- *
- * @param departement The department.
- * @throws IllegalArgumentException If the provided department code is invalid.
- */
-public void setDepartement(Departement departement) {
-    String departementString = String.valueOf(departement);
-    if (departementString.length() == 2) {
-        String prefix = departementString.substring(0, 2);
-        if (prefix.equals("29") || prefix.equals("22") || prefix.equals("56") || prefix.equals("35")) {
-            this.departement = departement;
+    /**
+     * Sets the ID of the commune.
+     *
+     * @param idCommune The ID of the commune.
+     */
+    public void setIdCommune(int idCommune) {
+        if (isValidIdCommune(idCommune)) {
+            this.idCommune = idCommune;
         } else {
-            throw new IllegalArgumentException("The department code must be 29, 22, 56, or 35.");
+            throw new RuntimeException("Invalid commune ID: " + idCommune);
         }
-    } else {
-        throw new IllegalArgumentException("The department code must be a two-digit number.");
     }
-}
+
+    /**
+     * Sets the name of the commune.
+     *
+     * @param nomCommune The name of the commune.
+     */
+    public void setNomCommune(String nomCommune) {
+        if (nomCommune != null && !nomCommune.trim().isEmpty()) {
+            this.nomCommune = nomCommune;
+        } else {
+            throw new RuntimeException("Invalid commune name: " + nomCommune);
+        }
+    }
+
+    /**
+     * Sets the number of houses in the commune.
+     *
+     * @param nbMaison The number of houses.
+     * @throws InvalidValueException If the number of houses is negative.
+     */
+    public void setNbMaison(int nbMaison) {
+        this.nbMaison = validateNonNegativeValueInt(nbMaison, "Number of houses");
+    }
+
+    /**
+     * Sets the number of apartments in the commune.
+     *
+     * @param nbAppart The number of apartments.
+     * @throws InvalidValueException If the number of apartments is negative.
+     */
+    public void setNbAppart(int nbAppart) {
+        this.nbAppart = validateNonNegativeValueInt(nbAppart, "Number of apartments");
+    }
+
+    /**
+     * Sets the average price of properties in the commune.
+     *
+     * @param prixMoyen The average price.
+     * @throws InvalidValueException If the average price is negative.
+     */
+    public void setPrixMoyen(double prixMoyen) {
+        this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Average price");
+    }
+
+    /**
+     * Sets the average price per square meter in the commune.
+     *
+     * @param prixM2Moyen The average price per square meter.
+     * @throws InvalidValueException If the average price per square meter is negative.
+     */
+    public void setPrixM2Moyen(double prixM2Moyen) {
+        this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Average price per square meter");
+    }
+
+    /**
+     * Sets the average surface area in the commune.
+     *
+     * @param surfaceMoy The average surface area.
+     * @throws InvalidValueException If the average surface area is negative.
+     */
+    public void setSurfaceMoy(double surfaceMoy) {
+        this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Average surface area");
+    }
+
+    /**
+     * Sets the total cultural expenses in the commune.
+     *
+     * @param depCulturellesTotales The total cultural expenses.
+     * @throws InvalidValueException If the total cultural expenses are negative.
+     */
+    public void setDepCulturellesTotales(double depCulturellesTotales) {
+        this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Total cultural expenses");
+    }
+
+    /**
+     * Sets the total budget of the commune.
+     *
+     * @param budgetTotal The total budget.
+     * @throws InvalidValueException If the total budget is negative.
+     */
+    public void setBudgetTotal(double budgetTotal) {
+        this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Total budget");
+    }
+
+    /**
+     * Sets the population of the commune.
+     *
+     * @param population The population.
+     * @throws InvalidValueException If the population is negative.
+     */
+    public void setPopulation(int population) {
+        this.population = validateNonNegativeValueInt(population, "Population");
+    }
+
+    /**
+     * Sets the department to which the commune belongs.
+     *
+     * @param departement The department.
+     * @throws IllegalArgumentException If the provided department code is invalid.
+     */
+    public void setDepartement(Departement departement) {
+        String departementString = String.valueOf(departement);
+        if (departementString.length() == 2) {
+            String prefix = departementString.substring(0, 2);
+            if (prefix.equals("29") || prefix.equals("22") || prefix.equals("56") || prefix.equals("35")) {
+                this.departement = departement;
+            } else {
+                throw new IllegalArgumentException("The department code must be 29, 22, 56, or 35.");
+            }
+        } else {
+            throw new IllegalArgumentException("The department code must be a two-digit number.");
+        }
+    }
 
     
 
@@ -409,7 +409,7 @@ public void setDepartement(Departement departement) {
 
 
 
-/* ------ Other Method ------ */
+    /* ------ Other Method ------ */
 
     @Override
     public String toString() {

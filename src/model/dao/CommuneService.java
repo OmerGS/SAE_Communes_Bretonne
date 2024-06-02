@@ -10,14 +10,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommuneService {
 
     // Méthode pour récupérer toutes les communes depuis la base de données
     public List<Commune> getAllCommunes() throws SQLException {
-        List<Commune> communes = new ArrayList<>();
-        
+        Map<Integer, Commune> communes = new HashMap<>();
+
         String query = "SELECT c.idCommune, c.nomCommune, c.leDepartement, " +
                "da.nbMaison, da.nbAppart, da.prixMoyen, da.prixM2Moyen, da.SurfaceMoy, " +
                "da.depensesCulturellesTotales, da.budgetTotal, da.population, " +
@@ -25,9 +27,7 @@ public class CommuneService {
                "FROM Commune c " +
                "JOIN DonneesAnnuelles da ON c.idCommune = da.laCommune " +
                "JOIN Departement d ON c.leDepartement = d.idDep " +
-               "WHERE da.lAnnee = ( " + 
-               "SELECT MAX(lAnnee) FROM DonneesAnnuelles)";
-
+               "WHERE da.lAnnee = (SELECT MAX(lAnnee) FROM DonneesAnnuelles)";
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
@@ -55,12 +55,32 @@ public class CommuneService {
                 try {
                     Commune commune = new Commune(idCommune, nomCommune, nbMaison, nbAppart, prixMoyen, 
                                                   prixM2Moyen, surfaceMoyenne, depensesCulturellesTotales, budgetTotal, population, departement);
-                    communes.add(commune);
+                    communes.put(idCommune, commune);
                 } catch (InvalidCommuneIdException | InvalidCommuneNameException e) {
                     e.printStackTrace();
                 }
             }
         }
-        return communes;
+
+        
+        String voisinageQuery = "SELECT commune, communeVoisine FROM Voisinage";
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(voisinageQuery);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int idCommune = resultSet.getInt("commune");
+                int idCommuneVoisine = resultSet.getInt("communeVoisine");
+
+                Commune commune = communes.get(idCommune);
+                Commune communeVoisine = communes.get(idCommuneVoisine);
+
+                if (commune != null && communeVoisine != null) {
+                    commune.addVoisine(communeVoisine);
+                }
+            }
+        }
+
+        return new ArrayList<>(communes.values());
     }
 }

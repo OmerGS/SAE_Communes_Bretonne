@@ -6,7 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,16 +14,16 @@ import java.util.ArrayList;
 
 /**
  * CommuneDetailsPage is a class that displays the details of a specific commune.
+ * @autor O.Gunes
  */
 public class CommuneDetailsPage {
     private CommuneDetailsPage() {
-        // Constructor privé pour éviter l'instanciation
     }
 
     /**
-     * This method displays a window with the details of the commune and its neighbors
+     * This method displays a window with the details of the commune and its neighbors.
      *
-     * @param commune The commune whose details are to be displayed
+     * @param commune The commune whose details are to be displayed.
      */
     public static void showCommune(Commune commune) {
         Stage detailsStage = new Stage();
