@@ -67,10 +67,19 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     private String codeString;
 
+    /**
+    * An Instance of MainPage page. 
+    */
     private MainPage mainPage;
 
+    /**
+    * An Instance of TrouverCheminCommune page. 
+    */
     private TrouverCheminCommune trouverCheminCommune;
 
+    /**
+    * ArrayList which contain commune. 
+    */
     private ArrayList<Commune> communes;
 
     /**
@@ -100,6 +109,17 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
 
+
+
+
+
+
+
+
+    /* ---------------------------------- */
+
+
+
     /**
     * Method which check if an event is realized.
     *
@@ -126,6 +146,43 @@ public class Controller implements EventHandler<ActionEvent> {
         handleTrouverCheminCommuneActions(e);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- MAINPAGE METHOD
+
+
+
+    /**
+    * Handle the MainPage actions. 
+    * @param e Event.
+    */
     private void handleMainPageActions(ActionEvent e) {
         if(e.getSource() == this.mainPage.getSearchField()){
             String searchText = this.mainPage.getSearchField().getText().trim();
@@ -140,9 +197,22 @@ public class Controller implements EventHandler<ActionEvent> {
                 ex.printStackTrace();
             }
         }
-
     }
 
+    /**
+    * Allow to search a commune and update the view. 
+    * @param searchText The Name of the commune.
+    */
+    public void handleSearchEvent(String searchText) {
+        List<Commune> filteredCommunes = getFilteredCommunes(searchText);
+        this.mainPage.updateCommunesListView(filteredCommunes);
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+    }   
+
+    /**
+    * Open a new page with the details of the commune.
+    * @param commune
+    */
     public void showCommuneDetails(Commune commune){
         try {
             CommuneDetailsPage.showCommune(commune);
@@ -151,16 +221,61 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
-    public void connectionClicked(){
-        try {
-            Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
-            this.connectionPage.start(stage);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+    /**
+    * Filter the commune List with the commune we search
+    * @param searchText the name of the commune we search.
+    * @return An ArrayList of commune.
+    */
+    public ArrayList<Commune> getFilteredCommunes(String searchText) {
+        ArrayList<Commune> allCommunes = this.communes;
+        ArrayList<Commune> filteredCommunes = new ArrayList<>();
+        
+        
+        String lowerCaseSearchText = searchText.toLowerCase();
+        for (Commune commune : allCommunes) {
+            if (commune.getNomCommune().toLowerCase().startsWith(lowerCaseSearchText)) {
+                filteredCommunes.add(commune);
+            }
         }
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+        return filteredCommunes;
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- TROUVERCHEMINCOMMUNE METHOD
+
+
+    /**
+    * Handle the action of TrouverCheminCommune. 
+    * @param e Event.
+    */
     private void handleTrouverCheminCommuneActions(ActionEvent e){
         if(e.getSource() == this.trouverCheminCommune.getButton()){
             String firstCommuneText = this.trouverCheminCommune.getStartCommuneName().getText();
@@ -170,7 +285,12 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
-
+    /**
+    * Return a Commune for a String which correspond of commune name.
+    * @param communeName The String of the name of the commune
+    * @return A commune if the commune with the String name exists
+    * @throws SQLException 
+    */
     public Commune getCommuneByName(String communeName) throws SQLException {
         CommuneService communeService = new CommuneService();
 
@@ -183,6 +303,11 @@ public class Controller implements EventHandler<ActionEvent> {
         return null;
     }
 
+    /**
+    * Allow to found the path between two communes. 
+    * @param startCommuneName The names of the first commune.
+    * @param endCommuneName The name of the destination commune.
+    */
     public void findPath(String startCommuneName, String endCommuneName) {
         CommuneService service = new CommuneService();
 
@@ -214,6 +339,28 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- CONNECTIONPAGE METHOD
 
 
     /**
@@ -288,6 +435,28 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- INSCRIPTIONPAGE METHOD
+
     /**
     * Handle the action of the Inscription Page. 
     * @param e The Action Event
@@ -338,6 +507,26 @@ public class Controller implements EventHandler<ActionEvent> {
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- FORGOTPASSWORD METHOD
+
 
     /**
     * Handle the action of ForgotPassword page.
@@ -404,6 +593,39 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     /**
+    * Private method, which change the state of the btnLogin present in forgotPassword page.
+    */
+    private void updateButtonState() {
+        if (this.codeSent) {
+            this.forgotPassword.getBtnLogin().setText("V\u00e9rifier");
+            this.forgotPassword.getCodeField().setDisable(false);
+        } else {
+            this.forgotPassword.getBtnLogin().setText("Recevoir Code");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- RESETPASSWORD METHOD
+
+    /**
     * Handle the action of ResetPassword page. 
     * @param e The Action Event
     */
@@ -468,17 +690,33 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+    
+
+     
+
+
+    
+
+
+
+
+
+
+
+
+
+    //! ---------------- MULTICLASS METHOD
 
 
     /**
-    * Private method, which change the state of the btnLogin present in forgotPassword page.
+    * Open the login panel when the image of account is clicked.
     */
-    private void updateButtonState() {
-        if (this.codeSent) {
-            this.forgotPassword.getBtnLogin().setText("V\u00e9rifier");
-            this.forgotPassword.getCodeField().setDisable(false);
-        } else {
-            this.forgotPassword.getBtnLogin().setText("Recevoir Code");
+    public void connectionClicked(){
+        try {
+            Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
+            this.connectionPage.start(stage);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -494,13 +732,6 @@ public class Controller implements EventHandler<ActionEvent> {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-
-    public void handleSearchEvent(String searchText) {
-        List<Commune> filteredCommunes = getFilteredCommunes(searchText);
-        this.mainPage.updateCommunesListView(filteredCommunes);
-        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
-    }    
-
 
     /**
      * Méthode pour récupérer la liste des communes depuis la base de données.
@@ -520,19 +751,4 @@ public class Controller implements EventHandler<ActionEvent> {
         return communes;
     }
 
-
-    public ArrayList<Commune> getFilteredCommunes(String searchText) {
-        ArrayList<Commune> allCommunes = this.communes;
-        ArrayList<Commune> filteredCommunes = new ArrayList<>();
-        
-        
-        String lowerCaseSearchText = searchText.toLowerCase();
-        for (Commune commune : allCommunes) {
-            if (commune.getNomCommune().toLowerCase().startsWith(lowerCaseSearchText)) {
-                filteredCommunes.add(commune);
-            }
-        }
-        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
-        return filteredCommunes;
-    }
 }
