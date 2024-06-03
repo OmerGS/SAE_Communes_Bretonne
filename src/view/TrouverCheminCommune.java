@@ -11,6 +11,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+/**
+* Find the path between two commune in Brittany. (found A path not the fastest path.)
+* @author O.Gunes 
+*/
 public class TrouverCheminCommune extends Application {
     private TextField startCommuneField;
     private TextField endCommuneField;
