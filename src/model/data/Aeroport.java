@@ -10,7 +10,7 @@ package data;
 public class Aeroport {
     private String nom;
     private String adresse;
-    private Commune commune;  // Many-to-one relationship with Commune
+    private Departement departement;
 
     /**
      * Constructs a new Aeroport with the specified name, address, and commune.
@@ -21,10 +21,10 @@ public class Aeroport {
 
 
      */
-    public Aeroport(String nom, String adresse, Commune commune) {
+    public Aeroport(String nom, String adresse, Departement departement) {
         setNom(nom);
         setAdresse(adresse);
-        setCommune(commune);
+        this.departement = departement;
     }
 
     /* ----- Getters ----- */
@@ -77,23 +77,12 @@ public class Aeroport {
      *
      * @return the commune associated with the airport
      */
-    public Commune getCommune() {
-        return commune;
+    public Departement getDepartement() {
+        return departement;
     }
 
-    /**
-     * Sets the commune associated with the airport.
-     *
-     * @param commune the new commune associated with the airport
-     * @throws InvalidCommuneIdException if the commune ID is not valid
-     */
-    public void setCommune(Commune commune){
-        if (isValidIdCommune(commune.getIdCommune())) {
-            this.commune = commune;
-        } else {
-            throw new RuntimeException("Invalid Commune ID: " + commune.getIdCommune());
-        }
-    }
+    
+    
 
     /* ----- Other Methods ----- */
 
@@ -104,7 +93,7 @@ public class Aeroport {
      */
     @Override
     public String toString() {
-        return "Aeroport [nom=" + nom + ", adresse=" + adresse + "]";
+        return "Aeroport [nom=" + nom + ", adresse=" + adresse + "departement "+departement +"]";
     }
 
     /**

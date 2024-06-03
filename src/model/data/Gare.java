@@ -44,11 +44,11 @@ public class Gare {
      * @throws InvalidIdException   if the id of the commune is invalid
      */
     public Gare(int codeGare, String nomGare, boolean estFret, boolean estVoyageur, Commune commune){
-        setCodeGare(codeGare);
-        setNomGare(nomGare);
-        setEstFret(estFret);
-        setEstVoyageur(estVoyageur);
-        setCommune(commune);
+        this.codeGare = codeGare;
+        this.nomGare = nomGare;
+        this.estFret = estFret;
+        this.estVoyageur = estVoyageur;
+        this.commune = commune;
     }
 
     /* ----- Getters ----- */
@@ -106,7 +106,7 @@ public class Gare {
      * @param codeGare the new unique code of the train station
      */
     public void setCodeGare(int codeGare) {
-        validateNonNegativeValueInt(codeGare,"Code gare");
+        this.codeGare = codeGare;
     }
 
     /**
@@ -162,7 +162,7 @@ public class Gare {
      */
     @Override
     public String toString() {
-        return "Gare [codeGare=" + codeGare + ", nomGare=" + nomGare + ", estFret=" + estFret + ", estVoyageur=" + estVoyageur + "]";
+        return "Gare [codeGare=" + codeGare + ", nomGare=" + nomGare + ", estFret=" + estFret + ", estVoyageur=" + estVoyageur + "commune" + commune + "]";
     }
 
     /**
@@ -211,15 +211,11 @@ public class Gare {
     */
     private int validateNonNegativeValueInt(int value, String fieldName) {
         int ret = -1;
-        if (value >= 0) {
+        if (value >= 0 || value == -1) {
             ret = value;
         } else {
             throw new IllegalArgumentException(fieldName + " invalide : " + value);
         }
         return ret;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a

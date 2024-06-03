@@ -3,6 +3,8 @@ package data;
 
 import java.util.ArrayList;
 
+import javax.naming.InvalidNameException;
+
 
 /**
  * Represents a department (Departement) with a unique id, name, investment in culture for 2019,
@@ -13,7 +15,6 @@ public class Departement {
      * The unique id of the department.
      */
     private int idDep;
-<<<<<<< HEAD
 
     /**
      * The name of the department.
@@ -21,15 +22,6 @@ public class Departement {
     private String nomDep;
 
     /**
-=======
-
-    /**
-     * The name of the department.
-     */
-    private String nomDep;
-
-    /**
->>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
      * The investment in culture for 2019.
      */
     private double invesCulture2019;
@@ -45,78 +37,36 @@ public class Departement {
     private ArrayList<Aeroport> aeroports;
 
     /**
-     * Constructs a new Departement with the specified parameters.
-     *
-     * @param idDep             the unique id of the department
-     * @param nomDep            the name of the department
-     * @param invesCulture2019  the investment in culture for 2019
-     * @throws InvalidNameException       if the name of the department is null or empty
+     * Static list to keep track of all department instances.
      */
+    private static ArrayList<Departement> departements = new ArrayList<>();
+
+
     public Departement(int idDep, String nomDep, double invesCulture2019){
-        setIdDep(idDep);
+        this.idDep = idDep;
         setNomDep(nomDep);
-        setInvesCulture2019(invesCulture2019);
+        this.invesCulture2019 = invesCulture2019;
         this.communes = new ArrayList<Commune>();
         this.aeroports = new ArrayList<Aeroport>();
+        departements.add(this);
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    /* ----- Getters ----- */
 
-    /**
-     * Returns the unique id of the department.
-     *
-     * @return the unique id of the department
-     */
-=======
-    public Departement(int idDep, String nomDep) {
-        this.idDep = idDep;
-        this.nomDep = nomDep;
-    }
-
->>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
-=======
-    /* ----- Getters ----- */
-
-    /**
-     * Returns the unique id of the department.
-     *
-     * @return the unique id of the department
-     */
->>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
     public int getIdDep() {
         return this.idDep;
     }
 
-    /**
-     * Returns the name of the department.
-     *
-     * @return the name of the department
-     */
+
     public String getNomDep() {
         return this.nomDep;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
-    /**
-     * Returns the investment in culture for 2019.
-     *
-     * @return the investment in culture for 2019
-     */
+ 
     public double getInvesCulture2019() {
         return this.invesCulture2019;
-<<<<<<< HEAD
     }
 
-    /**
-     * Returns the list of communes associated with the department.
-     *
-     * @return the list of communes associated with the department
-     */
+
     public ArrayList<Commune> getCommunes() {
         return this.communes;
     }
@@ -125,89 +75,36 @@ public class Departement {
         return this.aeroports;
     }
 
-    /* ----- Setters ----- */
 
-    /**
-     * Sets the unique id of the department.
-     *
-     * @param idDep the new unique id of the department
-     */
-    public void setIdDep(int idDep) {
-        validateNonNegativeValueInt(idDep,"id Départment");
+    // Méthode statique pour obtenir un département par son identifiant
+    public static Departement getDepartementById(int idDep) {
+        for (Departement dep : departements) {
+            if (dep.getIdDep() == idDep) {
+                return dep;
+            }
+        }
+        return null;  // Retourne null si aucun département n'est trouvé avec l'identifiant donné
     }
 
-    /**
-     * Sets the name of the department.
-     *
-     * @param nomDep the new name of the department
-     * @throws InvalidNameException if the name is null or empty
-     */
+
+    public void setIdDep(int idDep) {
+        this.idDep = idDep;
+    }
+
+
     public void setNomDep(String nomDep) throws RuntimeException {
         if (nomDep == null || nomDep.trim().isEmpty()) {
             throw new RuntimeException("The name of the department cannot be null or empty.");
         }
-=======
-    public Departement getDepartement(int id) {
-        return this;
-    }
-
-    public void setNomDep(String nomDep) {
->>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
-=======
-    }
-
-    /**
-     * Returns the list of communes associated with the department.
-     *
-     * @return the list of communes associated with the department
-     */
-    public ArrayList<Commune> getCommunes() {
-        return this.communes;
-    }
-
-    public ArrayList<Aeroport> getAeroport() {
-        return this.aeroports;
-    }
-
-    /* ----- Setters ----- */
-
-    /**
-     * Sets the unique id of the department.
-     *
-     * @param idDep the new unique id of the department
-     */
-    public void setIdDep(int idDep) {
-        validateNonNegativeValueInt(idDep,"id Départment");
-    }
-
-    /**
-     * Sets the name of the department.
-     *
-     * @param nomDep the new name of the department
-     * @throws InvalidNameException if the name is null or empty
-     */
-    public void setNomDep(String nomDep) throws RuntimeException {
-        if (nomDep == null || nomDep.trim().isEmpty()) {
-            throw new RuntimeException("The name of the department cannot be null or empty.");
-        }
->>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a
         this.nomDep = nomDep;
     }
 
-    /**
-     * Sets the investment in culture for 2019.
-     *
-     * @param invesCulture2019 the new investment in culture for 2019
-     */
+
     public void setInvesCulture2019(double invesCulture2019){
-        validateNonNegativeValueDouble(invesCulture2019,"Investissement Culture 2019");
+        this.invesCulture2019 = invesCulture2019;
     }
 
-    /**
-     * Sets the list of communes associated with the department.
-     *
-     * @param communes the new list of communes associated with the department
-     */
+
     public void setCommunes(ArrayList<Commune> communes) {
         this.communes = communes;
     }
@@ -216,11 +113,6 @@ public class Departement {
         this.aeroports = aeroports;
     }
 
-    /**
-     * Adds a commune to the list of communes associated with the department.
-     *
-     * @param commune the commune to add
-     */
     public void addCommune(Commune commune) {
         this.communes.add(commune);
     }
@@ -231,23 +123,12 @@ public class Departement {
         this.aeroports.add(aeroport);
     }
 
-    /* ----- Other Methods ----- */
-
-    /**
-     * Returns a string representation of the department.
-     *
-     * @return a string representation of the department
-     */
     @Override
     public String toString() {
-        return "Departement [idDep=" + idDep + ", nomDep=" + nomDep + ", invesCulture2019=" + invesCulture2019 + "]";
+        return "Departement [idDep=" + this.idDep + ", nomDep=" + this.nomDep + ", invesCulture2019=" + this.invesCulture2019 + "]";
     }
 
-    /**
-     * Returns the total population of the department by summing the population of all its communes.
-     *
-     * @return the total population of the department
-     */
+
     public int getTotalPopulation() {
         int totalPopulation = 0;
         for (Commune commune : this.communes) {
@@ -256,48 +137,11 @@ public class Departement {
         return totalPopulation;
     }
 
-    /**
-    * Method which allow to check if parameters is >= 0. 
-    * Signature for double and fieldName
-    *
-    * @param value the parameters which we want to check
-    * @param fieldName the fieldname of global var.
-    * @return double
-    * @throws IllegalArgumentException if provided value is negative
-    */
-    private double validateNonNegativeValueDouble(double value, String fieldName) {
-        double ret = -1;
-        if (value >= 0) {
-            ret = value;
-        } else {
-            throw new IllegalArgumentException(fieldName + " invalide : " + value);
-        }
-        return ret;
-    }
-
-    /**
-    * Method which allow to check if parameters is >= 0. 
-    * Signature for int and fieldName
-    *
-    * @param value the parameters which we want to check
-    * @param fieldName the fieldname of global var.
-    * @return int
-    * @throws IllegalArgumentException if provided value is negative
-    */
-    private int validateNonNegativeValueInt(int value, String fieldName) {
-        int ret = -1;
-        if (value >= 0) {
-            ret = value;
-        } else {
-            throw new RuntimeException(fieldName + " invalide : " + value);
-        }
-        return ret;
-    }
 
 
 
-<<<<<<< HEAD
+
+
+
+
 }
-=======
-}
->>>>>>> 3184e95bfe4f4a8fa33f1a4d5e91e001638c001a

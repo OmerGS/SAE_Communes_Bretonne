@@ -74,7 +74,7 @@ public class Commune {
             throw new RuntimeException("Nom de commune invalide : " + nomCommune);
         }
 
-        if(departement != null && (departement.getIdDep() == 29 || departement.getIdDep() == 56 || departement.getIdDep() == 35 || departement.getIdDep() == 22)){
+        if(departement != null){
             this.departement= departement;
         } else {
             throw new RuntimeException("Département invalide : " + departement.getNomDep());
@@ -533,12 +533,4 @@ public void setDepartement(Departement departement) {
 
         return getDepCulturellesTotales() / getPopulation();
     }
-<<<<<<< HEAD
-
-
-
-
-
-=======
->>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
 }
