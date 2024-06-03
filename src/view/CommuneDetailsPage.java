@@ -120,6 +120,11 @@ public class CommuneDetailsPage {
         detailsStage.showAndWait();
     }
 
+    /**
+    * Create the InfoBox. 
+    * @param infoText The text of the InfoBox.
+    * @return The box.
+    */
     private static VBox createInfoBox(String infoText) {
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
