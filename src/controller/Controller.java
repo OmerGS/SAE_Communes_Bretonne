@@ -8,7 +8,7 @@ import java.util.Timer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import dao.CommuneService;
 import dao.UserService;
@@ -18,6 +18,7 @@ import view.ConnectionPage;
 import view.InscriptionPage;
 import view.MainPage;
 import view.ResetPassword;
+import view.TrouverCheminCommune;
 import view.misc.CustomAlert;
 import view.ForgotPassword;
 
@@ -68,6 +69,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private MainPage mainPage;
 
+    private TrouverCheminCommune trouverCheminCommune;
 
     private ArrayList<Commune> communes;
 
@@ -80,6 +82,7 @@ public class Controller implements EventHandler<ActionEvent> {
         this.inscriptionPage = new InscriptionPage(this);
         this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
+        this.trouverCheminCommune = new TrouverCheminCommune(this);
         this.mainPage = mainPage;
 
     }    
@@ -92,6 +95,7 @@ public class Controller implements EventHandler<ActionEvent> {
         this.inscriptionPage = new InscriptionPage(this);
         this.forgotPassword = new ForgotPassword(this);
         this.resetPassword = new ResetPassword(this);
+        this.trouverCheminCommune = new TrouverCheminCommune(this);
         this.mainPage = new MainPage();
     }
 
@@ -117,12 +121,24 @@ public class Controller implements EventHandler<ActionEvent> {
 
         //Gestion des actions de la page principal
         handleMainPageActions(e);
+
+        //Trouver Chemin
+        handleTrouverCheminCommuneActions(e);
     }
 
     private void handleMainPageActions(ActionEvent e) {
         if(e.getSource() == this.mainPage.getSearchField()){
             String searchText = this.mainPage.getSearchField().getText().trim();
             handleSearchEvent(searchText);
+        }
+
+        if(e.getSource() == this.mainPage.getButtonCheminLePlusCourt()){
+            try {
+                Stage stage = (Stage) this.mainPage.getButtonCheminLePlusCourt().getScene().getWindow();
+                this.trouverCheminCommune.start(stage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
     }
@@ -143,6 +159,61 @@ public class Controller implements EventHandler<ActionEvent> {
             System.out.println(ex.getMessage());
         }
     }
+
+
+    private void handleTrouverCheminCommuneActions(ActionEvent e){
+        if(e.getSource() == this.trouverCheminCommune.getButton()){
+            String firstCommuneText = this.trouverCheminCommune.getStartCommuneName().getText();
+            String endCommuneText = this.trouverCheminCommune.getEndCommuneName().getText();
+
+            findPath(firstCommuneText, endCommuneText);
+        }
+    }
+
+
+    public Commune getCommuneByName(String communeName) throws SQLException {
+        CommuneService communeService = new CommuneService();
+
+        List<Commune> allCommunes = communeService.getAllCommunes();
+        for (Commune commune : allCommunes) {
+            if (commune.getNomCommune().equalsIgnoreCase(communeName)) {
+                return commune;
+            }
+        }
+        return null;
+    }
+
+    public void findPath(String startCommuneName, String endCommuneName) {
+        CommuneService service = new CommuneService();
+
+        try {
+            Commune startCommune = getCommuneByName(startCommuneName);
+            Commune endCommune = getCommuneByName(endCommuneName);
+    
+            if (startCommune == null || endCommune == null) {
+                this.trouverCheminCommune.setResultLabel("Commune de départ ou d'arrivée introuvable.");
+                return;
+            }
+    
+            List<Commune> path = service.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune());
+    
+            if (path.isEmpty()) {
+                this.trouverCheminCommune.setResultLabel("Aucun chemin trouvé entre les deux communes.");
+            } else {
+                this.trouverCheminCommune.setResultLabel("Chemin trouvé :");
+                for (Commune neighbor : path) {
+                    Button neighborButton = new Button(neighbor.getNomCommune());
+                    neighborButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5px 10px; -fx-font-size: 10pt; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+                    neighborButton.setOnAction(event -> CommuneDetailsPage.showCommune(neighbor));
+                    this.trouverCheminCommune.getHBoxBtnStorage().getChildren().add(neighborButton);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            this.trouverCheminCommune.setResultLabel("Erreur lors de la recherche du chemin.");
+        }
+    }
+
 
 
     /**
