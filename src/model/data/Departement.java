@@ -201,26 +201,4 @@ public class Departement {
         }
         return ret;
     }
-
-    /**
-    * Method which allow to check if parameters is >= 0. 
-    * Signature for int and fieldName
-    *
-    * @param value the parameters which we want to check
-    * @param fieldName the fieldname of global var.
-    * @return int
-    * @throws IllegalArgumentException if provided value is negative
-    */
-    private int validateNonNegativeValueInt(int value, String fieldName) {
-        int ret = -1;
-        if (value >= 0 || value == -1) {
-            ret = value;
-        } else {
-            throw new RuntimeException(fieldName + " invalide : " + value);
-        }
-        return ret;
-    }
-
-
-
 }
