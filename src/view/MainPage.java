@@ -4,11 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -27,6 +23,8 @@ public class MainPage extends Application {
     private Controller controller;
     private Label resultsLabel;
     private ImageView userIcon;
+    private VBox menuBox;
+    private Button cheminCourtButton;
 
     @Override
     public void start(Stage primaryStage) {
@@ -103,16 +101,20 @@ public class MainPage extends Application {
             menuIcon.setFitHeight(30);
             menuIcon.setFitWidth(30);
         } catch (NullPointerException e) {
-            System.out.println("user.png not found");
+            System.out.println("menu.png not found");
         }
 
-        if (userIcon != null) {
+        if (userIcon != null && menuIcon != null) {
             userBox.getChildren().addAll(this.userIcon, menuIcon);
         } else {
             userBox.getChildren().add(filterButton);
         }
 
-        // Spacer to push the filter button to the right
+        menuIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> toggleMenu());
+
+       
+        
+
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -152,17 +154,24 @@ public class MainPage extends Application {
         centerBox.getChildren().addAll(resultsBox, communeListView);
         VBox.setVgrow(communeListView, Priority.ALWAYS);
 
+        // Menu box for the side menu
+        menuBox = createMenuBox();
+        menuBox.setVisible(false);
+
+        StackPane mainPane = new StackPane();
+        mainPane.getChildren().addAll(centerBox, menuBox);
+
         VBox mainBox = new VBox(10);
-        mainBox.getChildren().addAll(topBar, centerBox);
+        mainBox.getChildren().addAll(topBar, mainPane);
+        VBox.setVgrow(mainPane, Priority.ALWAYS);
 
         Scene scene = new Scene(mainBox, 800, 600);
-        scene.getStylesheets().add("file:../resources/style/style.css");
+        scene.getStylesheets().add("file:../resources/css/style.css");
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Recherche de villes");
         primaryStage.show();
 
-        // Add event listener to the search field
         this.searchField.setOnKeyTyped(event -> {
             String searchText = searchField.getText().trim();
             this.controller.handleSearchEvent(searchText);
@@ -171,6 +180,32 @@ public class MainPage extends Application {
         this.userIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             this.controller.connectionClicked();
         });
+    }
+
+    private VBox createMenuBox() {
+        VBox menuBox = new VBox(10);
+        menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
+        menuBox.setPadding(new Insets(10));
+        menuBox.setAlignment(Pos.CENTER_LEFT);
+
+        Label graphsLabel = new Label("Graphes");
+        graphsLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.cheminCourtButton = new Button("Chemin Entre 2 commune");
+        this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+
+        this.cheminCourtButton.setOnAction(this.controller);
+
+        Label mapLabel = new Label("Carte");
+        mapLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        Label exportDataLabel = new Label("Exporter Données");
+        exportDataLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+
+        menuBox.getChildren().addAll(graphsLabel, this.cheminCourtButton, mapLabel, exportDataLabel);
+        return menuBox;
+    }
+
+    private void toggleMenu() {
+        menuBox.setVisible(!menuBox.isVisible());
     }
 
     private HBox createResultRow(Commune commune) {
@@ -245,5 +280,9 @@ public class MainPage extends Application {
 
     public ImageView getImageUserIcon() {
         return this.userIcon;
+    }
+
+    public Button getButtonCheminLePlusCourt(){
+        return(this.cheminCourtButton);
     }
 }

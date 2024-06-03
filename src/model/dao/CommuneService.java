@@ -10,17 +10,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
 public class CommuneService {
 
-    // Méthode pour récupérer toutes les communes depuis la base de données
+
     public List<Commune> getAllCommunes() throws SQLException {
         Map<Integer, Commune> communes = new HashMap<>();
 
-        // Étape 1 : Récupérer toutes les communes et leurs données
+
         String query = "SELECT c.idCommune, c.nomCommune, c.leDepartement, " +
                "da.nbMaison, da.nbAppart, da.prixMoyen, da.prixM2Moyen, da.SurfaceMoy, " +
                "da.depensesCulturellesTotales, da.budgetTotal, da.population, " +
@@ -63,7 +68,7 @@ public class CommuneService {
             }
         }
 
-        // Étape 2 : Récupérer toutes les relations de voisinage
+
         String voisinageQuery = "SELECT commune, communeVoisine FROM Voisinage";
         List<int[]> voisinages = new ArrayList<>();
 
@@ -88,5 +93,47 @@ public class CommuneService {
         }
 
         return new ArrayList<>(communes.values());
+    }
+
+
+
+
+
+
+    public List<Commune> cheminEntreCommune(int startId, int endId) throws SQLException {
+        Map<Integer, Commune> communeMap = new HashMap<>();
+        List<Commune> allCommunes = getAllCommunes();
+        for (Commune commune : allCommunes) {
+            communeMap.put(commune.getIdCommune(), commune);
+        }
+
+        Queue<Commune> queue = new LinkedList<>();
+        Set<Commune> visited = new HashSet<>();
+        Map<Commune, Commune> previous = new HashMap<>();
+
+        Commune startCommune = communeMap.get(startId);
+        Commune endCommune = communeMap.get(endId);
+
+        queue.add(startCommune);
+        visited.add(startCommune);
+
+        while (!queue.isEmpty()) {
+            Commune current = queue.poll();
+            if (current.equals(endCommune)) {
+                List<Commune> path = new LinkedList<>();
+                for (Commune at = endCommune; at != null; at = previous.get(at)) {
+                    path.add(0, at);
+                }
+                return path;
+            }
+            for (Commune neighbor : current.getCommunesVoisines()) {
+                if (!visited.contains(neighbor)) {
+                    queue.add(neighbor);
+                    visited.add(neighbor);
+                    previous.put(neighbor, current);
+                }
+            }
+        }
+        return Collections.emptyList();
     }
 }
