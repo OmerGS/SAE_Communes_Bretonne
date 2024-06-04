@@ -8,14 +8,17 @@ import java.util.Timer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import dao.CommuneService;
 import dao.UserService;
 import data.Commune;
+import view.CommuneDetailsPage;
 import view.ConnectionPage;
 import view.InscriptionPage;
 import view.MainPage;
 import view.ResetPassword;
+import view.TrouverCheminCommune;
 import view.misc.CustomAlert;
 import view.ForgotPassword;
 
@@ -64,9 +67,19 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     private String codeString;
 
+    /**
+    * An Instance of MainPage page. 
+    */
     private MainPage mainPage;
 
+    /**
+    * An Instance of TrouverCheminCommune page. 
+    */
+    private TrouverCheminCommune trouverCheminCommune;
 
+    /**
+    * ArrayList which contain commune. 
+    */
     private ArrayList<Commune> communes;
 
     /**
@@ -78,6 +91,7 @@ public class Controller implements EventHandler<ActionEvent> {
         this.inscriptionPage = new InscriptionPage(this);
         this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
+        this.trouverCheminCommune = new TrouverCheminCommune(this);
         this.mainPage = mainPage;
 
     }    
@@ -90,8 +104,20 @@ public class Controller implements EventHandler<ActionEvent> {
         this.inscriptionPage = new InscriptionPage(this);
         this.forgotPassword = new ForgotPassword(this);
         this.resetPassword = new ResetPassword(this);
+        this.trouverCheminCommune = new TrouverCheminCommune(this);
         this.mainPage = new MainPage();
     }
+
+
+
+
+
+
+
+
+
+    /* ---------------------------------- */
+
 
 
     /**
@@ -101,7 +127,247 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     @Override
     public void handle(ActionEvent e) {
-        /* PAGE DE CONNEXION */
+        // Gestion des actions de la page de connexion
+        handleConnectionPageActions(e);
+
+        // Gestion des actions de la page d'inscription
+        handleInscriptionPageActions(e);
+
+        // Gestion des actions de la page mot de passe oublié
+        handleForgotPasswordPageActions(e);
+
+        // Gestion des actions de la page réinitialisation du mot de passe
+        handleResetPasswordPageActions(e);
+
+        //Gestion des actions de la page principal
+        handleMainPageActions(e);
+
+        //Trouver Chemin
+        handleTrouverCheminCommuneActions(e);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- MAINPAGE METHOD
+
+
+
+    /**
+    * Handle the MainPage actions. 
+    * @param e Event.
+    */
+    private void handleMainPageActions(ActionEvent e) {
+        if(e.getSource() == this.mainPage.getSearchField()){
+            String searchText = this.mainPage.getSearchField().getText().trim();
+            handleSearchEvent(searchText);
+        }
+
+        if(e.getSource() == this.mainPage.getButtonCheminLePlusCourt()){
+            try {
+                Stage stage = (Stage) this.mainPage.getButtonCheminLePlusCourt().getScene().getWindow();
+                this.trouverCheminCommune.start(stage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    /**
+    * Allow to search a commune and update the view. 
+    * @param searchText The Name of the commune.
+    */
+    public void handleSearchEvent(String searchText) {
+        List<Commune> filteredCommunes = getFilteredCommunes(searchText);
+        this.mainPage.updateCommunesListView(filteredCommunes);
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+    }   
+
+    /**
+    * Open a new page with the details of the commune.
+    * @param commune
+    */
+    public void showCommuneDetails(Commune commune){
+        try {
+            CommuneDetailsPage.showCommune(commune);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    /**
+    * Filter the commune List with the commune we search
+    * @param searchText the name of the commune we search.
+    * @return An ArrayList of commune.
+    */
+    public ArrayList<Commune> getFilteredCommunes(String searchText) {
+        ArrayList<Commune> allCommunes = this.communes;
+        ArrayList<Commune> filteredCommunes = new ArrayList<>();
+        
+        
+        String lowerCaseSearchText = searchText.toLowerCase();
+        for (Commune commune : allCommunes) {
+            if (commune.getNomCommune().toLowerCase().startsWith(lowerCaseSearchText)) {
+                filteredCommunes.add(commune);
+            }
+        }
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+        return filteredCommunes;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- TROUVERCHEMINCOMMUNE METHOD
+
+
+    /**
+    * Handle the action of TrouverCheminCommune. 
+    * @param e Event.
+    */
+    private void handleTrouverCheminCommuneActions(ActionEvent e){
+        if(e.getSource() == this.trouverCheminCommune.getButton()){
+            String firstCommuneText = this.trouverCheminCommune.getStartCommuneName().getText();
+            String endCommuneText = this.trouverCheminCommune.getEndCommuneName().getText();
+
+            findPath(firstCommuneText, endCommuneText);
+        }
+    }
+
+    /**
+    * Return a Commune for a String which correspond of commune name.
+    * @param communeName The String of the name of the commune
+    * @return A commune if the commune with the String name exists
+    * @throws SQLException 
+    */
+    public Commune getCommuneByName(String communeName) throws SQLException {
+        CommuneService communeService = new CommuneService();
+
+        List<Commune> allCommunes = communeService.getAllCommunes();
+        for (Commune commune : allCommunes) {
+            if (commune.getNomCommune().equalsIgnoreCase(communeName)) {
+                return commune;
+            }
+        }
+        return null;
+    }
+
+    /**
+    * Allow to found the path between two communes. 
+    * @param startCommuneName The names of the first commune.
+    * @param endCommuneName The name of the destination commune.
+    */
+    public void findPath(String startCommuneName, String endCommuneName) {
+        CommuneService service = new CommuneService();
+
+        try {
+            Commune startCommune = getCommuneByName(startCommuneName);
+            Commune endCommune = getCommuneByName(endCommuneName);
+    
+            if (startCommune == null || endCommune == null) {
+                this.trouverCheminCommune.setResultLabel("Commune de départ ou d'arrivée introuvable.");
+                return;
+            }
+    
+            List<Commune> path = service.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune());
+    
+            if (path.isEmpty()) {
+                this.trouverCheminCommune.setResultLabel("Aucun chemin trouvé entre les deux communes.");
+            } else {
+                this.trouverCheminCommune.setResultLabel("Chemin trouvé :");
+                for (Commune neighbor : path) {
+                    Button neighborButton = new Button(neighbor.getNomCommune());
+                    neighborButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5px 10px; -fx-font-size: 10pt; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+                    neighborButton.setOnAction(event -> CommuneDetailsPage.showCommune(neighbor));
+                    this.trouverCheminCommune.getHBoxBtnStorage().getChildren().add(neighborButton);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            this.trouverCheminCommune.setResultLabel("Erreur lors de la recherche du chemin.");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! ---------------- CONNECTIONPAGE METHOD
+
+
+    /**
+    * Handle action of the Connection Page. 
+    * @param e The Action Event
+    */
+    private void handleConnectionPageActions(ActionEvent e) {
         if (e.getSource() == this.connectionPage.getLinkSignUp()) {
             try {
                 Stage stage = (Stage) this.connectionPage.getBtnLogin().getScene().getWindow();
@@ -143,6 +409,20 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.connectionPage.getErrorMessageLabel().setText("Connexion Reussi !");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
 
+                    
+                    CustomAlert.showAlert("Connexion Reussi", "Vous vous etes connecté avec succès. Redirection dans 3 secondes");
+
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Platform.runLater(() -> {
+                                    Stage stage = (Stage) connectionPage.getBtnLogin().getScene().getWindow();
+                                    mainPage.start(stage);
+                                });
+                            }
+                        }, 3000);
+
                     //CONNEXION A LA PAGE PRINCIPAL
 
                 } else {
@@ -152,6 +432,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
             }
         }
+    }
 
 
 
@@ -169,8 +450,18 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-        /* PAGE D'INSCRIPTION */
 
+
+
+
+
+    //! ---------------- INSCRIPTIONPAGE METHOD
+
+    /**
+    * Handle the action of the Inscription Page. 
+    * @param e The Action Event
+    */
+    private void handleInscriptionPageActions(ActionEvent e){
         if (this.inscriptionPage != null && e.getSource() == this.inscriptionPage.getBtnSignUp()) {
             String firstName = this.inscriptionPage.getFirstNameField().getText();
             String lastName = this.inscriptionPage.getLastNameField().getText();
@@ -215,6 +506,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 ex.printStackTrace();
             }
         }
+    }
 
 
 
@@ -225,8 +517,22 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-        /* PAGE MOT DE PASSE OUBLIE */
 
+
+
+
+
+
+
+
+    //! ---------------- FORGOTPASSWORD METHOD
+
+
+    /**
+    * Handle the action of ForgotPassword page.
+    * @param e The Action Event
+    */
+    private void handleForgotPasswordPageActions(ActionEvent e){
         if (e.getSource() == this.forgotPassword.getLinkForgotPassword()) {
             try {
                 Stage stage = (Stage) this.forgotPassword.getBtnLogin().getScene().getWindow();
@@ -284,6 +590,19 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
             }
         }
+    }
+
+    /**
+    * Private method, which change the state of the btnLogin present in forgotPassword page.
+    */
+    private void updateButtonState() {
+        if (this.codeSent) {
+            this.forgotPassword.getBtnLogin().setText("V\u00e9rifier");
+            this.forgotPassword.getCodeField().setDisable(false);
+        } else {
+            this.forgotPassword.getBtnLogin().setText("Recevoir Code");
+        }
+    }
 
 
 
@@ -296,7 +615,21 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-        /* REINITIALISATION DU MOT DE PASSE */
+
+
+
+
+
+
+
+
+    //! ---------------- RESETPASSWORD METHOD
+
+    /**
+    * Handle the action of ResetPassword page. 
+    * @param e The Action Event
+    */
+    private void handleResetPasswordPageActions(ActionEvent e){
         if (e.getSource() == this.resetPassword.getBtnValidate()) {
             String newPassword = this.resetPassword.getFirstPassword().getText();
             String confirmPassword = this.resetPassword.getSecondPassword().getText();
@@ -353,48 +686,37 @@ public class Controller implements EventHandler<ActionEvent> {
             Stage stage = (Stage) this.resetPassword.getBtnValidate().getScene().getWindow();
             this.connectionPage.start(stage);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /* PAGE PRINCIPAL AVEC LES VILLES */
     }
 
 
 
+    
+
+     
 
 
+    
+
+
+
+
+
+
+
+
+
+    //! ---------------- MULTICLASS METHOD
 
 
     /**
-    * Private method, which change the state of the btnLogin present in forgotPassword page.
+    * Open the login panel when the image of account is clicked.
     */
-    private void updateButtonState() {
-        if (this.codeSent) {
-            this.forgotPassword.getBtnLogin().setText("V\u00e9rifier");
-            this.forgotPassword.getCodeField().setDisable(false);
-        } else {
-            this.forgotPassword.getBtnLogin().setText("Recevoir Code");
+    public void connectionClicked(){
+        try {
+            Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
+            this.connectionPage.start(stage);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -411,56 +733,22 @@ public class Controller implements EventHandler<ActionEvent> {
         return matcher.matches();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    public void handleSearchEvent(String searchText) {
-        List<Commune> filteredCommunes = getFilteredCommunes(searchText);
-        this.mainPage.updateCommunesListView(filteredCommunes);
-        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
-    }    
-
-
     /**
      * Méthode pour récupérer la liste des communes depuis la base de données.
      * @return Une liste de noms de communes.
      */
     public ArrayList<Commune> getCommunes() {
-        this.communes = new ArrayList<Commune>();
+        this.communes = new ArrayList<>();
         CommuneService communeService = new CommuneService();
 
         try {
-            this.communes = (ArrayList) communeService.getAllCommunes();
-            this.mainPage.getNumberOfRow().setText(this.communes.size() + " resultat");
+            List<Commune> communesList = communeService.getAllCommunes();
+            this.communes = new ArrayList<>(communesList);
+            this.mainPage.getNumberOfRow().setText(this.communes.size() + " résultat");
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return communes;
     }
 
-    public ArrayList<Commune> getFilteredCommunes(String searchText) {
-        ArrayList<Commune> allCommunes = this.communes;
-        ArrayList<Commune> filteredCommunes = new ArrayList<>();
-        
-        
-        String lowerCaseSearchText = searchText.toLowerCase();
-        for (Commune commune : allCommunes) {
-            if (commune.getNomCommune().toLowerCase().startsWith(lowerCaseSearchText)) {
-                filteredCommunes.add(commune);
-            }
-        }
-        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
-        return filteredCommunes;
-    }
-    
-    
-    
 }

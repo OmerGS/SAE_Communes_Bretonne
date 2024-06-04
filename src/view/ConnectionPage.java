@@ -15,27 +15,61 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+* ConnectionPage which allow to connect to account.
+* @author O.Gunes, B.Campion. 
+*/
 public class ConnectionPage extends Application {
 
+    /**
+    * The controller of the application. 
+    */
     private Controller controller;
 
+    /**
+    * The signup link, which redirect to InscriptionPage. 
+    */
     private Hyperlink linkSignUp;
+
+    /**
+    * The forgot password link, which redirect to ForgotPassword page. 
+    */
     private Hyperlink linkForgotPassword;
+
+    /**
+    * The email TextField, which allow to write mail, with the format (user@example.net) 
+    */
     private TextField emailField;
     
+    /**
+    * The password PasswordField, which allow to write a password. 
+    */
     private PasswordField passwordField;
 
+    /**
+    * The login button.
+    */
     private Button btnLogin;
+
+    /**
+    * The errorMessageLabel, which print variable message.
+    */
     private Label errorMessageLabel;
 
+    /**
+    * The constructor of ConnectionPage, initialize the controller.
+    * @param controller The controller.
+    */
     public ConnectionPage(Controller controller){
         this.controller = controller;
     }
 
+    /**
+    * Launch the programs
+    * @param primaryStage The Stage. 
+    */
     @Override
     public void start(Stage primaryStage) {
-        this.controller = new Controller();
-
         // Image pour le logo
         ImageView logo = new ImageView(new Image("file:../resources/image/personnageH.png"));
         logo.setFitWidth(100);
@@ -154,16 +188,29 @@ public class ConnectionPage extends Application {
         this.btnLogin.setOnAction(this.controller);
     }
 
+
     /* ----- Getters ----- */
 
+    /**
+    * Getters for the link, for inscription page.
+    * @return The HyperLink.
+    */
     public Hyperlink getLinkSignUp() {
         return linkSignUp;
     }
 
+    /**
+    * 
+    * @return
+    */
     public Hyperlink getLinkForgotPassword() {
         return linkForgotPassword;
     }
 
+    /**
+    * 
+    * @return
+    */
     public TextField getEmailField() {
         return emailField;
     }

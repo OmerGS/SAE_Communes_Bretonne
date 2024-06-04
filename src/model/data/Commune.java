@@ -1,12 +1,13 @@
 package data;
 
-import java.util.List;
-import data.exceptions.*;
+import java.util.ArrayList;
+
+
 
 /**
 * Class who represents a commune with different parameters, we can manipulate it with different method. 
 * 
-* @author O.Gunes
+* @author O.Gunes, R.Peron, C.Brayan
 */
 public class Commune {
     /**
@@ -29,49 +30,14 @@ public class Commune {
     */
     private int nbAppart;
 
-    /**
-    * Average price of house and appartment 
-    */
-    private float prixMoyen;
 
-    /**
-    * Average price of one square meters. 
-    */
-    private float prixM2Moyen;
+    private double prixMoyen;
+    private double prixM2Moyen;
+    private double surfaceMoy;
+    private double depCulturellesTotales;
+    private double budgetTotal;
+    private int population;
 
-    /**
-    * Average square meters of house and appartment. 
-    */
-    private float surfaceMoy;
-
-    /**
-    * The amount of money spend in cultural activities. 
-    */
-    private float depCulturellesTotales;
-
-    /**
-    * Amount of commune budget. 
-    */
-    private float budgetTotal;
-
-    /**
-    * The number of person who lives in the commune. 
-    */
-    private float population;
-
-    /**
-    * List of airport.
-    * 
-    * Allow connection with Aeroport.java 
-    */
-    private List<Aeroport> aeroports;
-
-    /**
-    * List of trainstation.
-    *
-    * Allow conneciton with Gare.java 
-    */
-    private List<Gare> gares;
 
     /**
     * The department of the commune. 
@@ -79,73 +45,72 @@ public class Commune {
     * Allow connection with Departement.java 
     */
     private Departement departement;  
+
     
     /**
     * List of neighbours communes. 
     * 
     * Allow a connection with itself (Commune.java) 
     */
-    private List<Commune> communesVoisines;
+    private ArrayList<Commune> communesVoisines;
     
-    /**
-    * 
-    * Constructor of Commune.
-    *
-    * @param idCommune 
-    * @param nomCommune
-    * @param nbMaison
-    * @param nbAppart
-    * @param prixMoyen
-    * @param prixM2Moyen
-    * @param surfaceMoy
-    * @param depCulturellesTotales
-    * @param budgetTotal
-    * @param population
-    * @param departement
-    */
-    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, float prixMoyen, float prixM2Moyen, 
-                   float surfaceMoyenne, float depensesCulturellesTotales, float budgetTotal, float population, Departement departement) 
-            throws InvalidCommuneIdException, InvalidCommuneNameException {
-        if (idCommune <= 0) {
-            throw new InvalidCommuneIdException("Invalid commune ID");
-        }
-        if (nomCommune == null || nomCommune.isEmpty()) {
-            throw new InvalidCommuneNameException("Invalid commune name");
-        }
-        this.idCommune = idCommune;
-        this.nomCommune = nomCommune;
-        this.nbMaison = nbMaison;
-        this.nbAppart = nbAppart;
-        this.prixMoyen = prixMoyen;
-        this.prixM2Moyen = prixM2Moyen;
-        this.surfaceMoy = surfaceMoyenne;
-        this.depCulturellesTotales = depensesCulturellesTotales;
-        this.budgetTotal = budgetTotal;
-        this.population = population;
-        this.departement = departement;
-    }
 
 
-    public Commune(int idCommune, String nomCommune){
-        this.idCommune = idCommune;
-        this.nomCommune = nomCommune;
+    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
+        this.communesVoisines = new ArrayList<Commune>();
+
+
+        //idCommune
+        if (isValidIdCommune(idCommune)) {
+            this.idCommune = idCommune;
+        } else {
+            throw new RuntimeException("Numéro de commune invalide : " + idCommune);
+        }
+
+        //nomCommune
+        if (nomCommune != null && !nomCommune.trim().isEmpty()) {
+            this.nomCommune = nomCommune;
+        } else {
+            throw new RuntimeException("Nom de commune invalide : " + nomCommune);
+        }
+
+        if(departement != null && ((departement.getIdDep() == 29 || departement.getIdDep() == 56 || departement.getIdDep() == 35 || departement.getIdDep() == 22))){
+            this.departement= departement;
+        } else {
+            throw new RuntimeException("Département invalide : " + departement.getNomDep());
+        }
+
+
+        this.nbMaison = validateNonNegativeValueInt(nbMaison, "Nombre de maisons");
+        this.nbAppart = validateNonNegativeValueInt(nbAppart, "Nombre d'appartement");
+        this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Prix moyen");
+        this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Prix m2 moyen");
+        this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Surface moyenne");
+        this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Dépenses culturelles totales");
+        this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Budget total");
+        this.population = validateNonNegativeValueInt(population, "Population");
+
+
+        
     }
 
     /**
     * Method which allow to check if parameters is >= 0. 
-    * Signature for float and fieldName
+    * Signature for double and fieldName
     *
     * @param value the parameters which we want to check
     * @param fieldName the fieldname of global var.
-    * @return float
+    * @return double
     * @throws IllegalArgumentException if provided value is negative
     */
-    private float validateNonNegativeValue(float value, String fieldName) {
-        if (value >= 0) {
-            return value;
+    private double validateNonNegativeValueDouble(double value, String fieldName) {
+        double ret = -1;
+        if (value >= 0 || value == -1) {
+            ret = value;
         } else {
             throw new IllegalArgumentException(fieldName + " invalide : " + value);
         }
+        return ret;
     }
 
     /**
@@ -157,28 +122,40 @@ public class Commune {
     * @return int
     * @throws IllegalArgumentException if provided value is negative
     */
-    private int validateNonNegativeValue(int value, String fieldName) {
-        if (value >= 0) {
-            return value;
+    private int validateNonNegativeValueInt(int value, String fieldName) {
+        int ret = -1;
+        if (value >= 0 || value == -1) {
+            ret = value;
         } else {
             throw new IllegalArgumentException(fieldName + " invalide : " + value);
         }
+        return ret;
     }
 
     /**
-    * Method which allow to check if the id of commune is valid or not.
-    * 
-    * @param idCommune the id of commune which we wanted to create
-    * @return False if don't valid, else return true.
-    */
+     * Method which allows checking if the id of the commune is valid or not.
+     * 
+     * @param idCommune the id of the commune we want to validate
+     * @return false if not valid, else return true.
+     */
     private boolean isValidIdCommune(int idCommune) {
+        boolean ret = true;
         String idString = String.valueOf(idCommune);
+
+        // Check if the idCommune has exactly 5 digits
         if (idString.length() != 5) {
-            return false;
+            ret = false;
+        } else {
+            // Check if the prefix is one of the valid values
+            String prefix = idString.substring(0, 2);
+            ret = prefix.equals("29") || prefix.equals("35") || prefix.equals("22") || prefix.equals("56");
         }
-        String prefix = idString.substring(0, 2);
-        return prefix.equals("29") || prefix.equals("35") || prefix.equals("22") || prefix.equals("56");
+
+        return ret;
     }
+
+
+
 
 
 
@@ -227,7 +204,7 @@ public class Commune {
      *
      * @return The average price.
      */
-    public float getPrixMoyen() {
+    public double getPrixMoyen() {
         return prixMoyen;
     }
 
@@ -236,7 +213,7 @@ public class Commune {
      *
      * @return The average price per square meter.
      */
-    public float getPrixM2Moyen() {
+    public double getPrixM2Moyen() {
         return prixM2Moyen;
     }
 
@@ -245,7 +222,7 @@ public class Commune {
      *
      * @return The average surface area.
      */
-    public float getSurfaceMoy() {
+    public double getSurfaceMoy() {
         return surfaceMoy;
     }
 
@@ -254,7 +231,7 @@ public class Commune {
      *
      * @return The total cultural expenses.
      */
-    public float getDepCulturellesTotales() {
+    public double getDepCulturellesTotales() {
         return depCulturellesTotales;
     }
 
@@ -263,7 +240,7 @@ public class Commune {
      *
      * @return The total budget.
      */
-    public float getBudgetTotal() {
+    public double getBudgetTotal() {
         return budgetTotal;
     }
 
@@ -272,27 +249,10 @@ public class Commune {
      *
      * @return The population.
      */
-    public float getPopulation() {
+    public int getPopulation() {
         return population;
     }
 
-    /**
-     * Returns the list of airports in the commune.
-     *
-     * @return The list of airports.
-     */
-    public List<Aeroport> getAeroports() {
-        return aeroports;
-    }
-
-    /**
-     * Returns the list of train stations in the commune.
-     *
-     * @return The list of train stations.
-     */
-    public List<Gare> getGares() {
-        return gares;
-    }
 
     /**
      * Returns the department to which the commune belongs.
@@ -308,26 +268,25 @@ public class Commune {
      *
      * @return The list of neighboring communes.
      */
-    public List<Commune> getCommunesVoisines() {
-        return communesVoisines;
+    public ArrayList<Commune> getCommunesVoisines() {
+        return this.communesVoisines;
     }
 
 
 
 
-/* ------ Setters ------ */
+    /* ------ Setters ------ */
 
     /**
-    * Sets the ID of the commune.
-    *
-    * @param idCommune The ID of the commune.
-    * @throws InvalidCommuneIdException If the provided ID is invalid.
-    */
+     * Sets the ID of the commune.
+     *
+     * @param idCommune The ID of the commune.
+     */
     public void setIdCommune(int idCommune) {
         if (isValidIdCommune(idCommune)) {
             this.idCommune = idCommune;
         } else {
-            throw new InvalidCommuneIdException("Invalid commune ID: " + idCommune);
+            throw new RuntimeException("Invalid commune ID: " + idCommune);
         }
     }
 
@@ -335,13 +294,12 @@ public class Commune {
      * Sets the name of the commune.
      *
      * @param nomCommune The name of the commune.
-     * @throws InvalidCommuneNameException If the provided name is invalid.
      */
     public void setNomCommune(String nomCommune) {
         if (nomCommune != null && !nomCommune.trim().isEmpty()) {
             this.nomCommune = nomCommune;
         } else {
-            throw new InvalidCommuneNameException("Invalid commune name: " + nomCommune);
+            throw new RuntimeException("Invalid commune name: " + nomCommune);
         }
     }
 
@@ -349,108 +307,88 @@ public class Commune {
      * Sets the number of houses in the commune.
      *
      * @param nbMaison The number of houses.
+     * @throws InvalidValueException If the number of houses is negative.
      */
     public void setNbMaison(int nbMaison) {
-        this.nbMaison = validateNonNegativeValue(nbMaison, "Number of houses");
+        this.nbMaison = validateNonNegativeValueInt(nbMaison, "Number of houses");
     }
 
     /**
      * Sets the number of apartments in the commune.
      *
      * @param nbAppart The number of apartments.
+     * @throws InvalidValueException If the number of apartments is negative.
      */
     public void setNbAppart(int nbAppart) {
-        this.nbAppart = validateNonNegativeValue(nbAppart, "Number of apartments");
+        this.nbAppart = validateNonNegativeValueInt(nbAppart, "Number of apartments");
     }
 
     /**
      * Sets the average price of properties in the commune.
      *
      * @param prixMoyen The average price.
+     * @throws InvalidValueException If the average price is negative.
      */
-    public void setPrixMoyen(float prixMoyen) {
-        this.prixMoyen = validateNonNegativeValue(prixMoyen, "Average price");
+    public void setPrixMoyen(double prixMoyen) {
+        this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Average price");
     }
 
     /**
      * Sets the average price per square meter in the commune.
      *
      * @param prixM2Moyen The average price per square meter.
+     * @throws InvalidValueException If the average price per square meter is negative.
      */
-    public void setPrixM2Moyen(float prixM2Moyen) {
-        this.prixM2Moyen = validateNonNegativeValue(prixM2Moyen, "Average price per square meter");
+    public void setPrixM2Moyen(double prixM2Moyen) {
+        this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Average price per square meter");
     }
 
     /**
      * Sets the average surface area in the commune.
      *
      * @param surfaceMoy The average surface area.
+     * @throws InvalidValueException If the average surface area is negative.
      */
-    public void setSurfaceMoy(float surfaceMoy) {
-        this.surfaceMoy = validateNonNegativeValue(surfaceMoy, "Average surface area");
+    public void setSurfaceMoy(double surfaceMoy) {
+        this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Average surface area");
     }
 
     /**
      * Sets the total cultural expenses in the commune.
      *
      * @param depCulturellesTotales The total cultural expenses.
+     * @throws InvalidValueException If the total cultural expenses are negative.
      */
-    public void setDepCulturellesTotales(float depCulturellesTotales) {
-        this.depCulturellesTotales = validateNonNegativeValue(depCulturellesTotales, "Total cultural expenses");
+    public void setDepCulturellesTotales(double depCulturellesTotales) {
+        this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Total cultural expenses");
     }
 
     /**
      * Sets the total budget of the commune.
      *
      * @param budgetTotal The total budget.
+     * @throws InvalidValueException If the total budget is negative.
      */
-    public void setBudgetTotal(float budgetTotal) {
-        this.budgetTotal = validateNonNegativeValue(budgetTotal, "Total budget");
+    public void setBudgetTotal(double budgetTotal) {
+        this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Total budget");
     }
 
     /**
      * Sets the population of the commune.
      *
      * @param population The population.
+     * @throws InvalidValueException If the population is negative.
      */
-    public void setPopulation(float population) {
-        this.population = validateNonNegativeValue(population, "Population");
+    public void setPopulation(int population) {
+        this.population = validateNonNegativeValueInt(population, "Population");
     }
 
     /**
-    * Sets the list of airports in the commune.
-    *
-    * @param aeroports The list of airports.
-    * @throws IllegalArgumentException If the provided list is null.
-    */
-    public void setAeroports(List<Aeroport> aeroports) {
-        if (aeroports != null) {
-            this.aeroports = aeroports;
-        } else {
-            throw new IllegalArgumentException("The list of airports cannot be null.");
-        }
-    }
-
-    /**
-     * Sets the list of train stations in the commune.
+     * Sets the department to which the commune belongs.
      *
-     * @param gares The list of train stations.
-     * @throws IllegalArgumentException If the provided list is null.
+     * @param departement The department.
+     * @throws IllegalArgumentException If the provided department code is invalid.
      */
-    public void setGares(List<Gare> gares) {
-        if (gares != null) {
-            this.gares = gares;
-        } else {
-            throw new IllegalArgumentException("The list of train stations cannot be null.");
-        }
-    }
-
-    /**
-    * Sets the department to which the commune belongs.
-    *
-    * @param departement The department.
-    * @throws RuntimeException If the provided department code is invalid.
-    */
     public void setDepartement(Departement departement) {
         String departementString = String.valueOf(departement);
         if (departementString.length() == 2) {
@@ -471,7 +409,7 @@ public class Commune {
 
 
 
-/* ------ Other Method ------ */
+    /* ------ Other Method ------ */
 
     @Override
     public String toString() {
@@ -498,64 +436,26 @@ public class Commune {
         return nbMaison + nbAppart;
     }
     
-    public float prixMoyenParPropriete() {
+    public double prixMoyenParPropriete() {
+        double ret;
         int totalProprietes = getNbMaison() + getNbAppart();
         if (totalProprietes == 0) {
-            return 0;
+            ret = 0;
         } else {
-            return (getPrixMoyen() + getPrixM2Moyen()) / totalProprietes;
+            ret = (getPrixMoyen() + getPrixM2Moyen()) / totalProprietes;
         }
+        return ret;
     }
     
     
-    public boolean hasAirports() {
-        return aeroports != null && !aeroports.isEmpty();
-    }
     
     public boolean hasNeighboringCommunes() {
         return communesVoisines != null && !communesVoisines.isEmpty();
     }
 
-    public boolean hasTrainStation() {
-        return gares != null && !gares.isEmpty();
-    }    
+   
     
 
-    /**
-    * Estimates the Gross Domestic Product (GDP) of the commune based on several factors,
-    * such as the number of houses and apartments, the average price of properties,
-    * the total cultural expenses, and the total budget of the commune.
-    * 
-    * The GDP is estimated by calculating the contribution of three main sectors:
-    * 1. The real estate sector, based on the number of houses and apartments as well as the average price of properties.
-    * 2. The cultural sector, based on the total cultural expenses of the commune.
-    * 3. The services sector, estimated at 20% of the total budget of the commune.
-    * 
-    * This GDP estimation is then adjusted based on the population size.
-    * 
-    * @return An estimation of the commune's GDP.
-    */
-    public double estimateGDP() {
-        // Coefficient to convert cultural expenses into GDP contribution
-        final double CULTURAL_EXPENSES_COEFFICIENT = 0.1;
-        
-        // Contribution of the real estate sector to GDP
-        double realEstateContribution = (getNbMaison() * getPrixMoyen() + getNbAppart() * getPrixM2Moyen()) * 0.8;
-        
-        // Contribution of the cultural sector to GDP
-        double culturalContribution = getDepCulturellesTotales() * CULTURAL_EXPENSES_COEFFICIENT;
-        
-        // Contribution of the services sector to GDP (estimated at 20% of the total budget)
-        double servicesContribution = getBudgetTotal() * 0.2;
-        
-        // Total contribution to GDP
-        double estimatedGDP = realEstateContribution + culturalContribution + servicesContribution;
-        
-        // Adjustment based on population size
-        estimatedGDP *= (getPopulation() / 1000); // Divided by 1000 to avoid excessively large values
-        
-        return(estimatedGDP);
-    }
 
     /**
     * Determines if the commune is the most significant among its neighbors based on various factors
@@ -564,25 +464,28 @@ public class Commune {
     * @return True if the commune is the most significant among its neighbors, otherwise false.
     */
     public boolean isMostImportant() {
+        boolean ret = true;
         // Check if the commune has neighboring communes
         if (!hasNeighboringCommunes()) {
-            return false;
+            ret = false;
         }
+        if(ret){
+            // Initialize variables to keep track of the maximum values
+            int maxProperties = 0;
+            double maxBudget = 0;
+            double maxPopulation = 0;
 
-        // Initialize variables to keep track of the maximum values
-        int maxProperties = 0;
-        float maxBudget = 0;
-        float maxPopulation = 0;
-
-        // Iterate through neighboring communes to find the maximum values
-        for (Commune neighbor : communesVoisines) {
-            maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
-            maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
-            maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
+            // Iterate through neighboring communes to find the maximum values
+            for (Commune neighbor : communesVoisines) {
+                maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
+                maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
+                maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
+            }
+            ret = (getProprieteTotal() >= maxProperties) && (getBudgetTotal() >= maxBudget) && (getPopulation() >= maxPopulation);
         }
 
         // Check if the current commune has the maximum values
-        return (getProprieteTotal() >= maxProperties) && (getBudgetTotal() >= maxBudget) && (getPopulation() >= maxPopulation);
+        return ret;
     }
 
 
@@ -593,24 +496,26 @@ public class Commune {
     *         or null if there are no neighboring communes.
     */
     public String highestNeighboursPrice() {
+        String ret = null; 
         // Check if the commune has neighboring communes
         if (!hasNeighboringCommunes()) {
-            return null;
+            return ret;
         }
 
         String highestPriceCommune = null;
-        float highestAveragePrice = 0;
+        double highestAveragePrice = 0;
 
         // Iterate through neighboring communes to find the one with the highest average price per property
         for (Commune neighbor : communesVoisines) {
-            float neighborAveragePrice = neighbor.prixMoyenParPropriete();
+            double neighborAveragePrice = neighbor.prixMoyenParPropriete();
             if (neighborAveragePrice > highestAveragePrice) {
                 highestAveragePrice = neighborAveragePrice;
                 highestPriceCommune = neighbor.getNomCommune();
+                ret = highestPriceCommune;
             }
         }
 
-        return highestPriceCommune;
+        return ret;
     }
 
 
@@ -620,7 +525,7 @@ public class Commune {
     * @return The ratio of cultural expenses per inhabitant.
     * @throws ArithmeticException If the population is zero.
     */
-    public float culturalExpensesPerInhabitant() {
+    public double culturalExpensesPerInhabitant() {
         // Check if population is not zero
         if (getPopulation() == 0) {
             throw new ArithmeticException("Population cannot be zero.");
@@ -628,39 +533,4 @@ public class Commune {
 
         return getDepCulturellesTotales() / getPopulation();
     }
-
-
-    /**
-    * Estimates the potential economic growth of the commune based on various factors such as
-    * population growth rate, budget allocation for infrastructure development, and real estate trends.
-    *
-    * @return The estimated potential economic growth of the commune.
-    */
-    public double estimatePotentialEconomicGrowth() {
-        // Population growth rate (assumed)
-        double populationGrowthRate = 0.02; // 2% growth rate
-        
-        // Infrastructure development budget allocation factor
-        double infrastructureBudgetFactor = 0.15; // 15% of total budget allocated for infrastructure development
-        
-        // Real estate trend factor (percentage increase in property prices over the next year)
-        double realEstateTrendFactor = 0.05; // 5% increase
-        
-        // Calculate the projected increase in population over the next year
-        double projectedPopulationIncrease = getPopulation() * populationGrowthRate;
-        
-        // Calculate the projected increase in infrastructure development budget
-        double projectedInfrastructureBudgetIncrease = getBudgetTotal() * infrastructureBudgetFactor;
-        
-        // Calculate the projected increase in real estate prices
-        double projectedRealEstatePriceIncrease = (getPrixMoyen() + getPrixM2Moyen()) * realEstateTrendFactor;
-        
-        // Calculate the total projected economic growth
-        double totalProjectedGrowth = projectedPopulationIncrease + projectedInfrastructureBudgetIncrease + projectedRealEstatePriceIncrease;
-        
-        return totalProjectedGrowth;
-    }
-
-
-
 }
