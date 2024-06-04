@@ -7,15 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-<<<<<<< HEAD
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-=======
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import controller.Controller;
@@ -29,20 +22,14 @@ public class MainPage extends Application {
     private TextField searchField;
     private Controller controller;
     private Label resultsLabel;
-<<<<<<< HEAD
-=======
     private ImageView userIcon;
     private VBox menuBox;
     private Button cheminCourtButton;
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
 
     @Override
     public void start(Stage primaryStage) {
         this.controller = new Controller(this);
 
-<<<<<<< HEAD
-        // Image pour le logo
-=======
         // Initialize resultsLabel
         this.resultsLabel = new Label("55 résultats");
         this.resultsLabel.setStyle("-fx-font-size: 18px; -fx-padding: 10px;");
@@ -62,17 +49,12 @@ public class MainPage extends Application {
         HBox.setHgrow(filterButton, Priority.ALWAYS);
 
         // Logo image
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
         logo.setFitWidth(50);
         logo.setFitHeight(50);
         logo.setClip(new Circle(25, 25, 25));
 
-<<<<<<< HEAD
-        // Barre de recherche en haut
-=======
         // Search bar
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
         HBox searchBox = new HBox(10);
         searchBox.setPadding(new Insets(10));
         searchBox.setStyle("-fx-background-color: #000000; -fx-padding: 10; -fx-border-radius: 10px; -fx-background-radius: 10px;");
@@ -90,19 +72,11 @@ public class MainPage extends Application {
             System.out.println("search.png not found");
         }
 
-<<<<<<< HEAD
-        Region SpacerBar = new Region();
-        SpacerBar.setPrefWidth(60);
-
-        if (searchIcon != null) {
-            searchBox.getChildren().addAll(SpacerBar, searchIcon, this.searchField);
-=======
         Region spacerBar = new Region();
         spacerBar.setPrefWidth(60);
 
         if (searchIcon != null) {
             searchBox.getChildren().addAll(spacerBar, searchIcon, this.searchField);
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
         } else {
             searchBox.getChildren().add(this.searchField);
         }
@@ -114,34 +88,13 @@ public class MainPage extends Application {
 
         this.userIcon = null;
         try {
-<<<<<<< HEAD
-            userIcon = new ImageView(new Image("file:../resources/image/user.png"));
-            userIcon.setFitHeight(30);
-            userIcon.setFitWidth(30);
-        } catch (NullPointerException e) {
-            System.out.println("user.png not found");
-        }
-
-        ImageView menuIcon = null;
-        try {
-            menuIcon = new ImageView(new Image("file:../resources/image/menu.png"));
-            menuIcon.setFitHeight(30);
-            menuIcon.setFitWidth(30);
-=======
             this.userIcon = new ImageView(new Image("file:../resources/image/user.png"));
             this.userIcon.setFitHeight(30);
             this.userIcon.setFitWidth(30);
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
         } catch (NullPointerException e) {
             System.out.println("user.png not found");
         }
 
-<<<<<<< HEAD
-        Button filterButton = new Button("Filtrer");
-        filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        if (userIcon != null) {
-            userBox.getChildren().addAll(userIcon, menuIcon);
-=======
         ImageView menuIcon = null;
         try {
             menuIcon = new ImageView(new Image("file:../resources/image/menu.png"));
@@ -153,18 +106,10 @@ public class MainPage extends Application {
 
         if (userIcon != null && menuIcon != null) {
             userBox.getChildren().addAll(this.userIcon, menuIcon);
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
         } else {
             userBox.getChildren().add(filterButton);
         }
 
-<<<<<<< HEAD
-        // Region to push the filter button to the right
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        // Combiner la barre de recherche et la barre d'utilisateur
-=======
         menuIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> toggleMenu());
 
        
@@ -174,33 +119,13 @@ public class MainPage extends Application {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         // Top bar combining search and user bar
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
         HBox topBar = new HBox(10);
         topBar.setStyle("-fx-padding: 10; -fx-background-color: #000000; -fx-text-fill: #fff;");
         topBar.getChildren().addAll(logo, searchBox, spacer, userBox);
 
-<<<<<<< HEAD
-        // Résultats
-        HBox resultsBox = new HBox(10);
-        resultsBox.setPadding(new Insets(10));
-        resultsBox.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-background-radius: 10px;");
-        this.resultsLabel = new Label();
-        resultsLabel.setStyle("-fx-text-fill: #333;");
-
-        // Region to push the filter button to the right
-        Region spacerFilter = new Region();
-        HBox.setHgrow(spacerFilter, Priority.ALWAYS);
-
-        resultsBox.getChildren().addAll(resultsLabel, spacerFilter, filterButton);
-
-        // ListView pour afficher les communes
-        communeListView.setPrefSize(400, 400);
-        VBox.setVgrow(communeListView, Priority.ALWAYS); // Allow ListView to grow
-=======
         // ListView to display communes
         communeListView.setPrefHeight(Region.USE_COMPUTED_SIZE);
         communeListView.setStyle("-fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px;");
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
 
         // Custom cell factory to display Commune objects
         communeListView.setCellFactory(new Callback<>() {
@@ -211,12 +136,7 @@ public class MainPage extends Application {
                     protected void updateItem(Commune commune, boolean empty) {
                         super.updateItem(commune, empty);
                         if (commune != null) {
-<<<<<<< HEAD
-                            HBox row = createResultRow(commune.getNomCommune(), commune.getPrixM2Moyen(), commune.getPrixMoyen(), commune.isMostImportant());
-                            row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 10px; -fx-border-color: #d3d3d3; -fx-border-radius: 10px;");
-=======
                             HBox row = createResultRow(commune);
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
                             setGraphic(row);
                         }
                     }
@@ -291,21 +211,6 @@ public class MainPage extends Application {
     private HBox createResultRow(Commune commune) {
         HBox row = new HBox(10);
         row.setPadding(new Insets(10));
-<<<<<<< HEAD
-
-        Label cityLabel = new Label(cityName);
-        cityLabel.setStyle("-fx-text-fill: #333;");
-
-        // Set the alignment of the HBox to center
-        HBox cityLabelContainer = new HBox(cityLabel);
-        cityLabelContainer.setAlignment(Pos.CENTER);
-
-        Label priceM2Label = new Label("Prix m² " + priceM2 + "€");
-        Label averagePriceLabel = new Label("Prix moyen " + averagePrice + "€");
-        Label availableLabel = new Label(isAvailable ? "Oui" : "Non");
-        Button detailsButton = new Button("Voir plus");
-        detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-=======
         row.setStyle("-fx-background-color: #ffffff; -fx-border-color: #d3d3d3; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
         Label cityLabel = new Label(commune.getNomCommune());
@@ -325,7 +230,6 @@ public class MainPage extends Application {
         detailsButton.setOnAction(event -> {
             this.controller.showCommuneDetails(commune);
         });
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
 
         priceM2Label.setStyle("-fx-text-fill: #333;");
         averagePriceLabel.setStyle("-fx-text-fill: #333;");
@@ -349,11 +253,7 @@ public class MainPage extends Application {
         this.communeListView.getItems().clear();
         this.communeListView.getItems().addAll(communes);
 
-<<<<<<< HEAD
-        // Redéfinir la CellFactory pour s'assurer qu'elle est appliquée
-=======
         // Redefine CellFactory to ensure it is applied
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
         communeListView.setCellFactory(new Callback<ListView<Commune>, ListCell<Commune>>() {
             @Override
             public ListCell<Commune> call(ListView<Commune> listView) {
@@ -362,11 +262,7 @@ public class MainPage extends Application {
                     protected void updateItem(Commune commune, boolean empty) {
                         super.updateItem(commune, empty);
                         if (commune != null) {
-<<<<<<< HEAD
-                            HBox row = createResultRow(commune.getNomCommune(), commune.getPrixM2Moyen(), commune.getPrixMoyen(), commune.isMostImportant());
-=======
                             HBox row = createResultRow(commune);
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
                             row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-background-radius: 10px; -fx-border-color: #d3d3d3; -fx-border-radius: 10px;");
                             setGraphic(row);
                         } else {
@@ -385,8 +281,6 @@ public class MainPage extends Application {
     public Label getNumberOfRow() {
         return this.resultsLabel;
     }
-<<<<<<< HEAD
-=======
 
     public ImageView getImageUserIcon() {
         return this.userIcon;
@@ -395,5 +289,4 @@ public class MainPage extends Application {
     public Button getButtonCheminLePlusCourt(){
         return(this.cheminCourtButton);
     }
->>>>>>> 1987207e3b2b692ba8b86913782aaf6a44335d3f
 }
