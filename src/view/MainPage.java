@@ -2,6 +2,7 @@ package view;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -61,7 +61,7 @@ public class MainPage extends Application {
         SpacerBar.setPrefWidth(60);
 
         if (searchIcon != null) {
-            searchBox.getChildren().addAll(SpacerBar,searchIcon,this.searchField);
+            searchBox.getChildren().addAll(SpacerBar, searchIcon, this.searchField);
         } else {
             searchBox.getChildren().add(this.searchField);
         }
@@ -104,7 +104,7 @@ public class MainPage extends Application {
         // Combiner la barre de recherche et la barre d'utilisateur
         HBox topBar = new HBox(10);
         topBar.setStyle("-fx-padding: 10; -fx-background-color: #000000; -fx-text-fill: #fff;");
-        topBar.getChildren().addAll(logo,searchBox, spacer, userBox);
+        topBar.getChildren().addAll(logo, searchBox, spacer, userBox);
 
         // Résultats
         HBox resultsBox = new HBox(10);
@@ -112,7 +112,7 @@ public class MainPage extends Application {
         resultsBox.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-background-radius: 10px;");
         this.resultsLabel = new Label();
         resultsLabel.setStyle("-fx-text-fill: #333;");
-        
+
         // Region to push the filter button to the right
         Region spacerFilter = new Region();
         HBox.setHgrow(spacerFilter, Priority.ALWAYS);
@@ -121,6 +121,7 @@ public class MainPage extends Application {
 
         // ListView pour afficher les communes
         communeListView.setPrefSize(400, 400);
+        VBox.setVgrow(communeListView, Priority.ALWAYS); // Allow ListView to grow
 
         // Custom cell factory to display Commune objects
         communeListView.setCellFactory(new Callback<ListView<Commune>, ListCell<Commune>>() {
@@ -164,18 +165,23 @@ public class MainPage extends Application {
         row.setPadding(new Insets(10));
 
         Label cityLabel = new Label(cityName);
+        cityLabel.setStyle("-fx-text-fill: #333;");
+
+        // Set the alignment of the HBox to center
+        HBox cityLabelContainer = new HBox(cityLabel);
+        cityLabelContainer.setAlignment(Pos.CENTER);
+
         Label priceM2Label = new Label("Prix m² " + priceM2 + "€");
         Label averagePriceLabel = new Label("Prix moyen " + averagePrice + "€");
         Label availableLabel = new Label(isAvailable ? "Oui" : "Non");
         Button detailsButton = new Button("Voir plus");
         detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
 
-        cityLabel.setStyle("-fx-text-fill: #333;");
         priceM2Label.setStyle("-fx-text-fill: #333;");
         averagePriceLabel.setStyle("-fx-text-fill: #333;");
         availableLabel.setStyle("-fx-text-fill: #333;");
 
-        row.getChildren().addAll(cityLabel, priceM2Label, averagePriceLabel, availableLabel, detailsButton);
+        row.getChildren().addAll(cityLabelContainer, priceM2Label, averagePriceLabel, availableLabel, detailsButton);
         return row;
     }
 
