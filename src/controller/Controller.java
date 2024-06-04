@@ -3,12 +3,14 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Timer;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import dao.CommuneService;
 import dao.UserService;
@@ -22,12 +24,19 @@ import view.TrouverCheminCommune;
 import view.misc.CustomAlert;
 import view.ForgotPassword;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.SQLException;
 
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
@@ -310,34 +319,46 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     public void findPath(String startCommuneName, String endCommuneName) {
         CommuneService service = new CommuneService();
+        ServerConnectionManager connectionManager = loadConnectionManagerFromProperties("../properties/server.properties");
 
         try {
             Commune startCommune = getCommuneByName(startCommuneName);
             Commune endCommune = getCommuneByName(endCommuneName);
-    
+
             if (startCommune == null || endCommune == null) {
                 this.trouverCheminCommune.setResultLabel("Commune de départ ou d'arrivée introuvable.");
                 return;
             }
-    
+
             List<Commune> path = service.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune());
-    
+
             if (path.isEmpty()) {
                 this.trouverCheminCommune.setResultLabel("Aucun chemin trouvé entre les deux communes.");
             } else {
-                this.trouverCheminCommune.setResultLabel("Chemin trouvé :");
-                for (Commune neighbor : path) {
-                    Button neighborButton = new Button(neighbor.getNomCommune());
-                    neighborButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5px 10px; -fx-font-size: 10pt; -fx-border-radius: 5px; -fx-background-radius: 5px;");
-                    neighborButton.setOnAction(event -> CommuneDetailsPage.showCommune(neighbor));
-                    this.trouverCheminCommune.getHBoxBtnStorage().getChildren().add(neighborButton);
-                }
+                List<Integer> cityIds = path.stream().map(Commune::getIdCommune).collect(Collectors.toList());
+                connectionManager.retrieveImage(cityIds);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             this.trouverCheminCommune.setResultLabel("Erreur lors de la recherche du chemin.");
         }
     }
+
+    private ServerConnectionManager loadConnectionManagerFromProperties(String propertiesFile) {
+        try (FileInputStream input = new FileInputStream(propertiesFile)) {
+            Properties properties = new Properties();
+            properties.load(input);
+            String serverURL = properties.getProperty("url");
+            return new ServerConnectionManager(trouverCheminCommune, serverURL);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    
+
+
 
 
 
