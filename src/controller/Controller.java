@@ -2,6 +2,8 @@ package controller;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
@@ -207,7 +209,7 @@ public class Controller implements EventHandler<ActionEvent> {
     public void handleSearchEvent(String searchText) {
         List<Commune> filteredCommunes = getFilteredCommunes(searchText);
         this.mainPage.updateCommunesListView(filteredCommunes);
-        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " r\u00e9sultats");
     }   
 
     /**
@@ -238,9 +240,69 @@ public class Controller implements EventHandler<ActionEvent> {
                 filteredCommunes.add(commune);
             }
         }
-        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " resultat");
+        this.mainPage.getNumberOfRow().setText(filteredCommunes.size() + " r\u00e9sultats");
         return filteredCommunes;
     }
+
+
+    public void applyFiltersAndSort(String sortOption, boolean filterMorbihan, boolean filterFinistere, boolean filterCoteArmor, boolean filterIlleEtVilaine) {
+        if(sortOption.equals("A -> Z")){
+            Comparator<Commune> nomCommuneComparator = new Comparator<Commune>() {
+                @Override
+                public int compare(Commune commune1, Commune commune2) {
+                    return commune1.getNomCommune().compareTo(commune2.getNomCommune());
+                }
+            };
+            Collections.sort(this.communes, nomCommuneComparator);
+
+        } else if(sortOption.equals("Z -> A")){
+            Comparator<Commune> nomCommuneComparator = new Comparator<Commune>() {
+                @Override
+                public int compare(Commune commune1, Commune commune2) {
+                    return commune1.getNomCommune().compareTo(commune2.getNomCommune());
+                }
+            };
+            Collections.sort(this.communes, nomCommuneComparator.reversed());
+        }
+
+        ArrayList<Commune> filterList = new ArrayList<Commune>();
+
+
+        if(filterMorbihan){
+            for (Commune commune : this.communes) {
+                if(commune.getDepartement().getIdDep() == 56){
+                    filterList.add(commune);
+                }
+            }
+        } 
+        if(filterFinistere){
+            for (Commune commune : this.communes) {
+                if(commune.getDepartement().getIdDep() == 29){
+                    filterList.add(commune);
+                }
+            }
+        } 
+        if(filterIlleEtVilaine){
+            for (Commune commune : this.communes) {
+                if(commune.getDepartement().getIdDep() == 35){
+                    filterList.add(commune);
+                }
+            }
+        } 
+        if(filterCoteArmor){
+            for (Commune commune : this.communes) {
+                if(commune.getDepartement().getIdDep() == 22){
+                    filterList.add(commune);
+                }
+            }
+        }
+
+
+
+        mainPage.updateCommunesListView(filterList);
+        this.mainPage.getNumberOfRow().setText(filterList.size() + " r\u00e9sultats");
+    }
+    
 
 
 
@@ -745,7 +807,7 @@ public class Controller implements EventHandler<ActionEvent> {
         try {
             List<Commune> communesList = communeService.getAllCommunes();
             this.communes = new ArrayList<>(communesList);
-            this.mainPage.getNumberOfRow().setText(this.communes.size() + " résultat");
+            this.mainPage.getNumberOfRow().setText(this.communes.size() + " r\u00e9sultats");
         } catch (SQLException e) {
             e.printStackTrace();
         }

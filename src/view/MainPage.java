@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import controller.Controller;
 import data.Commune;
@@ -31,15 +32,13 @@ public class MainPage extends Application {
         this.controller = new Controller(this);
 
         // Initialize resultsLabel
-        this.resultsLabel = new Label("55 résultats");
+        this.resultsLabel = new Label("55 r\u00e9sultats");
         this.resultsLabel.setStyle("-fx-font-size: 18px; -fx-padding: 10px;");
 
         // Create filter button
         Button filterButton = new Button("Filtrer");
         filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        filterButton.setOnAction(event -> {
-            // Handle filter action
-        });
+        filterButton.setOnAction(event -> showFilterDialog());
 
         // HBox for results label and filter button
         HBox resultsBox = new HBox(10);
@@ -112,9 +111,6 @@ public class MainPage extends Application {
 
         menuIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> toggleMenu());
 
-       
-        
-
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -160,6 +156,7 @@ public class MainPage extends Application {
 
         StackPane mainPane = new StackPane();
         mainPane.getChildren().addAll(centerBox, menuBox);
+        StackPane.setAlignment(menuBox, Pos.CENTER_RIGHT);
 
         VBox mainBox = new VBox(10);
         mainBox.getChildren().addAll(topBar, mainPane);
@@ -185,8 +182,8 @@ public class MainPage extends Application {
     private VBox createMenuBox() {
         VBox menuBox = new VBox(10);
         menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
-        menuBox.setPadding(new Insets(10));
-        menuBox.setAlignment(Pos.CENTER_LEFT);
+        menuBox.setAlignment(Pos.CENTER_RIGHT);
+        menuBox.setMaxWidth(400);
 
         Label graphsLabel = new Label("Graphes");
         graphsLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
@@ -268,6 +265,64 @@ public class MainPage extends Application {
                 };
             }
         });
+    }
+
+
+    private void showFilterDialog() {
+        // Create the filter dialog
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Filtrer et trier");
+
+        // Radio buttons for sorting
+        ToggleGroup sortGroup = new ToggleGroup();
+        RadioButton sortAZ = new RadioButton("A -> Z");
+        sortAZ.setToggleGroup(sortGroup);
+        sortAZ.setSelected(true);
+        RadioButton sortZA = new RadioButton("Z -> A");
+        sortZA.setToggleGroup(sortGroup);
+
+        VBox sortBox = new VBox(10, sortAZ, sortZA);
+        sortBox.setPadding(new Insets(10));
+        sortBox.setStyle("-fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px;");
+
+        // Checkboxes for filters
+        CheckBox morbihanCheckBox = new CheckBox("Morbihan");
+        CheckBox finistereCheckBox = new CheckBox("Finist\u00e8re");
+        CheckBox coteArmorCheckBox = new CheckBox("C\u00f4tes-d'Armor");
+        CheckBox illeEtVilaineCheckBox = new CheckBox("Ille-et-Vilaine");
+
+        VBox filterBox = new VBox(10, morbihanCheckBox, finistereCheckBox, coteArmorCheckBox, illeEtVilaineCheckBox);
+        filterBox.setPadding(new Insets(10));
+        filterBox.setStyle("-fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px;");
+
+        // Apply button
+        Button applyButton = new Button("Appliquer");
+        applyButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
+        applyButton.setOnAction(event -> {
+            // Get selected sort option
+            RadioButton selectedSort = (RadioButton) sortGroup.getSelectedToggle();
+            String sortOption = selectedSort.getText();
+
+            // Get selected filters
+            boolean filterMorbihan = morbihanCheckBox.isSelected();
+            boolean filterFinistere = finistereCheckBox.isSelected();
+            boolean filterCoteArmor = coteArmorCheckBox.isSelected();
+            boolean filterIlleEtVilaine = illeEtVilaineCheckBox.isSelected();
+
+            // Apply the filters and sorting (you need to implement this method in your controller)
+            controller.applyFiltersAndSort(sortOption, filterMorbihan, filterFinistere, filterCoteArmor, filterIlleEtVilaine);
+            
+            dialog.close();
+        });
+
+        VBox dialogVBox = new VBox(20, new Label("Trier par :"), sortBox, new Label("Filtrer par département :"), filterBox, applyButton);
+        dialogVBox.setPadding(new Insets(20));
+        dialogVBox.setAlignment(Pos.CENTER);
+
+        Scene dialogScene = new Scene(dialogVBox, 400, 400);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 
     public TextField getSearchField() {
