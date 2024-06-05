@@ -9,8 +9,6 @@ import java.util.Timer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import dao.CommuneService;
 import dao.UserService;
@@ -26,11 +24,6 @@ import view.ForgotPassword;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.sql.SQLException;
 
 import java.util.TimerTask;
@@ -295,48 +288,36 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     /**
-    * Return a Commune for a String which correspond of commune name.
-    * @param communeName The String of the name of the commune
-    * @return A commune if the commune with the String name exists
-    * @throws SQLException 
-    */
-    public Commune getCommuneByName(String communeName) throws SQLException {
-        CommuneService communeService = new CommuneService();
-
-        List<Commune> allCommunes = communeService.getAllCommunes();
-        for (Commune commune : allCommunes) {
-            if (commune.getNomCommune().equalsIgnoreCase(communeName)) {
-                return commune;
-            }
-        }
-        return null;
-    }
-
-    /**
     * Allow to found the path between two communes. 
     * @param startCommuneName The names of the first commune.
     * @param endCommuneName The name of the destination commune.
     */
     public void findPath(String startCommuneName, String endCommuneName) {
         CommuneService service = new CommuneService();
-        ServerConnectionManager connectionManager = loadConnectionManagerFromProperties("../properties/server.properties");
 
         try {
-            Commune startCommune = getCommuneByName(startCommuneName);
-            Commune endCommune = getCommuneByName(endCommuneName);
+            Commune startCommune = service.getCommuneByName(startCommuneName);
+            Commune endCommune = service.getCommuneByName(endCommuneName);
 
             if (startCommune == null || endCommune == null) {
-                this.trouverCheminCommune.setResultLabel("Commune de départ ou d'arrivée introuvable.");
+                this.trouverCheminCommune.setResultLabel("Commune de d\u00e9part ou d'arriv\u00e9e introuvable.");
                 return;
-            }
-
-            List<Commune> path = service.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune());
-
-            if (path.isEmpty()) {
-                this.trouverCheminCommune.setResultLabel("Aucun chemin trouvé entre les deux communes.");
+            }else if(startCommune.getNomCommune().equalsIgnoreCase(endCommune.getNomCommune())){
+                this.trouverCheminCommune.setResultLabel("Commune de d\u00e9part ne peut pas \u00eatre la m\u00eame que la commune d'arriv\u00e9e.");
+                return;
             } else {
-                List<Integer> cityIds = path.stream().map(Commune::getIdCommune).collect(Collectors.toList());
+                List<Commune> path = service.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune());
+
+                if (path.isEmpty()) {
+                    this.trouverCheminCommune.setResultLabel("Aucun chemin trouv\u00e9 entre les deux communes.");
+                } else {
+                    ServerConnectionManager connectionManager = loadConnectionManagerFromProperties("../properties/server.properties");
+                    List<Integer> cityIds = new ArrayList<>();
+                    for (Commune commune : path) {
+                        cityIds.add(commune.getIdCommune());
+                    }
                 connectionManager.retrieveImage(cityIds);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

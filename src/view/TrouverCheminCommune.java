@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -63,13 +62,14 @@ public class TrouverCheminCommune extends Application {
 
         // Ajout de l'ImageView
         this.imageView = new ImageView();
-        this.imageView.setFitWidth(800); // Taille de l'image à ajuster
+        this.imageView.setImage(null);
+        this.imageView.setFitWidth(800);
         this.imageView.setFitHeight(600);
         StackPane imagePane = new StackPane(this.imageView);
 
         root.getChildren().addAll(topBar, inputBox, this.findPathButton, this.resultLabel, this.resultButtonBox, imagePane);
 
-        Scene scene = new Scene(root, 800, 1000); // Ajuster la hauteur pour accueillir l'image
+        Scene scene = new Scene(root, 800, 1000);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Trouver Chemin entre Communes");
         primaryStage.show();

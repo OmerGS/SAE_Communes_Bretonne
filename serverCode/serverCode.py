@@ -1,3 +1,8 @@
+# Code Python permettant la generations d'un graphe en liant le chemin d'une commune A vers une commune B.
+# Le programme JavaFX envoie une List de d'Ids de communes au code Python, le code python ensuite
+# lui trace les arrêtes de toutes les communes puis renvoie une image au code JavaFX.
+
+
 from flask import Flask, request, send_file
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -6,7 +11,7 @@ import ast
 
 app = Flask(__name__)
 
-# importation du fichier csv comme un panda dataframe
+# Importation du fichier CSV comme un panda dataframe
 communes = pd.read_csv("./voisinageCommunesBretonnes.csv", sep=';')
 
 def amezek(com):
@@ -56,14 +61,35 @@ def plot_graph():
     red_edges = create_path(connections)
 
     plt.figure(figsize=(20, 15))
-    nx.draw(G, pos=pos_insee, node_size=10, alpha=0.4, edge_color="gray", font_size=10, labels=label_insee)
-    nx.draw_networkx_edges(G, pos=pos_insee, edgelist=red_edges, edge_color='red', width=2)
+
+    # Positionnement des nœuds pour un espacement des noms de villes
+    pos = {node: (x, y) for node, (x, y) in pos_insee.items()}
+    pos_labels = {k: (x, y + 0.01) for k, (x, y) in pos.items()}
+
+    # Créer un sous-ensemble de labels pour n'inclure que les communes dans le chemin ou les communes de départ et d'arrivée
+    subset_labels = {com: label_insee[com] for com in G.nodes if com in connections or com == connections[0] or com == connections[-1]}
+    
+    nx.draw(G, pos=pos, node_size=10, alpha=0.4, edge_color="gray", font_size=10)
+    nx.draw_networkx_edges(G, pos=pos, edgelist=red_edges, edge_color='red', width=2)
+    nx.draw_networkx_labels(G, pos=pos_labels, labels=subset_labels, font_size=15, font_weight="bold")
+
+    # Trouver les limites des axes pour zoomer sur le chemin
+    min_x = min(pos[node][0] for node in connections)
+    max_x = max(pos[node][0] for node in connections)
+    min_y = min(pos[node][1] for node in connections)
+    max_y = max(pos[node][1] for node in connections)
+
+    # Ajouter une marge autour des limites des axes
+    margin = 0.1
+    plt.xlim(min_x - margin, max_x + margin)
+    plt.ylim(min_y - margin, max_y + margin)
 
     filename = "bretagne_graph_with_paths.png"
     plt.savefig(filename, dpi=300)
     plt.close()
 
     return send_file(filename, mimetype='image/png')
+
 
 if __name__ == '__main__':
     app.run(host='192.168.1.24', port=5000)
