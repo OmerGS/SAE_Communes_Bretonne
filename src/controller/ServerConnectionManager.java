@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -8,7 +7,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Properties;
 
 import javafx.scene.image.Image;
 import view.TrouverCheminCommune;
@@ -42,8 +40,7 @@ public class ServerConnectionManager {
                 this.trouverCheminCommune.setResultLabel("Erreur lors de la récupération du chemin.");
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            this.trouverCheminCommune.setResultLabel("Erreur lors de la recherche du chemin.");
+            this.trouverCheminCommune.setResultLabel("Connection au serveur impossible, ressayer plus tard.");
         }
     }
 }

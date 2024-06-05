@@ -136,4 +136,23 @@ public class CommuneService {
         }
         return Collections.emptyList();
     }
+
+
+    /**
+    * Return a Commune for a String which correspond of commune name.
+    * @param communeName The String of the name of the commune
+    * @return A commune if the commune with the String name exists
+    * @throws SQLException 
+    */
+    public Commune getCommuneByName(String communeName) throws SQLException {
+        CommuneService communeService = new CommuneService();
+
+        List<Commune> allCommunes = communeService.getAllCommunes();
+        for (Commune commune : allCommunes) {
+            if (commune.getNomCommune().equalsIgnoreCase(communeName)) {
+                return commune;
+            }
+        }
+        return null;
+    }
 }
