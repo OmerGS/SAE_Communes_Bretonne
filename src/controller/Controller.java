@@ -29,7 +29,6 @@ import java.sql.SQLException;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
@@ -412,7 +411,7 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
 
                     
-                    CustomAlert.showAlert("Connexion Reussi", "Vous vous etes connecté avec succès. Redirection dans 3 secondes");
+                    CustomAlert.showAlert("Connexion Reussi", "Vous vous etes connect\u00e9 avec succ\u00e8s. Redirection dans 2 secondes");
 
                         Timer timer = new Timer();
                         timer.schedule(new TimerTask() {
@@ -423,7 +422,7 @@ public class Controller implements EventHandler<ActionEvent> {
                                     mainPage.start(stage);
                                 });
                             }
-                        }, 3000);
+                        }, 2000);
 
                     //CONNEXION A LA PAGE PRINCIPAL
 

@@ -12,11 +12,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 /**
-* ConnectionPage which allow to connect to account.
+* ConnectionPage which allows to connect to an account.
 * @author O.Gunes, B.Campion. 
 */
 public class ConnectionPage extends Application {
@@ -27,22 +29,22 @@ public class ConnectionPage extends Application {
     private Controller controller;
 
     /**
-    * The signup link, which redirect to InscriptionPage. 
+    * The signup link, which redirects to InscriptionPage. 
     */
     private Hyperlink linkSignUp;
 
     /**
-    * The forgot password link, which redirect to ForgotPassword page. 
+    * The forgot password link, which redirects to ForgotPassword page. 
     */
     private Hyperlink linkForgotPassword;
 
     /**
-    * The email TextField, which allow to write mail, with the format (user@example.net) 
+    * The email TextField, which allows to write email, with the format (user@example.net) 
     */
     private TextField emailField;
     
     /**
-    * The password PasswordField, which allow to write a password. 
+    * The password PasswordField, which allows to write a password. 
     */
     private PasswordField passwordField;
 
@@ -52,12 +54,12 @@ public class ConnectionPage extends Application {
     private Button btnLogin;
 
     /**
-    * The errorMessageLabel, which print variable message.
+    * The errorMessageLabel, which prints variable message.
     */
     private Label errorMessageLabel;
 
     /**
-    * The constructor of ConnectionPage, initialize the controller.
+    * The constructor of ConnectionPage, initializes the controller.
     * @param controller The controller.
     */
     public ConnectionPage(Controller controller){
@@ -65,33 +67,33 @@ public class ConnectionPage extends Application {
     }
 
     /**
-    * Launch the programs
+    * Launch the program.
     * @param primaryStage The Stage. 
     */
     @Override
     public void start(Stage primaryStage) {
-        // Image pour le logo
+        // Image for the logo
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
         logo.setFitWidth(100);
         logo.setFitHeight(100);
         logo.setClip(new Circle(50, 50, 50));
 
-        // Label pour la région
+        // Label for the region
         Label lblRegion = new Label("Region");
         Label lblBretagne = new Label("Bretagne");
         lblRegion.setStyle("-fx-font-size: 24px; -fx-text-fill: #333333;");
         lblBretagne.setStyle("-fx-font-size: 24px; -fx-text-fill: #333333;");
 
-        // Layout pour le logo et le label
+        // Layout for the logo and the label
         VBox logoBox = new VBox(10, logo, lblRegion, lblBretagne);
         logoBox.setAlignment(Pos.CENTER);
         logoBox.setPadding(new Insets(20, 200, 20, 0));
 
-        // Titre pour la section de connexion
+        // Title for the connection section
         Label lblConnection = new Label("Connexion");
         lblConnection.setStyle("-fx-font-size: 35px; -fx-font-family: 'Arial'; -fx-text-fill: #333333;");
 
-        // Champs avec placeholders
+        // Fields with placeholders
         this.emailField = new TextField();
         this.emailField.setPromptText("e-mail");
         this.emailField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
@@ -100,7 +102,7 @@ public class ConnectionPage extends Application {
         this.passwordField.setPromptText("mot de passe");
         this.passwordField.setStyle("-fx-pref-width: 350px; -fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
-        // Bouton de connexion
+        // Login button
         this.btnLogin = new Button("Connexion");
         this.btnLogin.setStyle("-fx-pref-width: 350px; -fx-background-color: linear-gradient(to right, #FF512F 0%, #F09819 51%, #FF512F 100%);"
                 + "-fx-padding: 15px 45px;"
@@ -127,60 +129,71 @@ public class ConnectionPage extends Application {
             btnLogin.setScaleY(1);
         });
 
-        // Hyperliens
+        // Hyperlinks
         this.linkSignUp = new Hyperlink("S'inscrire");
         Label linkPasDeCompte = new Label("Pas de compte ?");
         this.linkForgotPassword = new Hyperlink("Mot de passe oubli\u00e9");
         linkSignUp.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';-fx-font-weight: bold");
         linkForgotPassword.setStyle("-fx-text-fill: #1a73e8; -fx-font-family: 'Arial';-fx-font-weight: bold");
 
-        // HBox pour linkPasDeCompte et linkSignUp
+        // HBox for linkPasDeCompte and linkSignUp
         HBox signUpBox = new HBox(5, linkPasDeCompte, linkSignUp);
         signUpBox.setAlignment(Pos.CENTER);
 
-        // VBox pour les liens
+        // VBox for the links
         VBox linksBox = new VBox(10, signUpBox, linkForgotPassword);
         linksBox.setPadding(new Insets(20, 0, 0, 0));
         linksBox.setAlignment(Pos.CENTER);
 
-        // Label pour les messages d'erreur
+        // Label for error messages
         this.errorMessageLabel = new Label();
         this.errorMessageLabel.setTextFill(Color.RED);
         this.errorMessageLabel.setStyle("-fx-font-size: 14px;");
         this.errorMessageLabel.setVisible(false);
 
-        // VBox pour les champs et les boutons
+        // VBox for the fields and buttons
         VBox fieldBox = new VBox(15, lblConnection, emailField, passwordField, btnLogin, errorMessageLabel);
         fieldBox.setPadding(new Insets(20));
         fieldBox.setAlignment(Pos.CENTER);
 
-        // Séparateur avec une couleur personnalisée
+        // Separator with custom color
         Separator separator = new Separator();
         separator.setPadding(new Insets(10, 0, 10, 0));
-        separator.setStyle("-fx-color: #333333;"); // Changez la couleur ici
+        separator.setStyle("-fx-color: #333333;"); // Change the color here
 
-        // VBox pour les champs, le séparateur et les liens
+        // VBox for the fields, separator, and links
         VBox centralBox = new VBox(20, fieldBox, separator, linksBox);
         centralBox.setAlignment(Pos.CENTER);
 
-        // HBox pour le logo et le contenu central
+        // HBox for the logo and central content
         HBox mainBox = new HBox(20, logoBox, centralBox);
         mainBox.setPadding(new Insets(20));
         mainBox.setAlignment(Pos.CENTER);
-        // Syntaxe du dégradé linéaire corrigée pour JavaFX CSS
+        // Corrected linear gradient syntax for JavaFX CSS
         mainBox.setStyle("-fx-background-color: linear-gradient(to right, rgba(255,165,0,1) 0%, rgba(0,0,0,0) 50%, rgba(255,255,255,1) 100%);");
 
-        // Scène
+        // Scene
         Scene scene = new Scene(mainBox, 800, 600);
 
-        // Configuration de la fenêtre
+        // Store if the stage is in full screen before changing the view
+        boolean wasFullScreen = primaryStage.isFullScreen();
+
+        // Window configuration
         primaryStage.setScene(scene);
         primaryStage.setTitle("Region Bretagne");
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
+
+        if (wasFullScreen) {
+            primaryStage.setFullScreen(true);
+        } else {
+            primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
+            primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
+        }
+
         primaryStage.show();
 
-        // Liaison des événements
+        // Event bindings
         this.linkSignUp.setOnAction(this.controller);
         this.linkForgotPassword.setOnAction(this.controller);
         this.emailField.setOnAction(this.controller);
