@@ -288,9 +288,13 @@ public class MainPage extends Application {
 
         // Checkboxes for filters
         CheckBox morbihanCheckBox = new CheckBox("Morbihan");
+        morbihanCheckBox.setSelected(true);
         CheckBox finistereCheckBox = new CheckBox("Finist\u00e8re");
+        finistereCheckBox.setSelected(true);
         CheckBox coteArmorCheckBox = new CheckBox("C\u00f4tes-d'Armor");
+        coteArmorCheckBox.setSelected(true);
         CheckBox illeEtVilaineCheckBox = new CheckBox("Ille-et-Vilaine");
+        illeEtVilaineCheckBox.setSelected(true);
 
         VBox filterBox = new VBox(10, morbihanCheckBox, finistereCheckBox, coteArmorCheckBox, illeEtVilaineCheckBox);
         filterBox.setPadding(new Insets(10));

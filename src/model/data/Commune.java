@@ -30,14 +30,38 @@ public class Commune {
     */
     private int nbAppart;
 
-
+    /**
+    * Average price of a house. 
+    */
     private double prixMoyen;
+
+    /**
+    * Average price of one square meter. 
+    */
     private double prixM2Moyen;
+
+    /**
+    * Average area of a house. 
+    */
     private double surfaceMoy;
+
+    /**
+    * The money spend on cultural activities. 
+    */
     private double depCulturellesTotales;
+
+    /**
+    * The budget of the commune 
+    */
     private double budgetTotal;
+
+    /**
+    * Number of human living in the commune. 
+    */
     private int population;
 
+    
+    private int lAnnee;
 
     /**
     * The department of the commune. 
@@ -56,9 +80,10 @@ public class Commune {
     
 
 
-    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
+    public Commune(int lAnnee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
         this.communesVoisines = new ArrayList<Commune>();
 
+        this.lAnnee = lAnnee;
 
         //idCommune
         if (isValidIdCommune(idCommune)) {
@@ -170,6 +195,15 @@ public class Commune {
      */
     public int getIdCommune() {
         return idCommune;
+    }
+
+    /**
+    * Return the year of the commune. 
+    *
+    * @return The year of commune.
+    */
+    public int getlAnnee(){
+        return(this.lAnnee);
     }
 
     /**
