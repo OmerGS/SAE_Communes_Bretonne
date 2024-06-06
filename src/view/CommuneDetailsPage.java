@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,6 +17,8 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
+
+import controller.Controller;
 
 /**
  * CommuneDetailsPage is a class that displays the details of a specific commune.
@@ -30,7 +33,7 @@ public class CommuneDetailsPage {
      *
      * @param commune The commune whose details are to be displayed.
      */
-    public static void showCommune(Commune commune) {
+    public static void showCommune(Commune commune, Controller controller) {
         Stage detailsStage = new Stage();
         detailsStage.setTitle("Détails de la commune");
 
@@ -73,7 +76,8 @@ public class CommuneDetailsPage {
             "Surface moyenne: " + commune.getSurfaceMoy(),
             "Dépenses culturelles totales: " + commune.getDepCulturellesTotales(),
             "Population: " + commune.getPopulation(),
-            "Importante: " + (commune.isMostImportant() ? "Oui" : "Non")
+            "Importante: " + (commune.isMostImportant() ? "Oui" : "Non"),
+            "Données recoltées en : " + commune.getlAnnee(),
         };
 
         for (int i = 0; i < infoTexts.length; i++) {
@@ -97,17 +101,20 @@ public class CommuneDetailsPage {
             for (Commune neighbor : neighbors) {
                 Button neighborButton = new Button(neighbor.getNomCommune());
                 neighborButton.getStyleClass().add("neighbor-button");
-                neighborButton.setOnAction(event -> showCommune(neighbor));
+                neighborButton.setOnAction(event -> showCommune(neighbor, controller));
                 neighborsPane.getChildren().add(neighborButton);
             }
         }
+
+        // Create ComboBox containing years
+        ComboBox<Integer> yearsComboBox = createYearsComboBox(commune, controller);
 
         Button closeButton = new Button("Fermer");
         closeButton.getStyleClass().add("close-button");
         closeButton.setOnAction(event -> detailsStage.close());
 
         detailsBox.getChildren().addAll(
-                namePane, infoGrid, neighborsLabel, neighborsPane, closeButton
+                namePane, infoGrid, neighborsLabel, neighborsPane, yearsComboBox, closeButton
         );
 
         ScrollPane scrollPane = new ScrollPane(detailsBox);
@@ -135,5 +142,57 @@ public class CommuneDetailsPage {
         label.getStyleClass().add("detail-label");
         box.getChildren().add(label);
         return box;
+    }
+
+    /**
+     * Create a ComboBox containing the years for which data is available for the given commune.
+     *
+     * @param commune The commune for which to create the ComboBox.
+     * @return The ComboBox containing the years.
+     */
+    private static ComboBox<Integer> createYearsComboBox(Commune commune, Controller controller) {
+        ComboBox<Integer> yearsComboBox = new ComboBox<>();
+
+        // Get the years for the commune
+        ArrayList<Integer> years = controller.getYearsForCommune(commune);
+
+
+
+
+
+
+
+
+        
+
+        /* ---- A NETTOYER ET A METTRE LE EVENT DANS LE CONTROLLER ---- */
+        //! TODO
+
+
+
+
+        // Add the years to the ComboBox
+        for (int year : years) {
+            yearsComboBox.getItems().add(year);
+        }
+
+        // Set default selection to the first year, if available
+        if (years.size() > 0) {
+            yearsComboBox.setValue(commune.getlAnnee());
+        }
+
+
+        yearsComboBox.setOnAction(event -> {
+            int selectedYear = yearsComboBox.getValue();
+            // Get commune details for the selected year
+            Commune selectedCommune = controller.getCommuneForYearAndCommune(commune.getNomCommune(), selectedYear);
+            CommuneDetailsPage.showCommune(selectedCommune, controller);
+        });
+
+        // Style the ComboBox as needed
+        yearsComboBox.setPromptText("Sélectionnez une année");
+        yearsComboBox.setMaxWidth(Double.MAX_VALUE);
+
+        return yearsComboBox;
     }
 }

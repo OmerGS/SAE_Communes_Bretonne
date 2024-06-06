@@ -83,7 +83,9 @@ public class Controller implements EventHandler<ActionEvent> {
     /**
     * ArrayList which contain commune. 
     */
-    private ArrayList<Commune> communes;
+    private ArrayList<Commune> communesRecente;
+
+    private List<Commune> communeToute;
 
     /**
     * The constructor of Controller. 
@@ -218,7 +220,7 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     public void showCommuneDetails(Commune commune){
         try {
-            CommuneDetailsPage.showCommune(commune);
+            CommuneDetailsPage.showCommune(commune, this);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -230,7 +232,7 @@ public class Controller implements EventHandler<ActionEvent> {
     * @return An ArrayList of commune.
     */
     public ArrayList<Commune> getFilteredCommunes(String searchText) {
-        ArrayList<Commune> allCommunes = this.communes;
+        ArrayList<Commune> allCommunes = this.communesRecente;
         ArrayList<Commune> filteredCommunes = new ArrayList<>();
         
         
@@ -253,7 +255,7 @@ public class Controller implements EventHandler<ActionEvent> {
                     return commune1.getNomCommune().compareTo(commune2.getNomCommune());
                 }
             };
-            Collections.sort(this.communes, nomCommuneComparator);
+            Collections.sort(this.communesRecente, nomCommuneComparator);
 
         } else if(sortOption.equals("Z -> A")){
             Comparator<Commune> nomCommuneComparator = new Comparator<Commune>() {
@@ -262,41 +264,20 @@ public class Controller implements EventHandler<ActionEvent> {
                     return commune1.getNomCommune().compareTo(commune2.getNomCommune());
                 }
             };
-            Collections.sort(this.communes, nomCommuneComparator.reversed());
+            Collections.sort(this.communesRecente, nomCommuneComparator.reversed());
         }
 
         ArrayList<Commune> filterList = new ArrayList<Commune>();
 
 
-        if(filterMorbihan){
-            for (Commune commune : this.communes) {
-                if(commune.getDepartement().getIdDep() == 56){
-                    filterList.add(commune);
-                }
+        for (Commune commune : this.communesRecente) {
+            if ((filterMorbihan && commune.getDepartement().getIdDep() == 56) ||
+                (filterFinistere && commune.getDepartement().getIdDep() == 29) ||
+                (filterIlleEtVilaine && commune.getDepartement().getIdDep() == 35) ||
+                (filterCoteArmor && commune.getDepartement().getIdDep() == 22)) {
+                filterList.add(commune);
             }
-        } 
-        if(filterFinistere){
-            for (Commune commune : this.communes) {
-                if(commune.getDepartement().getIdDep() == 29){
-                    filterList.add(commune);
-                }
-            }
-        } 
-        if(filterIlleEtVilaine){
-            for (Commune commune : this.communes) {
-                if(commune.getDepartement().getIdDep() == 35){
-                    filterList.add(commune);
-                }
-            }
-        } 
-        if(filterCoteArmor){
-            for (Commune commune : this.communes) {
-                if(commune.getDepartement().getIdDep() == 22){
-                    filterList.add(commune);
-                }
-            }
-        }
-
+        }        
 
 
         mainPage.updateCommunesListView(filterList);
@@ -386,6 +367,11 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
+    /**
+    * 
+    * @param propertiesFile
+    * @return
+    */
     private ServerConnectionManager loadConnectionManagerFromProperties(String propertiesFile) {
         try (FileInputStream input = new FileInputStream(propertiesFile)) {
             Properties properties = new Properties();
@@ -801,17 +787,78 @@ public class Controller implements EventHandler<ActionEvent> {
      * @return Une liste de noms de communes.
      */
     public ArrayList<Commune> getCommunes() {
-        this.communes = new ArrayList<>();
+        this.communesRecente = new ArrayList<>();
         CommuneService communeService = new CommuneService();
-
+    
         try {
-            List<Commune> communesList = communeService.getAllCommunes();
-            this.communes = new ArrayList<>(communesList);
-            this.mainPage.getNumberOfRow().setText(this.communes.size() + " r\u00e9sultats");
+            this.communeToute = communeService.getAllCommunes();
+            
+    
+            int mostRecentYear = -1;
+    
+           
+            for (int i = 0; i < communeToute.size(); i++) {
+                Commune commune = communeToute.get(i);
+                int currentYear = commune.getlAnnee();
+                if (currentYear > mostRecentYear) {
+                    mostRecentYear = currentYear;
+                }
+            }
+    
+            
+            ArrayList<Commune> recentCommunes = new ArrayList<>();
+            for (int i = 0; i < communeToute.size(); i++) {
+                Commune commune = communeToute.get(i);
+                if (commune.getlAnnee() == mostRecentYear) {
+                    recentCommunes.add(commune);
+                }
+            }
+    
+            this.communesRecente = recentCommunes;
+    
+            this.mainPage.getNumberOfRow().setText(this.communesRecente.size() + " résultats");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return communes;
+    
+        return this.communesRecente;
     }
+
+
+
+    public ArrayList<Integer> getYearsForCommune(Commune commune) {
+        List<Commune> allCommunes = this.communeToute;
+        ArrayList<Integer> returnValue = new ArrayList<Integer>();
+
+    
+        for (Commune currentCommune : allCommunes) {
+            if (currentCommune.getNomCommune().equals(commune.getNomCommune())) {
+                returnValue.add(currentCommune.getlAnnee());
+
+            }
+        }
+
+        return(returnValue);
+    }
+
+
+    public Commune getCommuneForYearAndCommune(String communeName, int year){
+        List<Commune> allCommunes = this.communeToute;
+        Commune returnCommune = null;
+
+        for (Commune currentCommune : allCommunes) {
+            if(currentCommune.getNomCommune().equals(communeName) && currentCommune.getlAnnee() == year){
+                returnCommune = currentCommune;
+                break;
+            }
+        }
+
+        return(returnCommune);
+    }
+    
+    
+    
+    
+    
 
 }

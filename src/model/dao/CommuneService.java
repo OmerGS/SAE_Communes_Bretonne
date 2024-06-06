@@ -23,31 +23,30 @@ public class CommuneService {
 
 
     public List<Commune> getAllCommunes() throws SQLException {
-        Map<Integer, Commune> communes = new HashMap<>();
-
-
+        Map<Integer, List<Commune>> communesByYear = new HashMap<>();
+        Map<Integer, Commune> communesById = new HashMap<>();
+    
         String query = "SELECT c.idCommune, c.nomCommune, c.leDepartement, " +
                "da.nbMaison, da.nbAppart, da.prixMoyen, da.prixM2Moyen, da.SurfaceMoy, " +
                "da.depensesCulturellesTotales, da.budgetTotal, da.population, " +
-               "d.nomDep " +
+               "d.nomDep, da.lAnnee " +
                "FROM Commune c " +
                "JOIN DonneesAnnuelles da ON c.idCommune = da.laCommune " +
-               "JOIN Departement d ON c.leDepartement = d.idDep " +
-               "WHERE da.lAnnee = (SELECT MAX(lAnnee) FROM DonneesAnnuelles)";
-
+               "JOIN Departement d ON c.leDepartement = d.idDep";
+    
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
-
+    
             while (resultSet.next()) {
                 int idCommune = resultSet.getInt("idCommune");
                 String nomCommune = resultSet.getString("nomCommune");
                 int leDepartement = resultSet.getInt("leDepartement");
-
+    
                 // Récupération des données du département
                 String nomDepartement = resultSet.getString("nomDep");
                 Departement departement = new Departement(leDepartement, nomDepartement, 0);
-
+    
                 // Récupération des données annuelles
                 int nbMaison = resultSet.getInt("nbMaison");
                 int nbAppart = resultSet.getInt("nbAppart");
@@ -57,43 +56,56 @@ public class CommuneService {
                 double depensesCulturellesTotales = resultSet.getDouble("depensesCulturellesTotales");
                 double budgetTotal = resultSet.getDouble("budgetTotal");
                 int population = resultSet.getInt("population");
-
+                int lAnnee = resultSet.getInt("lAnnee");
+    
                 try {
-                    Commune commune = new Commune(idCommune, nomCommune, nbMaison, nbAppart, prixMoyen,
+                    Commune commune = new Commune(lAnnee, idCommune, nomCommune, nbMaison, nbAppart, prixMoyen,
                                                   prixM2Moyen, surfaceMoyenne, depensesCulturellesTotales, budgetTotal, population, departement);
-                    communes.put(idCommune, commune);
+    
+                    // Ajouter la commune à la liste correspondante par année
+                    List<Commune> communesForYear = communesByYear.getOrDefault(lAnnee, new ArrayList<>());
+                    communesForYear.add(commune);
+                    communesByYear.put(lAnnee, communesForYear);
+    
+                    // Ajouter la commune à la map des communes par ID
+                    communesById.put(idCommune, commune);
                 } catch (InvalidCommuneIdException | InvalidCommuneNameException e) {
                     e.printStackTrace();
                 }
             }
         }
-
-
+    
         String voisinageQuery = "SELECT commune, communeVoisine FROM Voisinage";
         List<int[]> voisinages = new ArrayList<>();
-
+    
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(voisinageQuery);
              ResultSet resultSet = statement.executeQuery()) {
-
+    
             while (resultSet.next()) {
                 int idCommune = resultSet.getInt("commune");
                 int idCommuneVoisine = resultSet.getInt("communeVoisine");
                 voisinages.add(new int[]{idCommune, idCommuneVoisine});
             }
         }
-
+    
         for (int[] voisinage : voisinages) {
-            Commune commune = communes.get(voisinage[0]);
-            Commune communeVoisine = communes.get(voisinage[1]);
-
+            Commune commune = communesById.get(voisinage[0]);
+            Commune communeVoisine = communesById.get(voisinage[1]);
+    
             if (commune != null && communeVoisine != null) {
                 commune.addVoisine(communeVoisine);
             }
         }
-
-        return new ArrayList<>(communes.values());
+    
+        // Retourner toutes les communes
+        List<Commune> allCommunes = new ArrayList<>();
+        for (List<Commune> communes : communesByYear.values()) {
+            allCommunes.addAll(communes);
+        }
+        return allCommunes;
     }
+    
 
 
 
