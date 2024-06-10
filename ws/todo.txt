@@ -1,0 +1,10 @@
+Modificate the work and the event call in CommuneDetailsPage.
+
+isValidEmail Revoir cette methode !
+
+1. Refresh button in main page which allow to refresh the database, it will call getCommune from Controller.
+2. Account page, which can modify the user name, surname, the email, can logout, view if you are admin are not.
+3. Administrators Page, display only if your are administrator you can edit, create, update, delete data.
+4. Favorite, you can like some commune and it will be displayed in this page. (In database we will be store the favorite commune ID)
+5. Exporter les données.
+6. Modifier trouverCheminCommune pour avoir une liste des communes qu'on va traverser dans l'ordre.

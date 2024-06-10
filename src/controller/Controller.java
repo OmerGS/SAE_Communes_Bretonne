@@ -338,8 +338,8 @@ public class Controller implements EventHandler<ActionEvent> {
         CommuneService service = new CommuneService();
 
         try {
-            Commune startCommune = service.getCommuneByName(startCommuneName);
-            Commune endCommune = service.getCommuneByName(endCommuneName);
+            Commune startCommune = service.getCommuneByName(startCommuneName, this.communeToute);
+            Commune endCommune = service.getCommuneByName(endCommuneName, this.communeToute);
 
             if (startCommune == null || endCommune == null) {
                 this.trouverCheminCommune.setResultLabel("Commune de d\u00e9part ou d'arriv\u00e9e introuvable.");
@@ -348,7 +348,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 this.trouverCheminCommune.setResultLabel("Commune de d\u00e9part ne peut pas \u00eatre la m\u00eame que la commune d'arriv\u00e9e.");
                 return;
             } else {
-                List<Commune> path = service.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune());
+                List<Commune> path = service.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune(), this.communeToute);
 
                 if (path.isEmpty()) {
                     this.trouverCheminCommune.setResultLabel("Aucun chemin trouv\u00e9 entre les deux communes.");
@@ -783,9 +783,9 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     /**
-     * Méthode pour récupérer la liste des communes depuis la base de données.
-     * @return Une liste de noms de communes.
-     */
+    * Allow to get all of the commune.
+    * @return ArrayList<Commune> which contains the most recent year for each commune.
+    */
     public ArrayList<Commune> getCommunes() {
         this.communesRecente = new ArrayList<>();
         CommuneService communeService = new CommuneService();
@@ -793,7 +793,8 @@ public class Controller implements EventHandler<ActionEvent> {
         try {
             this.communeToute = communeService.getAllCommunes();
             
-    
+            //l'annee la plus recente qu'on a actuellement (-1), 
+            //(preventive difficile d'avoir les données pour l'année en dessous de -1).
             int mostRecentYear = -1;
     
            
@@ -805,7 +806,6 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
             }
     
-            
             ArrayList<Commune> recentCommunes = new ArrayList<>();
             for (int i = 0; i < communeToute.size(); i++) {
                 Commune commune = communeToute.get(i);
@@ -826,11 +826,17 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+    /**
+    * Allow to get all of available year of data for a Commune 
+    * @param commune The commune we look for the data
+    *
+    * @return ArrayList of Integer which contains all of years of data.
+    * 
+    */
     public ArrayList<Integer> getYearsForCommune(Commune commune) {
         List<Commune> allCommunes = this.communeToute;
         ArrayList<Integer> returnValue = new ArrayList<Integer>();
 
-    
         for (Commune currentCommune : allCommunes) {
             if (currentCommune.getNomCommune().equals(commune.getNomCommune())) {
                 returnValue.add(currentCommune.getlAnnee());
@@ -842,6 +848,13 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
 
+    /**
+    * Allow to get a specific commune which contains data of specified year 
+    * @param communeName The name of the commune
+    * @param year Year of data
+    *
+    * @return Data of commune for year passed in parameter
+    */
     public Commune getCommuneForYearAndCommune(String communeName, int year){
         List<Commune> allCommunes = this.communeToute;
         Commune returnCommune = null;
@@ -855,10 +868,4 @@ public class Controller implements EventHandler<ActionEvent> {
 
         return(returnCommune);
     }
-    
-    
-    
-    
-    
-
 }

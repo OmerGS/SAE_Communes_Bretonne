@@ -194,7 +194,7 @@ public class Commune {
      * @return The ID of the commune.
      */
     public int getIdCommune() {
-        return idCommune;
+        return this.idCommune;
     }
 
     /**
