@@ -22,6 +22,11 @@ import java.util.Set;
 public class CommuneService {
 
 
+    /**
+    * Get all of the commune which is in the database.
+    * @return List<Commune>.
+    * @throws SQLException
+    */
     public List<Commune> getAllCommunes() throws SQLException {
         Map<Integer, List<Commune>> communesByYear = new HashMap<>();
         Map<Integer, Commune> communesById = new HashMap<>();
@@ -106,15 +111,16 @@ public class CommuneService {
         return allCommunes;
     }
     
-
-
-
-
-
-
-    public List<Commune> cheminEntreCommune(int startId, int endId) throws SQLException {
+    /**
+    * Return the path of commune for go to commune start to commune end. 
+    * @param startId The commune of start
+    * @param endId The commune of end
+    * @param allCommunes All of the commune
+    * @return List<Commune> contains path.
+    * @throws SQLException
+    */
+    public List<Commune> cheminEntreCommune(int startId, int endId, List<Commune> allCommunes) throws SQLException {
         Map<Integer, Commune> communeMap = new HashMap<>();
-        List<Commune> allCommunes = getAllCommunes();
         for (Commune commune : allCommunes) {
             communeMap.put(commune.getIdCommune(), commune);
         }
@@ -133,8 +139,8 @@ public class CommuneService {
             Commune current = queue.poll();
             if (current.equals(endCommune)) {
                 List<Commune> path = new LinkedList<>();
-                for (Commune at = endCommune; at != null; at = previous.get(at)) {
-                    path.add(0, at);
+                for (Commune communeTrouve = endCommune; communeTrouve != null; communeTrouve = previous.get(communeTrouve)) {
+                    path.add(0, communeTrouve);
                 }
                 return path;
             }
@@ -156,10 +162,7 @@ public class CommuneService {
     * @return A commune if the commune with the String name exists
     * @throws SQLException 
     */
-    public Commune getCommuneByName(String communeName) throws SQLException {
-        CommuneService communeService = new CommuneService();
-
-        List<Commune> allCommunes = communeService.getAllCommunes();
+    public Commune getCommuneByName(String communeName, List<Commune> allCommunes) throws SQLException {
         for (Commune commune : allCommunes) {
             if (commune.getNomCommune().equalsIgnoreCase(communeName)) {
                 return commune;
