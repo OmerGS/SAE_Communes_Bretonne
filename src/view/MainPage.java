@@ -30,6 +30,9 @@ public class MainPage extends Application {
     private Button finistereFilterButton;
     private Button coteArmorFilterButton;
     private Button illeEtVilaineFilterButton;
+    private Button reloadDatabase;
+    private Button editData;
+
 
     public MainPage(Controller controller){
         this.controller = controller;
@@ -186,6 +189,8 @@ public class MainPage extends Application {
         menuBox = createMenuBox();
         menuBox.setVisible(false);
 
+        this.controller.verifyAdmin();
+
         StackPane mainPane = new StackPane();
         mainPane.getChildren().addAll(centerBox, menuBox);
         StackPane.setAlignment(menuBox, Pos.CENTER_RIGHT);
@@ -221,13 +226,18 @@ public class MainPage extends Application {
         this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.cheminCourtButton.setOnAction(this.controller);
 
-        Label editData = new Label("Modifier les données");
-        editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.editData = new Button("Modifier les données");
+        this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.editData.setOnAction(this.controller);
 
         Label exportDataLabel = new Label("Exporter Données");
         exportDataLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
 
-        menuBox.getChildren().addAll(this.cheminCourtButton, editData, exportDataLabel);
+        this.reloadDatabase = new Button("Rechargez la base de données");
+        this.reloadDatabase.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.reloadDatabase.setOnAction(this.controller);
+
+        menuBox.getChildren().addAll(this.cheminCourtButton, editData, exportDataLabel, this.reloadDatabase);
         return menuBox;
     }
 
@@ -264,6 +274,11 @@ public class MainPage extends Application {
 
     private void loadCommunes() {
         List<Commune> communes = controller.getCommunesFromDataBase();
+        communeListView.getItems().addAll(communes);
+    }
+
+
+    public void loadCommunes(List<Commune> communes) {
         communeListView.getItems().addAll(communes);
     }
 
@@ -331,5 +346,13 @@ public class MainPage extends Application {
 
     public Button getIlleEtVilaineFilterButton() {
         return illeEtVilaineFilterButton;
+    }
+
+    public Button getReloadDatabase() {
+        return reloadDatabase;
+    }
+
+    public Button getEditData() {
+        return editData;
     }
 }
