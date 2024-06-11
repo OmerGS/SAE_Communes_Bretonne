@@ -14,6 +14,7 @@ import dao.CommuneService;
 import dao.UserService;
 import data.Commune;
 import data.Utilisateur;
+import view.BretagneApp;
 import view.CommuneDetailsPage;
 import view.ConnectionPage;
 import view.InscriptionPage;
@@ -86,32 +87,46 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private List<Commune> communeToute;
 
-    private Utilisateur currentUser = null;
+    private Utilisateur currentUser;
+
+    private ArrayList<Utilisateur> listeUtilisateur;
+
+    private UserService userServices;
+
+    private BretagneApp accountPage;
 
     /**
     * The constructor of Controller. 
     * @param connectionPage
     */
     public Controller(MainPage mainPage) {
+        this.userServices = new UserService();
+        this.listeUtilisateur = this.userServices.loadAllUsers();
         this.connectionPage = new ConnectionPage(this);
         this.inscriptionPage = new InscriptionPage(this);
         this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
         this.trouverCheminCommune = new TrouverCheminCommune(this);
+        this.accountPage = new BretagneApp();
         this.mainPage = mainPage;
-
     }    
 
     /**
     * The Empty constructor of controller 
     */
     public Controller() {
+        this.userServices = new UserService();
+        this.listeUtilisateur = this.userServices.loadAllUsers();
         this.connectionPage = new ConnectionPage(this);
         this.inscriptionPage = new InscriptionPage(this);
-        this.forgotPassword = new ForgotPassword(this);
+        this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
         this.trouverCheminCommune = new TrouverCheminCommune(this);
-        this.mainPage = new MainPage();
+        this.accountPage = new BretagneApp();
+    }
+
+    public void setMainPage(MainPage mainPage){
+        this.mainPage = mainPage;
     }
 
 
@@ -289,6 +304,25 @@ public class Controller implements EventHandler<ActionEvent> {
     }
     
 
+    /**
+    * Open the login panel when the image of account is clicked.
+    */
+    public void connectionClicked() {
+        try {
+            if (this.currentUser != null) {
+                System.out.println("Utilisateur actuel : " + this.currentUser.getEmail());
+                Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
+                this.accountPage.start(stage);
+            } else {
+                System.out.println("Utilisateur non connecté.");
+                Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
+                this.connectionPage.start(stage);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
 
 
 
@@ -456,26 +490,22 @@ public class Controller implements EventHandler<ActionEvent> {
                 this.connectionPage.getErrorMessageLabel().setText("L'adresse e-mail n'est pas valide.");
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
             } else {
-                UserService userService = new UserService();
-                if (userService.validateLogin(email, password)){
+                if (this.userServices.validateLogin(email, password)){
                     this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
                     this.connectionPage.getErrorMessageLabel().setText("Connexion Reussi !");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
                     
+                    this.currentUser = searchList(email);
                     
-                    CustomAlert.showAlert("Connexion Reussi", "Vous vous etes connect\u00e9 avec succ\u00e8s. Redirection dans 2 secondes");
+                    try{
+                        CustomAlert.showAlert("Connexion Reussi", "Bonjour " + this.currentUser.getPrenom() + " ! Redirection en cours.");
+                        
+                        Stage stage = (Stage) connectionPage.getBtnLogin().getScene().getWindow();
+                        this.mainPage.start(stage);
 
-                        Timer timer = new Timer();
-                        timer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                Platform.runLater(() -> {
-                                    Stage stage = (Stage) connectionPage.getBtnLogin().getScene().getWindow();
-                                    mainPage.start(stage);
-                                });
-                            }
-                        }, 2000);
-
+                    } catch(Exception e1){
+                        System.out.println(e1.getMessage());
+                    }
                     
 
                 } else {
@@ -486,6 +516,16 @@ public class Controller implements EventHandler<ActionEvent> {
             }
         }
     }
+
+    private Utilisateur searchList(String email) {
+        for (Utilisateur user : this.listeUtilisateur) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null; // Si aucun utilisateur trouvé
+    }
+    
 
 
 
@@ -537,13 +577,13 @@ public class Controller implements EventHandler<ActionEvent> {
                 this.inscriptionPage.getErrorMessageLabel().setText("Les mots de passe ne correspondent pas.");
                 this.inscriptionPage.getErrorMessageLabel().setVisible(true);
             } else {
-                UserService creationUtilisateur = new UserService();
-                if (creationUtilisateur.emailExists(email)) {
+                if (this.userServices.emailExists(email)) {
                     this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                     this.inscriptionPage.getErrorMessageLabel().setText("L'adresse e-mail est d\u00e9j\u00e0 utilis\u00e9e.");
                     this.inscriptionPage.getErrorMessageLabel().setVisible(true);
                 } else {
-                    creationUtilisateur.createUser(lastName, firstName, email, password);
+                    this.userServices.createUser(lastName, firstName, email, password);
+                    this.userServices.loadAllUsers();
                     this.inscriptionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
                     this.inscriptionPage.getErrorMessageLabel().setText("Compte cr\u00e9e avec succ\u00e8s !");
                     this.inscriptionPage.getErrorMessageLabel().setVisible(true);
@@ -598,24 +638,23 @@ public class Controller implements EventHandler<ActionEvent> {
         if(e.getSource() == this.forgotPassword.getBtnLogin()){
             String email;
             if(this.forgotPassword.getBtnLogin().getText().equals("Recevoir Code")){
-                UserService serviceUtilisateur = new UserService();
                 String mail = this.forgotPassword.getEmailField().getText();
                 if(mail.isEmpty()){
                     this.forgotPassword.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                     this.forgotPassword.getErrorMessageLabel().setText("Tous les champs doivent etre rempli");
                     this.forgotPassword.getErrorMessageLabel().setVisible(true);
-                } else if(!serviceUtilisateur.emailExists(mail)){
+                } else if(!this.userServices.emailExists(mail)){
                     this.forgotPassword.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                     this.forgotPassword.getErrorMessageLabel().setText("Un mail deja renseignee dans la bdd doit etre entrer");
                     this.forgotPassword.getErrorMessageLabel().setVisible(true);
                 } else {
 
                     email = this.forgotPassword.getEmailField().getText();
-                    int code = serviceUtilisateur.generateVerificationCode();
+                    int code = this.userServices.generateVerificationCode();
                     this.codeString = String.valueOf(code);
 
                     try {
-                        serviceUtilisateur.sendVerificationEmail(email, codeString);
+                        this.userServices.sendVerificationEmail(email, codeString);
                     } catch (IOException e1) {
                         System.out.println(e1.getMessage());
                     } catch (MessagingException e2){
@@ -690,10 +729,8 @@ public class Controller implements EventHandler<ActionEvent> {
             if (newPassword.equals(confirmPassword)) {
                 if (!newPassword.isEmpty() && !confirmPassword.isEmpty()) {
                     String email = this.forgotPassword.getEmailField().getText();
-                    UserService userService = new UserService();
-
                     try {
-                        userService.updatePassword(email, newPassword);
+                        this.userServices.updatePassword(email, newPassword);
 
                         this.resetPassword.getErrorMessageLabel().setStyle("-fx-text-fill: green; -fx-font-size: 15px;");
                         this.resetPassword.getErrorMessageLabel().setVisible(true);
@@ -759,19 +796,6 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
     //! ---------------- MULTICLASS METHOD
-
-
-    /**
-    * Open the login panel when the image of account is clicked.
-    */
-    public void connectionClicked(){
-        try {
-            Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
-            this.connectionPage.start(stage);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
 
     /**
     * Check if a mail is valid with the format mail@subdomain.extension 

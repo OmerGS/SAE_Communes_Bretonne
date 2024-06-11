@@ -10,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import controller.Controller;
 import data.Commune;
@@ -32,10 +31,14 @@ public class MainPage extends Application {
     private Button coteArmorFilterButton;
     private Button illeEtVilaineFilterButton;
 
+    public MainPage(Controller controller){
+        this.controller = controller;
+        this.controller.setMainPage(this);
+    }
+
+
     @Override
     public void start(Stage primaryStage) {
-        this.controller = new Controller(this);
-
         // Initialize resultsLabel
         this.resultsLabel = new Label("55 r\u00e9sultats");
         this.resultsLabel.setStyle("-fx-font-size: 18px; -fx-padding: 10px;");

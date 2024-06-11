@@ -10,7 +10,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Random;
 import javax.mail.MessagingException;
 
@@ -21,6 +23,10 @@ import javax.mail.MessagingException;
 * @author O.Gunes
 */
 public class UserService {
+
+    public UserService(){
+
+    }
 
     /**
     * This method creates Utilisateur and hashes the password.
@@ -222,5 +228,38 @@ public class UserService {
     public int generateVerificationCode(){
         Random random = new Random();
         return random.nextInt(900000) + 100000;
+    }
+
+    /**
+    * Loads all users from the database into a list.
+    * 
+    * @return ArrayList of Utilisateur objects.
+    */
+    public ArrayList<Utilisateur> loadAllUsers() {
+        ArrayList<Utilisateur> utilisateurs = new ArrayList<>();
+
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "SELECT nom, prenom, email, motDePasse, salt FROM Utilisateur";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    String nom = resultSet.getString("nom");
+                    String prenom = resultSet.getString("prenom");
+                    String email = resultSet.getString("email");
+                    String motDePasse = resultSet.getString("motDePasse");
+                    String salt = resultSet.getString("salt");
+
+                    Utilisateur utilisateur = new Utilisateur(nom, prenom, email, motDePasse, salt);
+                    utilisateurs.add(utilisateur);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return utilisateurs;
     }
 }
