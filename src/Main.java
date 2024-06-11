@@ -1,3 +1,4 @@
+import controller.Controller;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -13,9 +14,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         primaryStage.getIcons().add(new Image("file:../resources/image/logo_bretagne.png"));
-
+        Controller controller = new Controller();
         
-        MainPage mainPage = new MainPage();
+        MainPage mainPage = new MainPage(controller);
         mainPage.start(primaryStage);
         
 
