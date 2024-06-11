@@ -26,6 +26,11 @@ public class MainPage extends Application {
     private ImageView userIcon;
     private VBox menuBox;
     private Button cheminCourtButton;
+    private Button toutesLesCommunes;
+    private Button morbihanFilterButton;
+    private Button finistereFilterButton;
+    private Button coteArmorFilterButton;
+    private Button illeEtVilaineFilterButton;
 
     @Override
     public void start(Stage primaryStage) {
@@ -38,14 +43,38 @@ public class MainPage extends Application {
         // Create filter button
         Button filterButton = new Button("Filtrer");
         filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        filterButton.setOnAction(event -> showFilterDialog());
+
+
+
+        // Checkboxes for filters
+        this.toutesLesCommunes = new Button("Toutes");
+        this.morbihanFilterButton = new Button("Morbihan");
+        this.finistereFilterButton = new Button("Finistère");
+        this.coteArmorFilterButton = new Button("Côtes-d'Armor");
+        this.illeEtVilaineFilterButton = new Button("Ille-et-Vilaine");
+
+        HBox communeFilterBox = new HBox(5, toutesLesCommunes, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
+
+
+        this.toutesLesCommunes.setOnAction(this.controller);
+        this.morbihanFilterButton.setOnAction(this.controller);
+        this.finistereFilterButton.setOnAction(this.controller);
+        this.coteArmorFilterButton.setOnAction(this.controller);
+        this.illeEtVilaineFilterButton.setOnAction(this.controller);
+
 
         // HBox for results label and filter button
         HBox resultsBox = new HBox(10);
         resultsBox.setAlignment(Pos.CENTER_LEFT);
         resultsBox.setPadding(new Insets(10));
-        resultsBox.getChildren().addAll(this.resultsLabel, filterButton);
-        HBox.setHgrow(filterButton, Priority.ALWAYS);
+
+        // Add a Region to take up the empty space
+        Region spacer2 = new Region();
+        HBox.setHgrow(spacer2, Priority.ALWAYS);
+
+        // Add the resultsLabel, spacer, and filterButton to the HBox
+        resultsBox.getChildren().addAll(this.resultsLabel, spacer2, communeFilterBox);
+
 
         // Logo image
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
@@ -185,19 +214,17 @@ public class MainPage extends Application {
         menuBox.setAlignment(Pos.CENTER_RIGHT);
         menuBox.setMaxWidth(400);
 
-        Label graphsLabel = new Label("Graphes");
-        graphsLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.cheminCourtButton = new Button("Chemin Entre 2 commune");
         this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-
         this.cheminCourtButton.setOnAction(this.controller);
 
-        Label mapLabel = new Label("Carte");
-        mapLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        Label editData = new Label("Modifier les données");
+        editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+
         Label exportDataLabel = new Label("Exporter Données");
         exportDataLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
 
-        menuBox.getChildren().addAll(graphsLabel, this.cheminCourtButton, mapLabel, exportDataLabel);
+        menuBox.getChildren().addAll(this.cheminCourtButton, editData, exportDataLabel);
         return menuBox;
     }
 
@@ -233,7 +260,7 @@ public class MainPage extends Application {
     }
 
     private void loadCommunes() {
-        List<Commune> communes = controller.getCommunes();
+        List<Commune> communes = controller.getCommunesFromDataBase();
         communeListView.getItems().addAll(communes);
     }
 
@@ -267,68 +294,6 @@ public class MainPage extends Application {
         });
     }
 
-
-    private void showFilterDialog() {
-        // Create the filter dialog
-        Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Filtrer et trier");
-
-        // Radio buttons for sorting
-        ToggleGroup sortGroup = new ToggleGroup();
-        RadioButton sortAZ = new RadioButton("A -> Z");
-        sortAZ.setToggleGroup(sortGroup);
-        sortAZ.setSelected(true);
-        RadioButton sortZA = new RadioButton("Z -> A");
-        sortZA.setToggleGroup(sortGroup);
-
-        VBox sortBox = new VBox(10, sortAZ, sortZA);
-        sortBox.setPadding(new Insets(10));
-        sortBox.setStyle("-fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px;");
-
-        // Checkboxes for filters
-        CheckBox morbihanCheckBox = new CheckBox("Morbihan");
-        morbihanCheckBox.setSelected(true);
-        CheckBox finistereCheckBox = new CheckBox("Finist\u00e8re");
-        finistereCheckBox.setSelected(true);
-        CheckBox coteArmorCheckBox = new CheckBox("C\u00f4tes-d'Armor");
-        coteArmorCheckBox.setSelected(true);
-        CheckBox illeEtVilaineCheckBox = new CheckBox("Ille-et-Vilaine");
-        illeEtVilaineCheckBox.setSelected(true);
-
-        VBox filterBox = new VBox(10, morbihanCheckBox, finistereCheckBox, coteArmorCheckBox, illeEtVilaineCheckBox);
-        filterBox.setPadding(new Insets(10));
-        filterBox.setStyle("-fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px;");
-
-        // Apply button
-        Button applyButton = new Button("Appliquer");
-        applyButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        applyButton.setOnAction(event -> {
-            // Get selected sort option
-            RadioButton selectedSort = (RadioButton) sortGroup.getSelectedToggle();
-            String sortOption = selectedSort.getText();
-
-            // Get selected filters
-            boolean filterMorbihan = morbihanCheckBox.isSelected();
-            boolean filterFinistere = finistereCheckBox.isSelected();
-            boolean filterCoteArmor = coteArmorCheckBox.isSelected();
-            boolean filterIlleEtVilaine = illeEtVilaineCheckBox.isSelected();
-
-            // Apply the filters and sorting (you need to implement this method in your controller)
-            controller.applyFiltersAndSort(sortOption, filterMorbihan, filterFinistere, filterCoteArmor, filterIlleEtVilaine);
-            
-            dialog.close();
-        });
-
-        VBox dialogVBox = new VBox(20, new Label("Trier par :"), sortBox, new Label("Filtrer par département :"), filterBox, applyButton);
-        dialogVBox.setPadding(new Insets(20));
-        dialogVBox.setAlignment(Pos.CENTER);
-
-        Scene dialogScene = new Scene(dialogVBox, 400, 400);
-        dialog.setScene(dialogScene);
-        dialog.show();
-    }
-
     public TextField getSearchField() {
         return this.searchField;
     }
@@ -343,5 +308,25 @@ public class MainPage extends Application {
 
     public Button getButtonCheminLePlusCourt(){
         return(this.cheminCourtButton);
+    }
+
+    public Button getToutesLesCommunes() {
+        return toutesLesCommunes;
+    }
+
+    public Button getMorbihanFilterButton() {
+        return morbihanFilterButton;
+    }
+
+    public Button getFinistereFilterButton() {
+        return finistereFilterButton;
+    }
+
+    public Button getCoteArmorFilterButton() {
+        return coteArmorFilterButton;
+    }
+
+    public Button getIlleEtVilaineFilterButton() {
+        return illeEtVilaineFilterButton;
     }
 }
