@@ -58,8 +58,8 @@ public class UserService {
     * @param email The email of the user
     * @return 1 if admin, else return 0.
     */
-    private int userIsAdmin(String email){
-        return email.contains("@univ-ubs.fr") ? 1 : 0;
+    public int userIsAdmin(String email){
+        return email.contains("@etud.univ-ubs.fr") ? 1 : 0;
     }
 
     /**

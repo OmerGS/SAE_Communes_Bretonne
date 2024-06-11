@@ -12,9 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 /**
@@ -186,9 +184,6 @@ public class ConnectionPage extends Application {
 
         if (wasFullScreen) {
             primaryStage.setFullScreen(true);
-        } else {
-            primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
-            primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
         }
 
         primaryStage.show();

@@ -238,6 +238,13 @@ public class Controller implements EventHandler<ActionEvent> {
         if(e.getSource() == this.mainPage.getToutesLesCommunes()){
             getCommune();
         }
+
+        if(e.getSource() == this.mainPage.getReloadDatabase()){
+            this.mainPage.loadCommunes(getCommunesFromDataBase());
+            this.listeUtilisateur = this.userServices.loadAllUsers();
+
+            CustomAlert.showAlert("Chargement Base de Donnees", "Le chargement est fini.");
+        }
     }
 
     /**
@@ -496,9 +503,9 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
                     
                     this.currentUser = searchList(email);
-                    
+
                     try{
-                        CustomAlert.showAlert("Connexion Reussi", "Bonjour " + this.currentUser.getPrenom() + " ! Redirection en cours.");
+                        CustomAlert.showAlert("Connexion Reussi", "Bonjour " + this.currentUser.getPrenom() + " " + this.currentUser.getNom() + " ! Redirection en cours.");
                         
                         Stage stage = (Stage) connectionPage.getBtnLogin().getScene().getWindow();
                         this.mainPage.start(stage);
@@ -523,10 +530,27 @@ public class Controller implements EventHandler<ActionEvent> {
                 return user;
             }
         }
-        return null; // Si aucun utilisateur trouvé
+        return null;
     }
     
+    public boolean isAdmin(){
+        boolean b = false;
+        if(this.currentUser == null){
+            b = false;
+        }else {
+            if(this.userServices.userIsAdmin(this.currentUser.getEmail()) == 1){
+                b = true;
+            }
+        }
+        return(b);
+    }
 
+    public void verifyAdmin(){
+        if (!isAdmin()) {
+            this.mainPage.getEditData().setDisable(true);
+            System.out.println("No admin !");
+        }
+    }
 
 
 
@@ -583,10 +607,11 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.inscriptionPage.getErrorMessageLabel().setVisible(true);
                 } else {
                     this.userServices.createUser(lastName, firstName, email, password);
-                    this.userServices.loadAllUsers();
                     this.inscriptionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
                     this.inscriptionPage.getErrorMessageLabel().setText("Compte cr\u00e9e avec succ\u00e8s !");
                     this.inscriptionPage.getErrorMessageLabel().setVisible(true);
+
+                    this.listeUtilisateur = this.userServices.loadAllUsers();
                 }
             }
         }
