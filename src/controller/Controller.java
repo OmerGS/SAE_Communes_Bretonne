@@ -1,9 +1,6 @@
 package controller;
 
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
@@ -12,9 +9,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+
 import dao.CommuneService;
 import dao.UserService;
 import data.Commune;
+import data.Utilisateur;
 import view.CommuneDetailsPage;
 import view.ConnectionPage;
 import view.InscriptionPage;
@@ -86,6 +85,8 @@ public class Controller implements EventHandler<ActionEvent> {
     private ArrayList<Commune> communesRecente;
 
     private List<Commune> communeToute;
+
+    private Utilisateur currentUser = null;
 
     /**
     * The constructor of Controller. 
@@ -202,6 +203,26 @@ public class Controller implements EventHandler<ActionEvent> {
                 ex.printStackTrace();
             }
         }
+
+        if(e.getSource() == this.mainPage.getFinistereFilterButton()){
+            applyFilter(29);
+        }
+
+        if(e.getSource() == this.mainPage.getMorbihanFilterButton()){
+            applyFilter(56);
+        }
+
+        if(e.getSource() == this.mainPage.getCoteArmorFilterButton()){
+            applyFilter(22);
+        }
+
+        if(e.getSource() == this.mainPage.getIlleEtVilaineFilterButton()){
+            applyFilter(35);
+        }
+
+        if(e.getSource() == this.mainPage.getToutesLesCommunes()){
+            getCommune();
+        }
     }
 
     /**
@@ -247,34 +268,12 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
 
-    public void applyFiltersAndSort(String sortOption, boolean filterMorbihan, boolean filterFinistere, boolean filterCoteArmor, boolean filterIlleEtVilaine) {
-        if(sortOption.equals("A -> Z")){
-            Comparator<Commune> nomCommuneComparator = new Comparator<Commune>() {
-                @Override
-                public int compare(Commune commune1, Commune commune2) {
-                    return commune1.getNomCommune().compareTo(commune2.getNomCommune());
-                }
-            };
-            Collections.sort(this.communesRecente, nomCommuneComparator);
-
-        } else if(sortOption.equals("Z -> A")){
-            Comparator<Commune> nomCommuneComparator = new Comparator<Commune>() {
-                @Override
-                public int compare(Commune commune1, Commune commune2) {
-                    return commune1.getNomCommune().compareTo(commune2.getNomCommune());
-                }
-            };
-            Collections.sort(this.communesRecente, nomCommuneComparator.reversed());
-        }
-
+    public void applyFilter(int idDep) {
         ArrayList<Commune> filterList = new ArrayList<Commune>();
 
 
         for (Commune commune : this.communesRecente) {
-            if ((filterMorbihan && commune.getDepartement().getIdDep() == 56) ||
-                (filterFinistere && commune.getDepartement().getIdDep() == 29) ||
-                (filterIlleEtVilaine && commune.getDepartement().getIdDep() == 35) ||
-                (filterCoteArmor && commune.getDepartement().getIdDep() == 22)) {
+            if (commune.getDepartement().getIdDep() == idDep) {
                 filterList.add(commune);
             }
         }        
@@ -282,6 +281,11 @@ public class Controller implements EventHandler<ActionEvent> {
 
         mainPage.updateCommunesListView(filterList);
         this.mainPage.getNumberOfRow().setText(filterList.size() + " r\u00e9sultats");
+    }
+
+    public void getCommune(){
+        this.mainPage.updateCommunesListView(this.communesRecente);
+        this.mainPage.getNumberOfRow().setText(this.communesRecente.size() + " r\u00e9sultats");
     }
     
 
@@ -453,11 +457,11 @@ public class Controller implements EventHandler<ActionEvent> {
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
             } else {
                 UserService userService = new UserService();
-                if (userService.validateLogin(email, password)) {
+                if (userService.validateLogin(email, password)){
                     this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: green;");
                     this.connectionPage.getErrorMessageLabel().setText("Connexion Reussi !");
                     this.connectionPage.getErrorMessageLabel().setVisible(true);
-
+                    
                     
                     CustomAlert.showAlert("Connexion Reussi", "Vous vous etes connect\u00e9 avec succ\u00e8s. Redirection dans 2 secondes");
 
@@ -472,7 +476,7 @@ public class Controller implements EventHandler<ActionEvent> {
                             }
                         }, 2000);
 
-                    //CONNEXION A LA PAGE PRINCIPAL
+                    
 
                 } else {
                     this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
@@ -786,7 +790,7 @@ public class Controller implements EventHandler<ActionEvent> {
     * Allow to get all of the commune.
     * @return ArrayList<Commune> which contains the most recent year for each commune.
     */
-    public ArrayList<Commune> getCommunes() {
+    public ArrayList<Commune> getCommunesFromDataBase(){
         this.communesRecente = new ArrayList<>();
         CommuneService communeService = new CommuneService();
     
