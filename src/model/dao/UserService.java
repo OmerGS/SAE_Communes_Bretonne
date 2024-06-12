@@ -262,4 +262,33 @@ public class UserService {
 
         return utilisateurs;
     }
+
+
+
+
+
+
+
+    /**
+    * This method creates Utilisateur and hashes the password.
+    * The hash of password allows security from database breaches.
+    *
+    * @param nom The surname of user
+    * @param prenom The name of user
+    * @param email The email of user
+    * @param plainPassword The password (without hash)
+    */
+    public void dropUser(String email){
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Utilisateur WHERE email=?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, email);
+                preparedStatement.executeUpdate(); // Execute the update query
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
