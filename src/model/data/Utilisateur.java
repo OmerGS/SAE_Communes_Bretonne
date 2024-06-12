@@ -20,6 +20,24 @@ public class Utilisateur {
     */
     private String email;
 
+    public void setNom(String nom){
+        if(nom != null){
+            this.nom = nom;
+        }
+    }
+
+    public void setPrenom(String prenom) {
+        if(prenom != null){
+            this.prenom = prenom;
+        }
+    }
+
+    public void setEmail(String email) {
+        if(email != null){
+            this.email = email;
+        }
+    }
+
     /**
     * The password of the user. 
     */

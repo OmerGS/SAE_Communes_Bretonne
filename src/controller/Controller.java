@@ -99,6 +99,8 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private CodeAlert envoieCodeValidation;
 
+    private String pendingNewEmail;
+
     /**
     * The constructor of Controller. 
     * @param connectionPage
@@ -178,26 +180,97 @@ public class Controller implements EventHandler<ActionEvent> {
         handleCodeAlertActions(e);
     }
 
-    private void handleAccountPageActions(ActionEvent e){
+
+
+
+
+
+
+
+    private void handleAccountPageActions(ActionEvent e) {
         if(e.getSource() == this.accountPage.getDisconnectButton()){
             this.currentUser = null;
             returnToMainPage();
         }
-
+    
         if(e.getSource() == this.accountPage.getDeleteButton()){
             int code = this.userServices.generateVerificationCode();
             this.codeString = code + "";
-
+    
             try {
                 this.userServices.sendVerificationEmail(currentUser.getEmail(), this.codeString);
             } catch (IOException | MessagingException e1) {
                 e1.printStackTrace();
             }
-
+    
             this.envoieCodeValidation = new CodeAlert(this);
             envoieCodeValidation.askCode(currentUser.getEmail());
         }
+    
+        if(e.getSource() == this.accountPage.getModifyButton()){
+            this.accountPage.getNameField().setText(this.accountPage.getNameLabel().getText());
+            this.accountPage.getFirstNameField().setText(this.accountPage.getFirstNameLabel().getText());
+            this.accountPage.getEmailField().setText(this.accountPage.getEmailLink().getText());
+    
+            this.accountPage.getNameLabel().setVisible(false);
+            this.accountPage.getFirstNameLabel().setVisible(false);
+            this.accountPage.getEmailLink().setVisible(false);
+    
+            this.accountPage.getNameField().setVisible(true);
+            this.accountPage.getFirstNameField().setVisible(true);
+            this.accountPage.getEmailField().setVisible(true);
+    
+            this.accountPage.getModifyButton().setVisible(false);
+            this.accountPage.getSaveButton().setVisible(true);
+        }
+    
+        if(e.getSource() == this.accountPage.getSaveButton()){
+            String newEmail = this.accountPage.getEmailField().getText();
+
+            if(isValidEmail(newEmail)){
+                if(!this.currentUser.getEmail().equals(newEmail) && !this.userServices.emailExists(newEmail)){
+                    int code = this.userServices.generateVerificationCode();
+                    this.codeString = code + "";
+                    this.pendingNewEmail = newEmail;  // Store the new email temporarily
+        
+                    try {
+                        this.userServices.sendVerificationEmail(newEmail, this.codeString);
+                    } catch (IOException | MessagingException e1) {
+                        e1.printStackTrace();
+                    }
+        
+                    this.envoieCodeValidation = new CodeAlert(this);
+                    envoieCodeValidation.askCode(newEmail);
+                } else {
+                    this.accountPage.getNameLabel().setText(this.accountPage.getNameField().getText());
+                    this.accountPage.getFirstNameLabel().setText(this.accountPage.getFirstNameField().getText());
+                    this.accountPage.getEmailLink().setText(this.accountPage.getEmailField().getText());
+
+                    this.accountPage.getNameLabel().setVisible(true);
+                    this.accountPage.getFirstNameLabel().setVisible(true);
+                    this.accountPage.getEmailLink().setVisible(true);
+
+                    this.accountPage.getNameField().setVisible(false);
+                    this.accountPage.getFirstNameField().setVisible(false);
+                    this.accountPage.getEmailField().setVisible(false);
+
+                    this.accountPage.getModifyButton().setVisible(true);
+                    this.accountPage.getSaveButton().setVisible(false);
+
+                    String surname = this.accountPage.getNameLabel().getText();
+                    String name = this.accountPage.getFirstNameLabel().getText();
+                    String email = this.accountPage.getEmailLink().getText();
+                    this.userServices.updateUser(this.currentUser.getEmail(), surname, name, email);
+                    
+                    this.currentUser.setNom(surname);
+                    this.currentUser.setPrenom(name);
+                }
+            } else {
+                CustomAlert.showAlert("Alerte", "Le Mail est invalide");
+            }
+        }
     }
+    
 
     public void returnToMainPage(){
         try {
@@ -219,22 +292,52 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-    private void handleCodeAlertActions(ActionEvent e){
+    private void handleCodeAlertActions(ActionEvent e) {
         if(e.getSource() == this.envoieCodeValidation.getCloseButton()){
             if(this.envoieCodeValidation.getCodeField().getText().equals(this.codeString)){
-                System.out.println("Let's Go");
-                this.userServices.dropUser(currentUser.getEmail());
-                this.listeUtilisateur.remove(currentUser);
+                if (this.pendingNewEmail != null) {
+                    String surname = this.accountPage.getNameLabel().getText();
+                    String name = this.accountPage.getFirstNameLabel().getText();
+                    
+                    this.userServices.updateUser(this.currentUser.getEmail(), surname, name, pendingNewEmail);
+                    this.currentUser.setNom(surname);
+                    this.currentUser.setPrenom(name);
+                    this.currentUser.setEmail(this.pendingNewEmail);
 
-                this.currentUser = null;
+                    this.accountPage.getEmailLink().setText(this.pendingNewEmail);
+                    this.pendingNewEmail = null;
 
+                    this.accountPage.getNameLabel().setText(this.accountPage.getNameField().getText());
+                    this.accountPage.getFirstNameLabel().setText(this.accountPage.getFirstNameField().getText());
+                    this.accountPage.getEmailLink().setText(this.accountPage.getEmailField().getText());
+
+                    this.accountPage.getNameLabel().setVisible(true);
+                    this.accountPage.getFirstNameLabel().setVisible(true);
+                    this.accountPage.getEmailLink().setVisible(true);
+
+                    this.accountPage.getNameField().setVisible(false);
+                    this.accountPage.getFirstNameField().setVisible(false);
+                    this.accountPage.getEmailField().setVisible(false);
+
+                    this.accountPage.getModifyButton().setVisible(true);
+                    this.accountPage.getSaveButton().setVisible(false);
+                } else {
+                    // Handle account deletion
+                    this.userServices.dropUser(currentUser.getEmail());
+                    this.listeUtilisateur.remove(currentUser);
+                    this.currentUser = null;
+                }
+    
                 Stage stage = (Stage) this.envoieCodeValidation.getCloseButton().getScene().getWindow();
+                this.mainPage.start(stage);
                 stage.close();
             } else {
-                System.out.println("Nuh uh");
+                this.envoieCodeValidation.getAlertLabel().setText("Le code est incorrect !");
+                this.envoieCodeValidation.getAlertLabel().setStyle("-fx-text-fill: red;");
             }
         }
     }
+    
 
 
 
@@ -551,7 +654,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.connectionPage.getErrorMessageLabel().setText("Tous les champs doivent \u00eatre remplis.");
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
-            } else if (!isValidEmail(email)) {
+            } else if (!isValidEmail(email) || !this.userServices.emailExists(email)) {
                 this.connectionPage.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
                 this.connectionPage.getErrorMessageLabel().setText("L'adresse e-mail n'est pas valide.");
                 this.connectionPage.getErrorMessageLabel().setVisible(true);
