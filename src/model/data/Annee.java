@@ -102,4 +102,17 @@ public class Annee {
         }
         return true;
     }
+
+
+    public String compareInflation(Annee otherAnnee) {
+        String ret = null;
+        if (this.tauxInflation > otherAnnee.getTauxInflation()) {
+            ret = this.annee + " has a higher inflation rate than " + otherAnnee.getAnnee();
+        } else if (this.tauxInflation < otherAnnee.getTauxInflation()) {
+            ret = this.annee + " has a lower inflation rate than " + otherAnnee.getAnnee();
+        } else {
+            ret = "Both years have the same inflation rate.";
+        }
+        return ret;
+    }
 }

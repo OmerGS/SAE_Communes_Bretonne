@@ -63,6 +63,9 @@ public class Commune {
     
     private int lAnnee;
 
+    private Gare gare;
+
+
     /**
     * The department of the commune. 
     * 
@@ -566,5 +569,36 @@ public class Commune {
         }
 
         return getDepCulturellesTotales() / getPopulation();
+    }
+
+    /**
+     * Vérifie si la commune possède une gare.
+     *
+     * @return true si la commune possède une gare, sinon false.
+     */
+    public boolean aUneGare() {
+        return gare != null;
+    }
+
+    /**
+     * Renvoie la gare de la commune.
+     *
+     * @return la gare de la commune, ou null si la commune n'a pas de gare.
+     */
+    public Gare getGare() {
+        return gare;
+    }
+
+    /**
+     * Ajoute une nouvelle gare à la commune.
+     *
+     * @param nouvelleGare la nouvelle gare à associer à la commune
+     */
+    public void ajouterGare(Gare nouvelleGare) {
+        if (gare == null) {
+            gare = nouvelleGare;
+        } else {
+            throw new RuntimeException("Une commune ne peut avoir qu'une seule gare.");
+        }
     }
 }

@@ -15,7 +15,6 @@ import dao.UserService;
 import data.Commune;
 import data.Utilisateur;
 import view.AccountPage;
-import view.BretagneApp;
 import view.CommuneDetailsPage;
 import view.ConnectionPage;
 import view.InscriptionPage;
@@ -261,7 +260,7 @@ public class Controller implements EventHandler<ActionEvent> {
                     String name = this.accountPage.getFirstNameLabel().getText();
                     String email = this.accountPage.getEmailLink().getText();
                     this.userServices.updateUser(this.currentUser.getEmail(), surname, name, email);
-                    
+
                     this.currentUser.setNom(surname);
                     this.currentUser.setPrenom(name);
                 }
