@@ -1,4 +1,4 @@
-package data;
+
 
 
 import java.sql.SQLException;
@@ -9,6 +9,11 @@ import dao.AnneeService;
 import dao.CommuneService;
 import dao.DepartementService;
 import dao.GareService;
+import data.Aeroport;
+import data.Annee;
+import data.Commune;
+import data.Departement;
+import data.Gare;
 
 public class MainScenario {
 

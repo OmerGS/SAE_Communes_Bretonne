@@ -33,6 +33,8 @@ public class printUserDatabase {
             
             // Création de la déclaration
             Statement declaration = connexion.createStatement();
+
+
             
             // Exécution de la requête SQL
             ResultSet resultat = declaration.executeQuery(requeteSQL);

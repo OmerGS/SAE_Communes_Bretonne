@@ -2,8 +2,9 @@ package data;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.naming.InvalidNameException;
 
 
 /**
@@ -11,6 +12,9 @@ import javax.naming.InvalidNameException;
  * and a list of associated communes.
  */
 public class Departement {
+
+
+    private static Set<Integer> idsUtilises = new HashSet<>();
     /**
      * The unique id of the department.
      */
@@ -43,12 +47,17 @@ public class Departement {
 
 
     public Departement(int idDep, String nomDep, double invesCulture2019){
-        this.idDep = idDep;
-        setNomDep(nomDep);
-        this.invesCulture2019 = invesCulture2019;
-        this.communes = new ArrayList<Commune>();
-        this.aeroports = new ArrayList<Aeroport>();
-        departements.add(this);
+        if((!idsUtilises.contains(idDep)) && nomDep != null && invesCulture2019 > 0){
+            this.idDep = idDep;
+            this.nomDep = nomDep;
+            this.invesCulture2019 = invesCulture2019;
+            idsUtilises.add(idDep);
+            this.communes = new ArrayList<Commune>();
+            this.aeroports = new ArrayList<Aeroport>();
+            departements.add(this);
+        }else{
+            throw new RuntimeException("parametre invalide");
+        }
     }
 
 
@@ -88,11 +97,17 @@ public class Departement {
 
 
     public void setIdDep(int idDep) {
-        this.idDep = idDep;
+        if (this.idDep != idDep) {
+            if (idsUtilises.contains(idDep)) {
+                throw new IllegalArgumentException("ID already in use: " + idDep);
+            }
+            idsUtilises.remove(this.idDep);
+            this.idDep = idDep;
+            idsUtilises.add(idDep);
+        }
     }
 
-
-    public void setNomDep(String nomDep) throws RuntimeException {
+    public void setNomDep(String nomDep){
         if (nomDep == null || nomDep.trim().isEmpty()) {
             throw new RuntimeException("The name of the department cannot be null or empty.");
         }
@@ -101,27 +116,31 @@ public class Departement {
 
 
     public void setInvesCulture2019(double invesCulture2019){
-        this.invesCulture2019 = invesCulture2019;
+        if(invesCulture2019 >= 0){
+            this.invesCulture2019 = invesCulture2019;
+        }else{
+            throw new RuntimeException();
+        }
     }
 
 
     public void setCommunes(ArrayList<Commune> communes) {
-        this.communes = communes;
+        if(communes != null && communes.size() > 0){
+            this.communes = communes;
+        }else{
+            throw new RuntimeException();
+        }
     }
 
     public void setAeroport(ArrayList<Aeroport> aeroports) {
-        this.aeroports = aeroports;
+        if(aeroports != null && aeroports.size() > 0){
+            this.aeroports = aeroports;
+        }else{
+            throw new RuntimeException();
+        }
     }
 
-    public void addCommune(Commune commune) {
-        this.communes.add(commune);
-    }
 
-
-
-    public void addAeroport(Aeroport aeroport) {
-        this.aeroports.add(aeroport);
-    }
 
     @Override
     public String toString() {
@@ -137,7 +156,22 @@ public class Departement {
         return totalPopulation;
     }
 
-
+    public void addCommune(Commune commune) {
+        if (commune.getDepartement().getIdDep() == this.idDep) {
+            this.communes.add(commune);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+    
+    public void addAeroport(Aeroport aeroport) {
+    
+        if (aeroport.getDepartement().getIdDep() == this.idDep) {
+            this.aeroports.add(aeroport);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
 
 

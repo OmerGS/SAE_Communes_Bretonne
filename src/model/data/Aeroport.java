@@ -1,11 +1,9 @@
 package data;
 
-
-
 /**
- * Represents an airport with a name, address, and a commune.
- * This class ensures that the associated commune has a valid ID.
- * The valid IDs have specific prefixes (29, 35, 22, 56) and are exactly 5 digits long.
+ * Represents an airport with a name, address, and a department.
+ * This class ensures that the associated department has a valid code.
+ * The valid codes have specific prefixes (29, 35, 22, 56) and are exactly 2 digits long.
  */
 public class Aeroport {
     private String nom;
@@ -13,18 +11,20 @@ public class Aeroport {
     private Departement departement;
 
     /**
-     * Constructs a new Aeroport with the specified name, address, and commune.
+     * Constructs a new Aeroport with the specified name, address, and department.
      *
      * @param nom     the name of the airport
      * @param adresse the address of the airport
-     * @param commune the commune associated with the airport
-
-
+     * @param departement the department associated with the airport
      */
     public Aeroport(String nom, String adresse, Departement departement) {
-        setNom(nom);
-        setAdresse(adresse);
-        this.departement = departement;
+        if (nom != null && adresse != null && departement != null) {
+            this.nom = nom;
+            this.adresse = adresse;
+            this.departement = departement;
+        } else {
+            throw new RuntimeException("Invalid parameter");
+        }
     }
 
     /* ----- Getters ----- */
@@ -43,7 +43,7 @@ public class Aeroport {
      *
      * @param nom the new name of the airport
      */
-    public void setNom(String nom){
+    public void setNom(String nom) {
         if (nom == null || nom.trim().isEmpty()) {
             throw new RuntimeException("The name of the airport cannot be null or empty.");
         }
@@ -63,9 +63,8 @@ public class Aeroport {
      * Sets the address of the airport.
      *
      * @param adresse the new address of the airport
-     * @throws InvalidAddressException if the address is null or empty
      */
-    public void setAdresse(String adresse){
+    public void setAdresse(String adresse) {
         if (adresse == null || adresse.trim().isEmpty()) {
             throw new RuntimeException("The address of the airport cannot be null or empty.");
         }
@@ -73,18 +72,33 @@ public class Aeroport {
     }
 
     /**
-     * Returns the commune associated with the airport.
+     * Returns the department associated with the airport.
      *
-     * @return the commune associated with the airport
+     * @return the department associated with the airport
      */
     public Departement getDepartement() {
         return departement;
     }
 
-    
+    /**
+     * Sets the department associated with the airport.
+     *
+     * @param departement the new department associated with the airport
+     */
+    public void setDepartement(Departement departement) {
+        if(departement != null){
+            if (departement.getIdDep() == 56 || departement.getIdDep() == 29 || departement.getIdDep() == 22 || departement.getIdDep() == 35) {
+                this.departement = departement;
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }else{
+            throw new IllegalArgumentException();
+        }
+    }
+
     
 
-    /* ----- Other Methods ----- */
 
     /**
      * Returns a string representation of the airport.
@@ -93,28 +107,26 @@ public class Aeroport {
      */
     @Override
     public String toString() {
-        return "Aeroport [nom=" + nom + ", adresse=" + adresse + "departement "+departement +"]";
+        return "Aeroport [nom=" + nom + ", adresse=" + adresse + ", departement=" + departement + "]";
     }
 
     /**
-     * Method which allows checking if the id of the commune is valid or not.
-     * 
-     * @param idCommune the id of the commune we want to validate
-     * @return false if not valid, else return true.
+     * Checks if this airport and another airport are in the same department.
+     *
+     * @param otherAirport the other airport to compare with
+     * @return true if both airports are in the same department, false otherwise
      */
-    private boolean isValidIdCommune(int idCommune) {
-        boolean ret = true;
-        String idString = String.valueOf(idCommune);
-
-        // Check if the idCommune has exactly 5 digits
-        if (idString.length() != 5) {
-            ret = false;
+    public boolean areInSameDepartment(Aeroport otherAirport) {
+        boolean ret = false;
+        if (otherAirport.departement != null) {
+            ret = this.departement.getIdDep() == otherAirport.departement.getIdDep();
         } else {
-            // Check if the prefix is one of the valid values
-            String prefix = idString.substring(0, 2);
-            ret = prefix.equals("29") || prefix.equals("35") || prefix.equals("22") || prefix.equals("56");
+            throw new RuntimeException("One or both airports do not have a valid department.");
         }
-
         return ret;
     }
+
+
+
+    
 }
