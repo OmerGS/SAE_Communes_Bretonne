@@ -16,14 +16,14 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image("file:../resources/image/logo_bretagne.png"));
         Controller controller = new Controller();
         
-        MainPage mainPage = new MainPage(controller);
-        mainPage.start(primaryStage);
+        //AccountPage mainPage = new AccountPage(controller);
+        //mainPage.start(primaryStage);
         
 
-        /*
-        MainPage connectionPage = new MainPage();
+        
+        MainPage connectionPage = new MainPage(controller);
         connectionPage.start(primaryStage);
-        */
+        
         
     }
 }

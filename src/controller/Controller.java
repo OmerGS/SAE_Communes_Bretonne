@@ -14,6 +14,7 @@ import dao.CommuneService;
 import dao.UserService;
 import data.Commune;
 import data.Utilisateur;
+import view.AccountPage;
 import view.BretagneApp;
 import view.CommuneDetailsPage;
 import view.ConnectionPage;
@@ -21,6 +22,7 @@ import view.InscriptionPage;
 import view.MainPage;
 import view.ResetPassword;
 import view.TrouverCheminCommune;
+import view.misc.CodeAlert;
 import view.misc.CustomAlert;
 import view.ForgotPassword;
 
@@ -93,7 +95,9 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private UserService userServices;
 
-    private BretagneApp accountPage;
+    private AccountPage accountPage;
+
+    private CodeAlert envoieCodeValidation;
 
     /**
     * The constructor of Controller. 
@@ -107,7 +111,8 @@ public class Controller implements EventHandler<ActionEvent> {
         this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
         this.trouverCheminCommune = new TrouverCheminCommune(this);
-        this.accountPage = new BretagneApp();
+        this.accountPage = new AccountPage(this);
+        this.envoieCodeValidation = new CodeAlert(this);
         this.mainPage = mainPage;
     }    
 
@@ -122,7 +127,8 @@ public class Controller implements EventHandler<ActionEvent> {
         this.forgotPassword = new ForgotPassword(this); 
         this.resetPassword = new ResetPassword(this);
         this.trouverCheminCommune = new TrouverCheminCommune(this);
-        this.accountPage = new BretagneApp();
+        this.accountPage = new AccountPage(this);
+        this.envoieCodeValidation = new CodeAlert(this);
     }
 
     public void setMainPage(MainPage mainPage){
@@ -165,6 +171,41 @@ public class Controller implements EventHandler<ActionEvent> {
 
         //Trouver Chemin
         handleTrouverCheminCommuneActions(e);
+
+        //Page Utilisateur
+        handleAccountPageActions(e);
+
+        handleCodeAlertActions(e);
+    }
+
+    private void handleAccountPageActions(ActionEvent e){
+        if(e.getSource() == this.accountPage.getDisconnectButton()){
+            this.currentUser = null;
+            returnToMainPage();
+        }
+
+        if(e.getSource() == this.accountPage.getDeleteButton()){
+            int code = this.userServices.generateVerificationCode();
+            this.codeString = code + "";
+
+            try {
+                this.userServices.sendVerificationEmail(currentUser.getEmail(), this.codeString);
+            } catch (IOException | MessagingException e1) {
+                e1.printStackTrace();
+            }
+
+            this.envoieCodeValidation = new CodeAlert(this);
+            envoieCodeValidation.askCode(currentUser.getEmail());
+        }
+    }
+
+    public void returnToMainPage(){
+        try {
+            Stage stage = (Stage) this.accountPage.getEmailLink().getScene().getWindow();
+            this.mainPage.start(stage);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 
@@ -178,8 +219,22 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+    private void handleCodeAlertActions(ActionEvent e){
+        if(e.getSource() == this.envoieCodeValidation.getCloseButton()){
+            if(this.envoieCodeValidation.getCodeField().getText().equals(this.codeString)){
+                System.out.println("Let's Go");
+                this.userServices.dropUser(currentUser.getEmail());
+                this.listeUtilisateur.remove(currentUser);
 
+                this.currentUser = null;
 
+                Stage stage = (Stage) this.envoieCodeValidation.getCloseButton().getScene().getWindow();
+                stage.close();
+            } else {
+                System.out.println("Nuh uh");
+            }
+        }
+    }
 
 
 
@@ -320,6 +375,10 @@ public class Controller implements EventHandler<ActionEvent> {
                 System.out.println("Utilisateur actuel : " + this.currentUser.getEmail());
                 Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
                 this.accountPage.start(stage);
+
+                this.accountPage.getFirstNameLabel().setText(currentUser.getPrenom());
+                this.accountPage.getNameLabel().setText(currentUser.getNom());
+                this.accountPage.getEmailLink().setText(currentUser.getEmail());
             } else {
                 System.out.println("Utilisateur non connecté.");
                 Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
@@ -868,8 +927,6 @@ public class Controller implements EventHandler<ActionEvent> {
             }
     
             this.communesRecente = recentCommunes;
-    
-            this.mainPage.getNumberOfRow().setText(this.communesRecente.size() + " résultats");
         } catch (SQLException e) {
             e.printStackTrace();
         }

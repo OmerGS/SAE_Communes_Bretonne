@@ -32,18 +32,20 @@ public class MainPage extends Application {
     private Button illeEtVilaineFilterButton;
     private Button reloadDatabase;
     private Button editData;
+    private int nbCommune;
 
 
     public MainPage(Controller controller){
         this.controller = controller;
         this.controller.setMainPage(this);
+        loadCommunes();
     }
 
 
     @Override
     public void start(Stage primaryStage) {
         // Initialize resultsLabel
-        this.resultsLabel = new Label("55 r\u00e9sultats");
+        this.resultsLabel = new Label(this.nbCommune + " r\u00e9sultats");
         this.resultsLabel.setStyle("-fx-font-size: 18px; -fx-padding: 10px;");
 
         // Create filter button
@@ -175,9 +177,6 @@ public class MainPage extends Application {
             }
         });
 
-        // Load communes and display them in the ListView
-        loadCommunes();
-
         // VBox to center the ListView and make it grow
         VBox centerBox = new VBox(10);
         centerBox.setAlignment(Pos.TOP_CENTER);
@@ -274,6 +273,7 @@ public class MainPage extends Application {
 
     private void loadCommunes() {
         List<Commune> communes = controller.getCommunesFromDataBase();
+        this.nbCommune = communes.size();
         communeListView.getItems().addAll(communes);
     }
 
