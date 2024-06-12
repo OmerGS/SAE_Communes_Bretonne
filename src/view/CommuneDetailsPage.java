@@ -18,8 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.mail.event.MailEvent;
-
 import controller.Controller;
 
 /**

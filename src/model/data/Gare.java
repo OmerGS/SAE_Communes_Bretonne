@@ -1,5 +1,8 @@
 package data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.naming.InvalidNameException;
 
 /**
@@ -7,6 +10,8 @@ import javax.naming.InvalidNameException;
  * about its functionality for freight and passengers, along with its associated commune.
  */
 public class Gare {
+
+    private static Set<Integer> idsUtilises = new HashSet<>();
     /**
      * The unique code of the train station.
      */
@@ -40,15 +45,17 @@ public class Gare {
      * @param estFret     true if the train station allows freight, false otherwise
      * @param estVoyageur true if the train station accepts passenger trains, false otherwise
      * @param commune     the commune of the train station
-     * @throws InvalidNameException if the name of the train station is null or empty
-     * @throws InvalidIdException   if the id of the commune is invalid
      */
     public Gare(int codeGare, String nomGare, boolean estFret, boolean estVoyageur, Commune commune){
-        setCodeGare(codeGare);
-        setNomGare(nomGare);
-        setEstFret(estFret);
-        setEstVoyageur(estVoyageur);
-        setCommune(commune);
+        if (!idsUtilises.contains(codeGare) && nomGare != null && commune != null) {
+            this.codeGare = codeGare;
+            this.nomGare = nomGare;
+            this.estFret = estFret;
+            this.estVoyageur = estVoyageur;
+            this.commune = commune;
+            idsUtilises.add(codeGare);
+            commune.ajouterGare(this);
+        }
     }
 
     /* ----- Getters ----- */
@@ -106,14 +113,21 @@ public class Gare {
      * @param codeGare the new unique code of the train station
      */
     public void setCodeGare(int codeGare) {
-        validateNonNegativeValueInt(codeGare,"Code gare");
+        if (this.codeGare != codeGare) {
+            if (idsUtilises.contains(codeGare)) {
+                throw new IllegalArgumentException("ID already in use: " + codeGare);
+            }
+            idsUtilises.remove(this.codeGare);
+            this.codeGare = codeGare;
+            idsUtilises.add(codeGare);
+            
+        }
     }
 
     /**
      * Sets the name of the train station.
      *
      * @param nomGare the new name of the train station
-     * @throws InvalidNameException if the name is null or empty
      */
     public void setNomGare(String nomGare){
         if (nomGare == null || nomGare.trim().isEmpty()) {
@@ -147,10 +161,15 @@ public class Gare {
      * @throws InvalidIdException if the id of the commune is invalid
      */
     public void setCommune(Commune commune){
-        if (!isValidIdCommune(commune.getIdCommune())) {
-            throw new RuntimeException("Invalid commune ID: " + commune.getIdCommune());
+        if(commune != null){
+            if (!isValidIdCommune(commune.getIdCommune())) {
+                throw new RuntimeException("Invalid commune ID: " + commune.getIdCommune());
+            }
+            this.commune = commune;
+        }else{
+            throw new RuntimeException();
         }
-        this.commune = commune;
+
     }
 
     /* ----- Other Methods ----- */
@@ -162,7 +181,7 @@ public class Gare {
      */
     @Override
     public String toString() {
-        return "Gare [codeGare=" + codeGare + ", nomGare=" + nomGare + ", estFret=" + estFret + ", estVoyageur=" + estVoyageur + "]";
+        return "Gare [codeGare=" + codeGare + ", nomGare=" + nomGare + ", estFret=" + estFret + ", estVoyageur=" + estVoyageur + "commune" + commune + "]";
     }
 
     /**
@@ -198,24 +217,8 @@ public class Gare {
         return ret;
     }
 
+    
 
 
-        /**
-    * Method which allow to check if parameters is >= 0. 
-    * Signature for int and fieldName
-    *
-    * @param value the parameters which we want to check
-    * @param fieldName the fieldname of global var.
-    * @return int
-    * @throws IllegalArgumentException if provided value is negative
-    */
-    private int validateNonNegativeValueInt(int value, String fieldName) {
-        int ret = -1;
-        if (value >= 0 || value == -1) {
-            ret = value;
-        } else {
-            throw new IllegalArgumentException(fieldName + " invalide : " + value);
-        }
-        return ret;
-    }
+
 }

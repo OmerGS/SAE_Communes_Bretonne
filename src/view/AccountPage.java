@@ -261,27 +261,6 @@ public class AccountPage extends Application {
         return infoPanel;
     }
 
-    private void handleSaveButton() {
-        nameLabel.setText(nameField.getText());
-        firstNameLabel.setText(firstNameField.getText());
-        emailLink.setText(emailField.getText());
-
-        nameLabel.setVisible(true);
-        firstNameLabel.setVisible(true);
-        emailLink.setVisible(true);
-
-        nameField.setVisible(false);
-        firstNameField.setVisible(false);
-        emailField.setVisible(false);
-
-        modifyButton.setVisible(true);
-        saveButton.setVisible(false);
-
-        System.out.println("Updated Information:");
-        System.out.println("Nom: " + nameLabel.getText());
-        System.out.println("Prénom: " + firstNameLabel.getText());
-        System.out.println("Email: " + emailLink.getText());
-    }
 
     public static void main(String[] args) {
         launch(args);

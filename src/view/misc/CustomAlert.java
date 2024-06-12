@@ -1,13 +1,10 @@
 package view.misc;
 
-import controller.Controller;
-import data.Utilisateur;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -17,7 +14,6 @@ import javafx.stage.Stage;
 * @author O.Gunes
 */
 public class CustomAlert {
-    private static String code;
 
     /**
     * This constructor allow to display a window title, header and the content

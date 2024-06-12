@@ -2,6 +2,9 @@ package data;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 
 
 /**
@@ -9,6 +12,9 @@ import java.util.ArrayList;
  * and a list of associated communes.
  */
 public class Departement {
+
+
+    private static Set<Integer> idsUtilises = new HashSet<>();
     /**
      * The unique id of the department.
      */
@@ -35,55 +41,41 @@ public class Departement {
     private ArrayList<Aeroport> aeroports;
 
     /**
-     * Constructs a new Departement with the specified parameters.
-     *
-     * @param idDep             the unique id of the department
-     * @param nomDep            the name of the department
-     * @param invesCulture2019  the investment in culture for 2019
-     * @throws InvalidNameException       if the name of the department is null or empty
+     * Static list to keep track of all department instances.
      */
+    private static ArrayList<Departement> departements = new ArrayList<>();
+
+
     public Departement(int idDep, String nomDep, double invesCulture2019){
-        setIdDep(idDep);
-        setNomDep(nomDep);
-        setInvesCulture2019(invesCulture2019);
-        this.communes = new ArrayList<Commune>();
-        this.aeroports = new ArrayList<Aeroport>();
+        if((!idsUtilises.contains(idDep)) && nomDep != null && invesCulture2019 > 0){
+            this.idDep = idDep;
+            this.nomDep = nomDep;
+            this.invesCulture2019 = invesCulture2019;
+            idsUtilises.add(idDep);
+            this.communes = new ArrayList<Commune>();
+            this.aeroports = new ArrayList<Aeroport>();
+            departements.add(this);
+        }else{
+            throw new RuntimeException("parametre invalide");
+        }
     }
 
-    /* ----- Getters ----- */
 
-    /**
-     * Returns the unique id of the department.
-     *
-     * @return the unique id of the department
-     */
     public int getIdDep() {
         return this.idDep;
     }
 
-    /**
-     * Returns the name of the department.
-     *
-     * @return the name of the department
-     */
+
     public String getNomDep() {
         return this.nomDep;
     }
 
-    /**
-     * Returns the investment in culture for 2019.
-     *
-     * @return the investment in culture for 2019
-     */
+ 
     public double getInvesCulture2019() {
         return this.invesCulture2019;
     }
 
-    /**
-     * Returns the list of communes associated with the department.
-     *
-     * @return the list of communes associated with the department
-     */
+
     public ArrayList<Commune> getCommunes() {
         return this.communes;
     }
@@ -92,89 +84,70 @@ public class Departement {
         return this.aeroports;
     }
 
-    /* ----- Setters ----- */
 
-    /**
-     * Sets the unique id of the department.
-     *
-     * @param idDep the new unique id of the department
-     */
-    public void setIdDep(int idDep) {
-        if(idDep != 29 || idDep != 35 || idDep != 22 || idDep != 56){
-            this.idDep = idDep;
-        } else {
-            throw new IllegalArgumentException("The id of Department isn't correct");
+    // Méthode statique pour obtenir un département par son identifiant
+    public static Departement getDepartementById(int idDep) {
+        for (Departement dep : departements) {
+            if (dep.getIdDep() == idDep) {
+                return dep;
+            }
         }
-        
+        return null;  // Retourne null si aucun département n'est trouvé avec l'identifiant donné
     }
 
-    /**
-     * Sets the name of the department.
-     *
-     * @param nomDep the new name of the department
-     * @throws InvalidNameException if the name is null or empty
-     */
-    public void setNomDep(String nomDep) throws RuntimeException {
+
+    public void setIdDep(int idDep) {
+        if (this.idDep != idDep) {
+            if (idsUtilises.contains(idDep)) {
+                throw new IllegalArgumentException("ID already in use: " + idDep);
+            }
+            idsUtilises.remove(this.idDep);
+            this.idDep = idDep;
+            idsUtilises.add(idDep);
+        }
+    }
+
+    public void setNomDep(String nomDep){
         if (nomDep == null || nomDep.trim().isEmpty()) {
             throw new RuntimeException("The name of the department cannot be null or empty.");
         }
         this.nomDep = nomDep;
     }
 
-    /**
-     * Sets the investment in culture for 2019.
-     *
-     * @param invesCulture2019 the new investment in culture for 2019
-     */
+
     public void setInvesCulture2019(double invesCulture2019){
-        validateNonNegativeValueDouble(invesCulture2019,"Investissement Culture 2019");
+        if(invesCulture2019 >= 0){
+            this.invesCulture2019 = invesCulture2019;
+        }else{
+            throw new RuntimeException();
+        }
     }
 
-    /**
-     * Sets the list of communes associated with the department.
-     *
-     * @param communes the new list of communes associated with the department
-     */
+
     public void setCommunes(ArrayList<Commune> communes) {
-        this.communes = communes;
+        if(communes != null && communes.size() > 0){
+            this.communes = communes;
+        }else{
+            throw new RuntimeException();
+        }
     }
 
     public void setAeroport(ArrayList<Aeroport> aeroports) {
-        this.aeroports = aeroports;
-    }
-
-    /**
-     * Adds a commune to the list of communes associated with the department.
-     *
-     * @param commune the commune to add
-     */
-    public void addCommune(Commune commune) {
-        this.communes.add(commune);
+        if(aeroports != null && aeroports.size() > 0){
+            this.aeroports = aeroports;
+        }else{
+            throw new RuntimeException();
+        }
     }
 
 
 
-    public void addAeroport(Aeroport aeroport) {
-        this.aeroports.add(aeroport);
-    }
-
-    /* ----- Other Methods ----- */
-
-    /**
-     * Returns a string representation of the department.
-     *
-     * @return a string representation of the department
-     */
     @Override
     public String toString() {
-        return "Departement [idDep=" + idDep + ", nomDep=" + nomDep + ", invesCulture2019=" + invesCulture2019 + "]";
+        return "Departement [idDep=" + this.idDep + ", nomDep=" + this.nomDep + ", invesCulture2019=" + this.invesCulture2019 + "]";
     }
 
-    /**
-     * Returns the total population of the department by summing the population of all its communes.
-     *
-     * @return the total population of the department
-     */
+
     public int getTotalPopulation() {
         int totalPopulation = 0;
         for (Commune commune : this.communes) {
@@ -183,22 +156,26 @@ public class Departement {
         return totalPopulation;
     }
 
-    /**
-    * Method which allow to check if parameters is >= 0. 
-    * Signature for double and fieldName
-    *
-    * @param value the parameters which we want to check
-    * @param fieldName the fieldname of global var.
-    * @return double
-    * @throws IllegalArgumentException if provided value is negative
-    */
-    private double validateNonNegativeValueDouble(double value, String fieldName) {
-        double ret = -1;
-        if (value >= 0 || value == -1) {
-            ret = value;
+    public void addCommune(Commune commune) {
+        if (commune.getDepartement().getIdDep() == this.idDep) {
+            this.communes.add(commune);
         } else {
-            throw new IllegalArgumentException(fieldName + " invalide : " + value);
+            throw new IllegalArgumentException();
         }
-        return ret;
     }
+    
+    public void addAeroport(Aeroport aeroport) {
+    
+        if (aeroport.getDepartement().getIdDep() == this.idDep) {
+            this.aeroports.add(aeroport);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+
+
+
+
+
 }
