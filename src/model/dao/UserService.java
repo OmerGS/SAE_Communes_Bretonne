@@ -270,13 +270,7 @@ public class UserService {
 
 
     /**
-    * This method creates Utilisateur and hashes the password.
-    * The hash of password allows security from database breaches.
-    *
-    * @param nom The surname of user
-    * @param prenom The name of user
-    * @param email The email of user
-    * @param plainPassword The password (without hash)
+    * 
     */
     public void dropUser(String email){
         try (Connection connexion = ConnectionManager.getConnection()) {
@@ -291,4 +285,42 @@ public class UserService {
             e.printStackTrace();
         }
     }
+
+
+    /**
+    *
+    */
+    public void updateUserMail(String email, String newPendingMail) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "UPDATE Utilisateur SET email = ? WHERE email = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, newPendingMail);
+                preparedStatement.setString(2, email);
+                preparedStatement.executeUpdate(); // Execute the update query
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    public void updateUser(String currentEmail, String newName, String newFirstName, String newEmail) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "UPDATE Utilisateur SET nom = ?, prenom = ?, email = ? WHERE email = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, newName);
+                preparedStatement.setString(2, newFirstName);
+                preparedStatement.setString(3, newEmail);
+                preparedStatement.setString(4, currentEmail);
+                preparedStatement.executeUpdate(); // Execute the update query
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+     
 }

@@ -15,6 +15,7 @@ public class CodeAlert {
     private Controller controller;
     private TextField codeField;
     private Button closeButton;
+    private Label alertLabel;
 
     public CodeAlert(Controller controller){
         this.controller = controller;
@@ -40,6 +41,9 @@ public class CodeAlert {
         this.codeField = new TextField();
         codeField.setOnAction(this.controller);
 
+        this.alertLabel = new Label();
+        this.alertLabel.setVisible(false);        
+
         this.closeButton = new Button("OK");
         closeButton.setStyle("-fx-background-color: #FF007F; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
         closeButton.setOnAction(this.controller);
@@ -61,5 +65,9 @@ public class CodeAlert {
 
     public Button getCloseButton(){
         return(this.closeButton);
+    }
+
+    public Label getAlertLabel(){
+        return(this.alertLabel);
     }
 }

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +30,30 @@ public class AccountPage extends Application {
     private Button deleteButton;
     private Button disconnectButton;
     private Button modifyButton;
+    private Button saveButton;
+    private TextField nameField;
+    private TextField firstNameField;
+    private TextField emailField;
+
+    public Controller getController() {
+        return controller;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
+    }
+
+    public TextField getNameField() {
+        return nameField;
+    }
+
+    public TextField getFirstNameField() {
+        return firstNameField;
+    }
+
+    public TextField getEmailField() {
+        return emailField;
+    }
 
     public Button getDeleteButton() {
         return deleteButton;
@@ -90,7 +115,7 @@ public class AccountPage extends Application {
         this.deleteButton.setOnAction(this.controller);
         this.disconnectButton.setOnAction(this.controller);
         this.modifyButton.setOnAction(this.controller);
-
+        this.saveButton.setOnAction(this.controller);
     }
 
     private VBox menuBar() {
@@ -144,8 +169,8 @@ public class AccountPage extends Application {
 
         StackPane mainPane = new StackPane();
         VBox infoPanel = createInfoPanel();
-        infoPanel.setMaxWidth(300); // Set a maximum width for the info panel
-        infoPanel.setMaxHeight(400); // Set a maximum height for the info panel
+        infoPanel.setMaxWidth(400); // Set a maximum width for the info panel
+        infoPanel.setMaxHeight(500); // Set a maximum height for the info panel
         mainPane.getChildren().addAll(infoPanel, menuBox);
         StackPane.setAlignment(infoPanel, Pos.CENTER); // Center the info panel
         StackPane.setAlignment(menuBox, Pos.TOP_RIGHT); // Position the menu box in the top right
@@ -161,7 +186,7 @@ public class AccountPage extends Application {
     private VBox createMenuBox() {
         VBox menuBox = new VBox(10);
         menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
-        menuBox.setAlignment(Pos.CENTER);
+        menuBox.setAlignment(Pos.CENTER_RIGHT);
         menuBox.setMaxWidth(400);
 
         this.cheminCourtButton = new Button("Chemin Entre 2 commune");
@@ -192,16 +217,38 @@ public class AccountPage extends Application {
         HBox topRightBox = new HBox();
         topRightBox.setAlignment(Pos.TOP_RIGHT);
         this.modifyButton = new Button("MODIFIER");
-        this.modifyButton.setStyle("-fx-background-color: transparent; -fx-text-fill: black;");
+        this.modifyButton.setStyle("-fx-background-color: green; -fx-text-fill: black;");
         topRightBox.getChildren().add(this.modifyButton);
 
-        this.nameLabel = new Label("Lorem");
-        this.firstNameLabel = new Label("Ipsum");
-        this.emailLink = new Hyperlink("mail@example.fr");
+        this.saveButton = new Button("SAVE");
+        this.saveButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        this.saveButton.setVisible(false);
 
-        HBox nameBox = new HBox(10, new Label("Nom :"), this.nameLabel);
-        HBox firstNameBox = new HBox(10, new Label("Prénom :"), this.firstNameLabel);
-        HBox emailBox = new HBox(10, new Label("Email :"), this.emailLink);
+        this.nameLabel = new Label("Omer");
+        this.firstNameLabel = new Label("GUNES");
+        this.emailLink = new Hyperlink("27omerf@gmail.com");
+
+        this.nameField = new TextField();
+        this.firstNameField = new TextField();
+        this.emailField = new TextField();
+
+        nameField.setVisible(false);
+        firstNameField.setVisible(false);
+        emailField.setVisible(false);
+
+        // StackPanes to overlap labels and text fields
+        StackPane nameStack = new StackPane(nameLabel, nameField);
+        StackPane firstNameStack = new StackPane(firstNameLabel, firstNameField);
+        StackPane emailStack = new StackPane(emailLink, emailField);
+
+        // Set alignment for text fields
+        StackPane.setAlignment(nameField, Pos.CENTER_LEFT);
+        StackPane.setAlignment(firstNameField, Pos.CENTER_LEFT);
+        StackPane.setAlignment(emailField, Pos.CENTER_LEFT);
+
+        HBox nameBox = new HBox(10, new Label("Nom :"), nameStack);
+        HBox firstNameBox = new HBox(10, new Label("Prénom :"), firstNameStack);
+        HBox emailBox = new HBox(10, new Label("Email :"), emailStack);
 
         this.deleteButton = new Button("SUPPRIMER");
         deleteButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white;");
@@ -209,9 +256,31 @@ public class AccountPage extends Application {
         this.disconnectButton = new Button("Deconnexion");
         disconnectButton.setStyle("-fx-background-color: #8293D2; -fx-text-fill: black;");
 
-        infoPanel.getChildren().addAll(topRightBox, nameBox, firstNameBox, emailBox, deleteButton, disconnectButton);
+        infoPanel.getChildren().addAll(topRightBox, nameBox, firstNameBox, emailBox, deleteButton, disconnectButton, saveButton);
 
         return infoPanel;
+    }
+
+    private void handleSaveButton() {
+        nameLabel.setText(nameField.getText());
+        firstNameLabel.setText(firstNameField.getText());
+        emailLink.setText(emailField.getText());
+
+        nameLabel.setVisible(true);
+        firstNameLabel.setVisible(true);
+        emailLink.setVisible(true);
+
+        nameField.setVisible(false);
+        firstNameField.setVisible(false);
+        emailField.setVisible(false);
+
+        modifyButton.setVisible(true);
+        saveButton.setVisible(false);
+
+        System.out.println("Updated Information:");
+        System.out.println("Nom: " + nameLabel.getText());
+        System.out.println("Prénom: " + firstNameLabel.getText());
+        System.out.println("Email: " + emailLink.getText());
     }
 
     public static void main(String[] args) {
