@@ -86,7 +86,7 @@ public class Departement {
 
 
     // Méthode statique pour obtenir un département par son identifiant
-    public static Departement getDepartementById(int idDep) {
+    public Departement getDepartementById(int idDep) {
         for (Departement dep : departements) {
             if (dep.getIdDep() == idDep) {
                 return dep;

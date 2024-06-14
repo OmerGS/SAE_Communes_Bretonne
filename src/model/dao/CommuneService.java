@@ -9,49 +9,61 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public class CommuneService {
 
+    private DepartementService departementService;
+    private List<Departement> listeDepartement;
+
+    public CommuneService() {
+        this.departementService = new DepartementService();
+        try {
+            this.listeDepartement = departementService.getAllDepartement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Departement findDepartementById(int departementId) {
+        for (Departement departement : listeDepartement) {
+            if (departement.getIdDep() == departementId) {
+                return departement;
+            }
+        }
+        return null;
+    }
 
     /**
-    * Get all of the commune which is in the database.
-    * @return List<Commune>.
-    * @throws SQLException
-    */
+     * Get all of the commune which is in the database.
+     * @return List<Commune>.
+     * @throws SQLException
+     */
     public List<Commune> getAllCommunes() throws SQLException {
         Map<Integer, List<Commune>> communesByYear = new HashMap<>();
         Map<Integer, Commune> communesById = new HashMap<>();
-    
+        List<Commune> allCommunes = new ArrayList<>();
+
         String query = "SELECT c.idCommune, c.nomCommune, c.leDepartement, " +
-               "da.nbMaison, da.nbAppart, da.prixMoyen, da.prixM2Moyen, da.SurfaceMoy, " +
-               "da.depensesCulturellesTotales, da.budgetTotal, da.population, " +
-               "d.nomDep, da.lAnnee " +
-               "FROM Commune c " +
-               "JOIN DonneesAnnuelles da ON c.idCommune = da.laCommune " +
-               "JOIN Departement d ON c.leDepartement = d.idDep";
-    
+                "da.nbMaison, da.nbAppart, da.prixMoyen, da.prixM2Moyen, da.SurfaceMoy, " +
+                "da.depensesCulturellesTotales, da.budgetTotal, da.population, " +
+                "d.nomDep, da.lAnnee " +
+                "FROM Commune c " +
+                "JOIN DonneesAnnuelles da ON c.idCommune = da.laCommune " +
+                "JOIN Departement d ON c.leDepartement = d.idDep";
+
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
-    
+
             while (resultSet.next()) {
                 int idCommune = resultSet.getInt("idCommune");
                 String nomCommune = resultSet.getString("nomCommune");
                 int leDepartement = resultSet.getInt("leDepartement");
-    
-                // Récupération des données du département
-                String nomDepartement = resultSet.getString("nomDep");
-                Departement departement = new Departement(leDepartement, nomDepartement, 0);
-    
+
+                // Find the corresponding Departement object
+                Departement departementDeLaCommune = findDepartementById(leDepartement);
+
                 // Récupération des données annuelles
                 int nbMaison = resultSet.getInt("nbMaison");
                 int nbAppart = resultSet.getInt("nbAppart");
@@ -62,63 +74,66 @@ public class CommuneService {
                 double budgetTotal = resultSet.getDouble("budgetTotal");
                 int population = resultSet.getInt("population");
                 int lAnnee = resultSet.getInt("lAnnee");
-    
+
                 try {
                     Commune commune = new Commune(lAnnee, idCommune, nomCommune, nbMaison, nbAppart, prixMoyen,
-                                                  prixM2Moyen, surfaceMoyenne, depensesCulturellesTotales, budgetTotal, population, departement);
-    
+                            prixM2Moyen, surfaceMoyenne, depensesCulturellesTotales, budgetTotal, population, departementDeLaCommune);
+
                     // Ajouter la commune à la liste correspondante par année
                     List<Commune> communesForYear = communesByYear.getOrDefault(lAnnee, new ArrayList<>());
                     communesForYear.add(commune);
                     communesByYear.put(lAnnee, communesForYear);
-    
+
                     // Ajouter la commune à la map des communes par ID
                     communesById.put(idCommune, commune);
+
+                    // Ajouter la commune à la liste globale
+                    allCommunes.add(commune);
                 } catch (InvalidCommuneIdException | InvalidCommuneNameException e) {
                     e.printStackTrace();
                 }
             }
         }
-    
+
         String voisinageQuery = "SELECT commune, communeVoisine FROM Voisinage";
         List<int[]> voisinages = new ArrayList<>();
-    
+
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(voisinageQuery);
              ResultSet resultSet = statement.executeQuery()) {
-    
+
             while (resultSet.next()) {
                 int idCommune = resultSet.getInt("commune");
                 int idCommuneVoisine = resultSet.getInt("communeVoisine");
                 voisinages.add(new int[]{idCommune, idCommuneVoisine});
             }
         }
-    
+
         for (int[] voisinage : voisinages) {
             Commune commune = communesById.get(voisinage[0]);
             Commune communeVoisine = communesById.get(voisinage[1]);
-    
+
             if (commune != null && communeVoisine != null) {
-                commune.addVoisine(communeVoisine);
+                // Add the neighbor to all instances of the commune, regardless of the year
+                for (Commune c : allCommunes) {
+                    if (c.getIdCommune() == commune.getIdCommune()) {
+                        c.addVoisine(communeVoisine);
+                    }
+                }
             }
         }
-    
-        // Retourner toutes les communes
-        List<Commune> allCommunes = new ArrayList<>();
-        for (List<Commune> communes : communesByYear.values()) {
-            allCommunes.addAll(communes);
-        }
+
         return allCommunes;
     }
-    
+
     /**
-    * Return the path of commune for go to commune start to commune end. 
-    * @param startId The commune of start
-    * @param endId The commune of end
-    * @param allCommunes All of the commune
-    * @return List<Commune> contains path.
-    * @throws SQLException
-    */
+     * Return the path of commune for go to commune start to commune end. 
+     * @param startId The commune of start
+     * @param endId The commune of end
+     * @param allCommunes All of the commune
+     * @return List<Commune> contains path.
+     * @throws SQLException
+     */
     public List<Commune> cheminEntreCommune(int startId, int endId, List<Commune> allCommunes) throws SQLException {
         Map<Integer, Commune> communeMap = new HashMap<>();
         for (Commune commune : allCommunes) {
@@ -155,13 +170,12 @@ public class CommuneService {
         return Collections.emptyList();
     }
 
-
     /**
-    * Return a Commune for a String which correspond of commune name.
-    * @param communeName The String of the name of the commune
-    * @return A commune if the commune with the String name exists
-    * @throws SQLException 
-    */
+     * Return a Commune for a String which correspond of commune name.
+     * @param communeName The String of the name of the commune
+     * @return A commune if the commune with the String name exists
+     * @throws SQLException 
+     */
     public Commune getCommuneByName(String communeName, List<Commune> allCommunes) throws SQLException {
         for (Commune commune : allCommunes) {
             if (commune.getNomCommune().equalsIgnoreCase(communeName)) {
