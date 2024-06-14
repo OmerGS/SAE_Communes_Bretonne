@@ -5,6 +5,7 @@ import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -12,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -37,7 +39,7 @@ public class ConnectionPage extends Application {
     private Hyperlink linkForgotPassword;
 
     /**
-    * The email TextField, which allows to write email, with the format (user@example.net) 
+    * The email TextField, which allows to write email, with the format (mail@example.net) 
     */
     private TextField emailField;
     
@@ -167,24 +169,22 @@ public class ConnectionPage extends Application {
         HBox mainBox = new HBox(20, logoBox, centralBox);
         mainBox.setPadding(new Insets(20));
         mainBox.setAlignment(Pos.CENTER);
-        // Corrected linear gradient syntax for JavaFX CSS
         mainBox.setStyle("-fx-background-color: linear-gradient(to right, rgba(255,165,0,1) 0%, rgba(0,0,0,0) 50%, rgba(255,255,255,1) 100%);");
 
         // Scene
         Scene scene = new Scene(mainBox, 800, 600);
 
-        // Store if the stage is in full screen before changing the view
-        boolean wasFullScreen = primaryStage.isFullScreen();
-
         // Window configuration
         primaryStage.setScene(scene);
         primaryStage.setTitle("Region Bretagne");
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+        
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
 
-        if (wasFullScreen) {
-            primaryStage.setFullScreen(true);
-        }
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
 
         primaryStage.show();
 

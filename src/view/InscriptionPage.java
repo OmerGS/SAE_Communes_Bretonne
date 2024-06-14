@@ -5,12 +5,14 @@ import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -148,10 +150,18 @@ public class InscriptionPage extends Application {
         Scene scene = new Scene(mainBox, 800, 600);
 
         // Configuration de la fenêtre
+
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("Region Bretagne");
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+
         primaryStage.show();
 
         // Liaison des événements

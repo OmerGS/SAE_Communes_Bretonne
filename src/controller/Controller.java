@@ -183,7 +183,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-
+    // ! ACCOUNT PAGE
 
 
 
@@ -288,7 +288,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-
+    // ! PAGE TO HANDLE CODE SENDING
 
 
 
