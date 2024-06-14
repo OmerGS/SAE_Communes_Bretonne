@@ -14,7 +14,8 @@ import java.util.Set;
 public class Departement {
 
 
-    private static Set<Integer> idsUtilises = new HashSet<>();
+    private Set<Integer> idsUtilises = new HashSet<>();
+
     /**
      * The unique id of the department.
      */
@@ -51,7 +52,7 @@ public class Departement {
             this.idDep = idDep;
             this.nomDep = nomDep;
             this.invesCulture2019 = invesCulture2019;
-            idsUtilises.add(idDep);
+            this.idsUtilises.add(idDep);
             this.communes = new ArrayList<Commune>();
             this.aeroports = new ArrayList<Aeroport>();
             departements.add(this);

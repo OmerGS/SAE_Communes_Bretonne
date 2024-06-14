@@ -4,12 +4,14 @@ import controller.Controller;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class TrouverCheminCommune extends Application {
@@ -72,6 +74,15 @@ public class TrouverCheminCommune extends Application {
         Scene scene = new Scene(root, 800, 1000);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Trouver Chemin entre Communes");
+
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
+        
         primaryStage.show();
     }
 

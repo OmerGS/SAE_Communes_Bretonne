@@ -3,6 +3,7 @@ package view;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -10,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import controller.Controller;
 import data.Commune;
@@ -201,6 +203,14 @@ public class MainPage extends Application {
         Scene scene = new Scene(mainBox, 800, 600);
         scene.getStylesheets().add("file:../resources/css/style.css");
 
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
+        
         primaryStage.setScene(scene);
         primaryStage.setTitle("Recherche de villes");
         primaryStage.show();
