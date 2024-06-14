@@ -3,8 +3,6 @@ package data;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.naming.InvalidNameException;
-
 /**
  * Represents a train station (Gare) with a unique code, name, and information 
  * about its functionality for freight and passengers, along with its associated commune.

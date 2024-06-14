@@ -115,7 +115,7 @@ public class Controller implements EventHandler<ActionEvent> {
         this.accountPage = new AccountPage(this);
         this.envoieCodeValidation = new CodeAlert(this);
         this.mainPage = mainPage;
-    }    
+    }
 
     /**
     * The Empty constructor of controller 
@@ -176,6 +176,7 @@ public class Controller implements EventHandler<ActionEvent> {
         //Page Utilisateur
         handleAccountPageActions(e);
 
+        //Page qui demande le code
         handleCodeAlertActions(e);
     }
 
@@ -326,10 +327,12 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.listeUtilisateur.remove(currentUser);
                     this.currentUser = null;
                 }
-    
-                Stage stage = (Stage) this.envoieCodeValidation.getCloseButton().getScene().getWindow();
+
+                Stage stage2 = (Stage) this.envoieCodeValidation.getCloseButton().getScene().getWindow();
+                stage2.close();
+
+                Stage stage = (Stage) this.accountPage.getDeleteButton().getScene().getWindow();
                 this.mainPage.start(stage);
-                stage.close();
             } else {
                 this.envoieCodeValidation.getAlertLabel().setText("Le code est incorrect !");
                 this.envoieCodeValidation.getAlertLabel().setStyle("-fx-text-fill: red;");
