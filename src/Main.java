@@ -1,3 +1,4 @@
+import controller.Controller;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -15,16 +16,16 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         primaryStage.getIcons().add(new Image("file:../resources/image/logo_bretagne.png"));
+        Controller controller = new Controller();
+        
+        //AccountPage mainPage = new AccountPage(controller);
+        //mainPage.start(primaryStage);
+        
 
         
-        MainPage mainPage = new MainPage();
-        mainPage.start(primaryStage);
-        
-
-        /*
-        MainPage connectionPage = new MainPage();
+        MainPage connectionPage = new MainPage(controller);
         connectionPage.start(primaryStage);
-        */
+        
         
     }
 }

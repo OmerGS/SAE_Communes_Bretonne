@@ -8,13 +8,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-/**
-* Find the path between two commune in Brittany. (found A path not the fastest path.)
-* @author O.Gunes 
-*/
 public class TrouverCheminCommune extends Application {
     private TextField startCommuneField;
     private TextField endCommuneField;
@@ -22,6 +19,7 @@ public class TrouverCheminCommune extends Application {
     private Button findPathButton;
     private Controller controller;
     private HBox resultButtonBox;
+    private ImageView imageView;
 
     public TrouverCheminCommune(Controller controller) {
         this.controller = controller;
@@ -34,9 +32,7 @@ public class TrouverCheminCommune extends Application {
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.TOP_CENTER);
 
-
         HBox topBar = createTopBar();
-
 
         HBox inputBox = new HBox(10);
         inputBox.setAlignment(Pos.CENTER);
@@ -64,9 +60,16 @@ public class TrouverCheminCommune extends Application {
 
         this.resultButtonBox = new HBox();
 
-        root.getChildren().addAll(topBar, inputBox, this.findPathButton, this.resultLabel, this.resultButtonBox);
+        // Ajout de l'ImageView
+        this.imageView = new ImageView();
+        this.imageView.setImage(null);
+        this.imageView.setFitWidth(800);
+        this.imageView.setFitHeight(600);
+        StackPane imagePane = new StackPane(this.imageView);
 
-        Scene scene = new Scene(root, 800, 400);
+        root.getChildren().addAll(topBar, inputBox, this.findPathButton, this.resultLabel, this.resultButtonBox, imagePane);
+
+        Scene scene = new Scene(root, 800, 1000);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Trouver Chemin entre Communes");
         primaryStage.show();
@@ -120,5 +123,8 @@ public class TrouverCheminCommune extends Application {
     public HBox getHBoxBtnStorage(){
         return(this.resultButtonBox);
     }
-    
+
+    public ImageView getImageView() {
+        return imageView;
+    }
 }

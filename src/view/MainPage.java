@@ -25,28 +25,64 @@ public class MainPage extends Application {
     private ImageView userIcon;
     private VBox menuBox;
     private Button cheminCourtButton;
+    private Button toutesLesCommunes;
+    private Button morbihanFilterButton;
+    private Button finistereFilterButton;
+    private Button coteArmorFilterButton;
+    private Button illeEtVilaineFilterButton;
+    private Button reloadDatabase;
+    private Button editData;
+    private int nbCommune;
+
+
+    public MainPage(Controller controller){
+        this.controller = controller;
+        this.controller.setMainPage(this);
+        loadCommunes();
+    }
+
 
     @Override
     public void start(Stage primaryStage) {
-        this.controller = new Controller(this);
-
         // Initialize resultsLabel
-        this.resultsLabel = new Label("55 résultats");
+        this.resultsLabel = new Label(this.nbCommune + " r\u00e9sultats");
         this.resultsLabel.setStyle("-fx-font-size: 18px; -fx-padding: 10px;");
 
         // Create filter button
         Button filterButton = new Button("Filtrer");
         filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        filterButton.setOnAction(event -> {
-            // Handle filter action
-        });
+
+
+
+        // Checkboxes for filters
+        this.toutesLesCommunes = new Button("Toutes");
+        this.morbihanFilterButton = new Button("Morbihan");
+        this.finistereFilterButton = new Button("Finistère");
+        this.coteArmorFilterButton = new Button("Côtes-d'Armor");
+        this.illeEtVilaineFilterButton = new Button("Ille-et-Vilaine");
+
+        HBox communeFilterBox = new HBox(5, toutesLesCommunes, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
+
+
+        this.toutesLesCommunes.setOnAction(this.controller);
+        this.morbihanFilterButton.setOnAction(this.controller);
+        this.finistereFilterButton.setOnAction(this.controller);
+        this.coteArmorFilterButton.setOnAction(this.controller);
+        this.illeEtVilaineFilterButton.setOnAction(this.controller);
+
 
         // HBox for results label and filter button
         HBox resultsBox = new HBox(10);
         resultsBox.setAlignment(Pos.CENTER_LEFT);
         resultsBox.setPadding(new Insets(10));
-        resultsBox.getChildren().addAll(this.resultsLabel, filterButton);
-        HBox.setHgrow(filterButton, Priority.ALWAYS);
+
+        // Add a Region to take up the empty space
+        Region spacer2 = new Region();
+        HBox.setHgrow(spacer2, Priority.ALWAYS);
+
+        // Add the resultsLabel, spacer, and filterButton to the HBox
+        resultsBox.getChildren().addAll(this.resultsLabel, spacer2, communeFilterBox);
+
 
         // Logo image
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
@@ -112,9 +148,6 @@ public class MainPage extends Application {
 
         menuIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> toggleMenu());
 
-       
-        
-
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -144,9 +177,6 @@ public class MainPage extends Application {
             }
         });
 
-        // Load communes and display them in the ListView
-        loadCommunes();
-
         // VBox to center the ListView and make it grow
         VBox centerBox = new VBox(10);
         centerBox.setAlignment(Pos.TOP_CENTER);
@@ -158,8 +188,11 @@ public class MainPage extends Application {
         menuBox = createMenuBox();
         menuBox.setVisible(false);
 
+        this.controller.verifyAdmin();
+
         StackPane mainPane = new StackPane();
         mainPane.getChildren().addAll(centerBox, menuBox);
+        StackPane.setAlignment(menuBox, Pos.CENTER_RIGHT);
 
         VBox mainBox = new VBox(10);
         mainBox.getChildren().addAll(topBar, mainPane);
@@ -185,22 +218,25 @@ public class MainPage extends Application {
     private VBox createMenuBox() {
         VBox menuBox = new VBox(10);
         menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
-        menuBox.setPadding(new Insets(10));
-        menuBox.setAlignment(Pos.CENTER_LEFT);
+        menuBox.setAlignment(Pos.CENTER_RIGHT);
+        menuBox.setMaxWidth(400);
 
-        Label graphsLabel = new Label("Graphes");
-        graphsLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.cheminCourtButton = new Button("Chemin Entre 2 commune");
         this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-
         this.cheminCourtButton.setOnAction(this.controller);
 
-        Label mapLabel = new Label("Carte");
-        mapLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.editData = new Button("Modifier les données");
+        this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.editData.setOnAction(this.controller);
+
         Label exportDataLabel = new Label("Exporter Données");
         exportDataLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
 
-        menuBox.getChildren().addAll(graphsLabel, this.cheminCourtButton, mapLabel, exportDataLabel);
+        this.reloadDatabase = new Button("Rechargez la base de données");
+        this.reloadDatabase.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.reloadDatabase.setOnAction(this.controller);
+
+        menuBox.getChildren().addAll(this.cheminCourtButton, editData, exportDataLabel, this.reloadDatabase);
         return menuBox;
     }
 
@@ -240,7 +276,13 @@ public class MainPage extends Application {
     }
 
     private void loadCommunes() {
-        List<Commune> communes = controller.getCommunes();
+        List<Commune> communes = controller.getCommunesFromDataBase();
+        this.nbCommune = communes.size();
+        communeListView.getItems().addAll(communes);
+    }
+
+
+    public void loadCommunes(List<Commune> communes) {
         communeListView.getItems().addAll(communes);
     }
 
@@ -288,5 +330,33 @@ public class MainPage extends Application {
 
     public Button getButtonCheminLePlusCourt(){
         return(this.cheminCourtButton);
+    }
+
+    public Button getToutesLesCommunes() {
+        return toutesLesCommunes;
+    }
+
+    public Button getMorbihanFilterButton() {
+        return morbihanFilterButton;
+    }
+
+    public Button getFinistereFilterButton() {
+        return finistereFilterButton;
+    }
+
+    public Button getCoteArmorFilterButton() {
+        return coteArmorFilterButton;
+    }
+
+    public Button getIlleEtVilaineFilterButton() {
+        return illeEtVilaineFilterButton;
+    }
+
+    public Button getReloadDatabase() {
+        return reloadDatabase;
+    }
+
+    public Button getEditData() {
+        return editData;
     }
 }

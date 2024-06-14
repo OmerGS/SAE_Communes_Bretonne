@@ -30,13 +30,40 @@ public class Commune {
     */
     private int nbAppart;
 
-
+    /**
+    * Average price of a house. 
+    */
     private double prixMoyen;
+
+    /**
+    * Average price of one square meter. 
+    */
     private double prixM2Moyen;
+
+    /**
+    * Average area of a house. 
+    */
     private double surfaceMoy;
+
+    /**
+    * The money spend on cultural activities. 
+    */
     private double depCulturellesTotales;
+
+    /**
+    * The budget of the commune 
+    */
     private double budgetTotal;
+
+    /**
+    * Number of human living in the commune. 
+    */
     private int population;
+
+    
+    private int lAnnee;
+
+    private Gare gare;
 
 
     /**
@@ -56,9 +83,10 @@ public class Commune {
     
 
 
-    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
+    public Commune(int lAnnee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
         this.communesVoisines = new ArrayList<Commune>();
 
+        this.lAnnee = lAnnee;
 
         //idCommune
         if (isValidIdCommune(idCommune)) {
@@ -169,7 +197,16 @@ public class Commune {
      * @return The ID of the commune.
      */
     public int getIdCommune() {
-        return idCommune;
+        return this.idCommune;
+    }
+
+    /**
+    * Return the year of the commune. 
+    *
+    * @return The year of commune.
+    */
+    public int getlAnnee(){
+        return(this.lAnnee);
     }
 
     /**
@@ -532,5 +569,36 @@ public class Commune {
         }
 
         return getDepCulturellesTotales() / getPopulation();
+    }
+
+    /**
+     * Vérifie si la commune possède une gare.
+     *
+     * @return true si la commune possède une gare, sinon false.
+     */
+    public boolean aUneGare() {
+        return gare != null;
+    }
+
+    /**
+     * Renvoie la gare de la commune.
+     *
+     * @return la gare de la commune, ou null si la commune n'a pas de gare.
+     */
+    public Gare getGare() {
+        return gare;
+    }
+
+    /**
+     * Ajoute une nouvelle gare à la commune.
+     *
+     * @param nouvelleGare la nouvelle gare à associer à la commune
+     */
+    public void ajouterGare(Gare nouvelleGare) {
+        if (gare == null) {
+            gare = nouvelleGare;
+        } else {
+            throw new RuntimeException("Une commune ne peut avoir qu'une seule gare.");
+        }
     }
 }

@@ -2,5 +2,4 @@ javac --module-path "..\lib\javafx-sdk-22.0.1\lib;..\lib\mysql-connector-j-8.4.0
 
 java --module-path "..\lib\javafx-sdk-22.0.1\lib;..\lib\mysql-connector-j-8.4.0\mysql-connector-j-8.4.0.jar;..\lib\javax.mail.jar;..\lib\jaf-1.0.2\activation.jar;" --add-modules javafx.controls,javafx.web,java.mail -cp ../class Main
 
-
 pause

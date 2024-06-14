@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Random;
 import javax.mail.MessagingException;
@@ -21,6 +22,10 @@ import javax.mail.MessagingException;
 * @author O.Gunes
 */
 public class UserService {
+
+    public UserService(){
+
+    }
 
     /**
     * This method creates Utilisateur and hashes the password.
@@ -52,8 +57,8 @@ public class UserService {
     * @param email The email of the user
     * @return 1 if admin, else return 0.
     */
-    private int userIsAdmin(String email){
-        return email.contains("@univ-ubs.fr") ? 1 : 0;
+    public int userIsAdmin(String email){
+        return email.contains("@etud.univ-ubs.fr") ? 1 : 0;
     }
 
     /**
@@ -223,4 +228,98 @@ public class UserService {
         Random random = new Random();
         return random.nextInt(900000) + 100000;
     }
+
+    /**
+    * Loads all users from the database into a list.
+    * 
+    * @return ArrayList of Utilisateur objects.
+    */
+    public ArrayList<Utilisateur> loadAllUsers() {
+        ArrayList<Utilisateur> utilisateurs = new ArrayList<>();
+
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "SELECT nom, prenom, email, motDePasse, salt FROM Utilisateur";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    String nom = resultSet.getString("nom");
+                    String prenom = resultSet.getString("prenom");
+                    String email = resultSet.getString("email");
+                    String motDePasse = resultSet.getString("motDePasse");
+                    String salt = resultSet.getString("salt");
+
+                    Utilisateur utilisateur = new Utilisateur(nom, prenom, email, motDePasse, salt);
+                    utilisateurs.add(utilisateur);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return utilisateurs;
+    }
+
+
+
+
+
+
+
+    /**
+    * 
+    */
+    public void dropUser(String email){
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Utilisateur WHERE email=?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, email);
+                preparedStatement.executeUpdate(); // Execute the update query
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+    *
+    */
+    public void updateUserMail(String email, String newPendingMail) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "UPDATE Utilisateur SET email = ? WHERE email = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, newPendingMail);
+                preparedStatement.setString(2, email);
+                preparedStatement.executeUpdate(); // Execute the update query
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    public void updateUser(String currentEmail, String newName, String newFirstName, String newEmail) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "UPDATE Utilisateur SET nom = ?, prenom = ?, email = ? WHERE email = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, newName);
+                preparedStatement.setString(2, newFirstName);
+                preparedStatement.setString(3, newEmail);
+                preparedStatement.setString(4, currentEmail);
+                preparedStatement.executeUpdate(); // Execute the update query
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+     
 }

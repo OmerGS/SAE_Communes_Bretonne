@@ -56,11 +56,11 @@ public class InscriptionPage extends Application {
 
         // Champs avec placeholders
         this.firstNameField = new TextField();
-        this.firstNameField.setPromptText("Nom");
+        this.firstNameField.setPromptText("Pr\\u00E9nom");
         this.firstNameField.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
         this.lastNameField = new TextField();
-        this.lastNameField.setPromptText("Pr\u00E9nom");
+        this.lastNameField.setPromptText("Nom");
         this.lastNameField.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
         HBox nameBox = new HBox(10, firstNameField, lastNameField);
