@@ -235,7 +235,7 @@ public class MainPage extends Application {
         averagePriceLabel.setStyle("-fx-text-fill: #333;");
         availableLabel.setStyle("-fx-text-fill: #333;");
 
-        row.getChildren().addAll(cityLabelContainer, priceM2Label, averagePriceLabel, availableLabel, detailsButton);
+        row.getChildren().addAll(cityLabel, priceM2Label, averagePriceLabel, availableLabel, detailsButton);
         return row;
     }
 
