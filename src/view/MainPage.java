@@ -253,33 +253,90 @@ public class MainPage extends Application {
     private void toggleMenu() {
         menuBox.setVisible(!menuBox.isVisible());
     }
-
+    
     private HBox createResultRow(Commune commune) {
-        HBox row = new HBox(10);
-        row.setPadding(new Insets(10));
-        row.setStyle("-fx-background-color: #ffffff; -fx-border-color: #d3d3d3; -fx-border-radius: 10px; -fx-background-radius: 10px;");
-
-        Label cityLabel = new Label(commune.getNomCommune());
-        cityLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-
-        Label priceM2Label = new Label("Prix m² " + commune.getPrixM2Moyen() + "€");
-        priceM2Label.setStyle("-fx-font-size: 12px;");
-
-        Label averagePriceLabel = new Label("Prix moyen " + commune.getPrixMoyen() + "€");
-        averagePriceLabel.setStyle("-fx-font-size: 12px;");
-
-        Label availableLabel = new Label(commune.isMostImportant() ? "Oui" : "Non");
-        availableLabel.setStyle("-fx-font-size: 12px;");
-
+        HBox returnHbox = new HBox();
+        returnHbox.setAlignment(Pos.CENTER); // Center align the HBox
+        
+        VBox mainBox = new VBox(20); // Main VBox for entire structure with spacing of 10
+        mainBox.setAlignment(Pos.CENTER); // Center align the VBox
+        mainBox.setPadding(new Insets(10)); // Add padding for spacing around the VBox
+        
+        // HBox for left and right information labels
+        HBox infoHBox = new HBox(40); // HBox for left and right info labels with spacing of 10
+        infoHBox.setAlignment(Pos.CENTER); // Center align horizontally
+        
+        // Left VBox for infos1 and infos2
+        HBox leftVBox = new HBox(20); // VBox for left info labels with spacing of 5
+        leftVBox.setAlignment(Pos.CENTER_LEFT); // Align to the left vertically
+        
+        // Infos1 label
+        Label info1Label = new Label("Important\n" + commune.isMostImportant());
+        info1Label.setStyle("-fx-font-size: 12px;");
+        
+        // Infos2 label
+        Label info2Label = new Label("Prix m2\n" + commune.getPrixM2Moyen());
+        info2Label.setStyle("-fx-font-size: 12px;");
+        
+        leftVBox.getChildren().addAll(info1Label, info2Label);
+        
+        // Right VBox for infos3 and infos4
+        HBox rightVBox = new HBox(10); // VBox for right info labels with spacing of 5
+        rightVBox.setAlignment(Pos.CENTER_RIGHT); // Align to the right vertically
+        
+        // Infos3 label
+        Label info3Label = new Label("Prix Moyen\n" + commune.getPrixMoyen());
+        info3Label.setStyle("-fx-font-size: 12px;");
+        
+        // Infos4 label
+        Label info4Label = new Label("Gare\n" + commune.aUneGare());
+        info4Label.setStyle("-fx-font-size: 12px;");
+        
+        rightVBox.getChildren().addAll(info3Label, info4Label);
+        
+        // Commune name label
+        Label communeLabel = new Label(commune.getNomCommune());
+        communeLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        
+        // Add left and right VBoxes to infoHBox
+        infoHBox.getChildren().addAll(leftVBox, communeLabel, rightVBox);
+        
+        // Button for showing more details
         Button detailsButton = new Button("Voir plus");
         detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
         detailsButton.setOnAction(event -> {
             this.controller.showCommuneDetails(commune);
         });
-
-        row.getChildren().addAll(cityLabel, priceM2Label, averagePriceLabel, availableLabel, detailsButton);
-        return row;
+        
+        // Align button to the center
+        VBox.setMargin(detailsButton, new Insets(10, 0, 0, 0)); // Adjust top margin for button
+        
+        // Add elements to the main VBox
+        mainBox.getChildren().addAll(infoHBox, detailsButton);
+        returnHbox.getChildren().addAll(mainBox);
+        
+        return returnHbox;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
 
     private void loadCommunes() {
         List<Commune> communes = controller.getCommunesFromDataBase();
