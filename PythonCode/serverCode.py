@@ -2,7 +2,7 @@
 # Le programme JavaFX envoie une List de d'Ids de communes au code Python, le code python ensuite
 # lui trace les arrêtes de toutes les communes puis renvoie une image au code JavaFX.
 
-
+# @author O.Gunes
 from flask import Flask, request, send_file
 import matplotlib.pyplot as plt
 import networkx as nx

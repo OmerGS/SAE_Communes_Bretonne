@@ -10,9 +10,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
-* CustomAlert is a class who display a notification.
-* @author O.Gunes
-*/
+ * The CustomAlert class provides methods to display custom alert notifications.
+ * It offers options to show an alert with a title, header, and content, or just a title and content.
+ * The alerts are displayed as modal windows, meaning they block interaction with other windows until closed.
+ * 
+ * This class includes two static methods:
+ * <ul>
+ *   <li>{@link #showAlert(String, String, String)}: Displays an alert with a title, header, and content.</li>
+ *   <li>{@link #showAlert(String, String)}: Displays an alert with a title and content.</li>
+ * </ul>
+ * The alerts are styled with JavaFX CSS for a consistent look and feel.
+ * 
+ * @author O.Gunes
+ */
 public class CustomAlert {
 
     /**
@@ -55,11 +65,11 @@ public class CustomAlert {
 
     
     /**
-    * This constructor allow to display a window title and the content
-    *
-    * @param title The title of notification
-    * @param content The content of notification
-    */
+     * Displays a custom alert window with the specified title and content.
+     * 
+     * @param title The title of the alert window.
+     * @param content The content text of the alert window.
+     */
     public static void showAlert(String title, String content) {
         Stage alertStage = new Stage();
         alertStage.initModality(Modality.APPLICATION_MODAL);

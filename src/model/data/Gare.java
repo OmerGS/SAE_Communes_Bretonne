@@ -6,6 +6,18 @@ import java.util.Set;
 /**
  * Represents a train station (Gare) with a unique code, name, and information 
  * about its functionality for freight and passengers, along with its associated commune.
+ * This class ensures that each train station has a unique code and provides methods to access and modify its properties.
+ * It also validates the commune ID associated with the station.
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ *     Commune commune = new Commune(12345, "Example Commune");
+ *     Gare gare = new Gare(1, "Example Station", true, true, commune);
+ * </pre>
+ * 
+ * @see Commune
+ * 
+ * @author R.Peron
  */
 public class Gare {
 
