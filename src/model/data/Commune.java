@@ -497,26 +497,22 @@ public class Commune {
     */
     public boolean isMostImportant() {
         boolean ret = true;
-        // Check if the commune has neighboring communes
-        if (!(communesVoisines != null && !communesVoisines.isEmpty())) {
-            ret = false;
-        }
-        if(ret){
-            // Initialize variables to keep track of the maximum values
-            int maxProperties = 0;
-            double maxBudget = 0;
-            double maxPopulation = 0;
 
-            // Iterate through neighboring communes to find the maximum values
-            for (Commune neighbor : communesVoisines) {
-                maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
-                maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
-                maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
-            }
-            ret = (getProprieteTotal() >= maxProperties) && (getBudgetTotal() >= maxBudget) && (getPopulation() >= maxPopulation);
+        int maxProperties = -2;
+        double maxBudget = -2;
+        double maxPopulation = -2;
+
+        for (Commune neighbor : this.communesVoisines) {
+            maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
+            System.out.println("maxProperties: " + maxProperties);
+            maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
+            System.out.println("maxBudget: " + maxBudget);
+            maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
+            System.out.println("maxPopulation: " + maxPopulation);
         }
 
-        // Check if the current commune has the maximum values
+        ret = (this.getProprieteTotal() >= maxProperties) && (this.getBudgetTotal() >= maxBudget) && (this.getPopulation() >= maxPopulation);
+
         return ret;
     }
 
