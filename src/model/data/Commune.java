@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
 * Class who represents a commune with different parameters, we can manipulate it with different method. 
 * 
-* @author O.Gunes, R.Peron, C.Brayan
+* 
 */
 public class Commune {
     /**
@@ -55,50 +55,41 @@ public class Commune {
     private ArrayList<Commune> communesVoisines;
 
     private Gare gare;
+
+    private Annee annee;
     
 
 
-    public Commune(int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
-        this.communesVoisines = new ArrayList<Commune>();
+    public Commune(Annee annee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, 
+                   double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, 
+                   int population, Departement departement) {
+        this.communesVoisines = new ArrayList<>();
 
-
-
-        //idCommune
-        if (isValidIdCommune(idCommune)) {
-            this.idCommune = idCommune;
-        } else {
-            throw new RuntimeException("Numéro de commune invalide : " + idCommune);
+        if (!isValidIdCommune(idCommune)) {
+            throw new IllegalArgumentException("Invalid commune ID: " + idCommune);
+        }
+        if (nomCommune == null || nomCommune.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid commune name: " + nomCommune);
+        }
+        if (departement == null || !isValidDepartement(departement)) {
+            throw new IllegalArgumentException("Invalid department: " + departement);
+        }
+        if (annee == null && !isValidYear(annee)) {
+            throw new IllegalArgumentException("Invalid year: " + annee);
         }
 
-        //nomCommune
-        if (nomCommune != null && !nomCommune.trim().isEmpty()) {
-            this.nomCommune = nomCommune;
-        } else {
-            throw new RuntimeException("Nom de commune invalide : " + nomCommune);
-        }
-
-        if(departement != null){
-            this.departement= departement;
-        } else {
-            throw new RuntimeException("Département invalide : " + departement.getNomDep());
-        }
-
-        if(nomCommune != null && !nomCommune.trim().isEmpty() && nbMaison >= 0 && nbAppart >= 0 && prixMoyen >= 0 && prixM2Moyen >= 0 && surfaceMoy >= 0 && depCulturellesTotales >= 0 && budgetTotal >= 0 && population >= 0){
-            this.nomCommune = nomCommune;
-            this.nbMaison = nbMaison;
-            this.nbAppart = nbAppart;
-            this.prixMoyen = prixMoyen;
-            this.prixM2Moyen = prixM2Moyen;
-            this.surfaceMoy = surfaceMoy;
-            this.depCulturellesTotales = depCulturellesTotales;
-            this.budgetTotal = budgetTotal;
-            this.population = population;
-        }else {
-            throw new RuntimeException("Paramètre invalide");
-        }
-
-
-        
+        this.annee = annee;
+        this.idCommune = idCommune;
+        this.nomCommune = nomCommune;
+        this.nbMaison = nbMaison;
+        this.nbAppart = nbAppart;
+        this.prixMoyen = prixMoyen;
+        this.prixM2Moyen = prixM2Moyen;
+        this.surfaceMoy = surfaceMoy;
+        this.depCulturellesTotales = depCulturellesTotales;
+        this.budgetTotal = budgetTotal;
+        this.population = population;
+        this.departement = departement;
     }
 
 
@@ -127,6 +118,15 @@ public class Commune {
     }
 
 
+
+    private boolean isValidYear(Annee annee){
+        boolean validYear = false;
+        if(annee.getAnnee() == 2018 || annee.getAnnee() == 2019 || annee.getAnnee() == 2020 || annee.getAnnee() == 2021){
+            validYear = true;
+        }
+        return validYear;
+
+    }
 
 
 
@@ -242,6 +242,11 @@ public class Commune {
      */
     public ArrayList<Commune> getCommunesVoisines() {
         return communesVoisines;
+    }
+
+
+    public Annee getAnnee() {
+        return this.annee;
     }
 
 
@@ -404,6 +409,16 @@ public void setDepartement(Departement departement) {
     }
 }
 
+
+public void setAnnee(Annee annee) {
+    if(annee.getAnnee() >= 0){
+        this.annee = annee;
+    }else{
+        throw new RuntimeException("Parametre invalide");
+    }
+}
+
+
     
 
 
@@ -564,5 +579,14 @@ public void setDepartement(Departement departement) {
         } else {
             throw new RuntimeException("Une commune ne peut avoir qu'une seule gare.");
         }
+    }
+
+    private boolean isValidDepartement(Departement departement) {
+        int id = departement.getIdDep();
+        boolean ret = false;
+        if(id == 56 || id == 29 || id == 22 || id == 35){
+            ret = true;
+        }
+        return ret;
     }
 }

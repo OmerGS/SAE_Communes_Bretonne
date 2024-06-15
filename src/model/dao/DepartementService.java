@@ -1,6 +1,6 @@
 package dao;
 
-import data.Commune;
+
 import data.Departement;
 import data.exceptions.InvalidCommuneIdException;
 import data.exceptions.InvalidCommuneNameException;

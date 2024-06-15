@@ -18,13 +18,15 @@ public class Aeroport {
      * @param departement the department associated with the airport
      */
     public Aeroport(String nom, String adresse, Departement departement) {
-        if (nom != null && adresse != null && departement != null) {
-            this.nom = nom;
-            this.adresse = adresse;
-            this.departement = departement;
-        } else {
-            throw new RuntimeException("Invalid parameter");
+        if (nom == null || nom.trim().isEmpty() || adresse == null || adresse.trim().isEmpty() || departement == null) {
+            throw new IllegalArgumentException("Invalid parameters for Aeroport.");
         }
+        if (!isValidDepartement(departement)) {
+            throw new IllegalArgumentException("Invalid department ID: " + departement.getIdDep());
+        }
+        this.nom = nom;
+        this.adresse = adresse;
+        this.departement = departement;
     }
 
     /* ----- Getters ----- */
@@ -124,6 +126,11 @@ public class Aeroport {
             throw new RuntimeException("One or both airports do not have a valid department.");
         }
         return ret;
+    }
+
+    private boolean isValidDepartement(Departement departement) {
+        int id = departement.getIdDep();
+        return id == 56 || id == 29 || id == 22 || id == 35;
     }
 
 

@@ -14,7 +14,7 @@ import java.util.Set;
 public class Departement {
 
 
-    private static Set<Integer> idsUtilises = new HashSet<>();
+    private Set<Integer> idsUtilises = new HashSet<>();
     /**
      * The unique id of the department.
      */
@@ -47,17 +47,19 @@ public class Departement {
 
 
     public Departement(int idDep, String nomDep, double invesCulture2019){
-        if((!idsUtilises.contains(idDep)) && nomDep != null && invesCulture2019 > 0){
-            this.idDep = idDep;
-            this.nomDep = nomDep;
-            this.invesCulture2019 = invesCulture2019;
-            idsUtilises.add(idDep);
-            this.communes = new ArrayList<Commune>();
-            this.aeroports = new ArrayList<Aeroport>();
-            departements.add(this);
-        }else{
-            throw new RuntimeException("parametre invalide");
+        if(idDep <= 0 || nomDep == null || nomDep.trim().isEmpty() || invesCulture2019 <= 0) {
+            throw new IllegalArgumentException("Invalid parameters for Departement.");
         }
+        if(idsUtilises.contains(idDep)) {
+            throw new IllegalArgumentException("ID already in use: " + idDep);
+        }
+        this.idDep = idDep;
+        this.nomDep = nomDep;
+        this.invesCulture2019 = invesCulture2019;
+        this.idsUtilises.add(idDep);
+        this.communes = new ArrayList<>();
+        this.aeroports = new ArrayList<>();
+        departements.add(this);
     }
 
 
@@ -87,12 +89,13 @@ public class Departement {
 
     // Méthode statique pour obtenir un département par son identifiant
     public static Departement getDepartementById(int idDep) {
+        Departement ret = null;
         for (Departement dep : departements) {
             if (dep.getIdDep() == idDep) {
-                return dep;
+                ret = dep;
             }
         }
-        return null;  // Retourne null si aucun département n'est trouvé avec l'identifiant donné
+        return ret;  // Retourne null si aucun département n'est trouvé avec l'identifiant donné
     }
 
 

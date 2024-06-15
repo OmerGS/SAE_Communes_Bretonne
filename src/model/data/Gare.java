@@ -47,15 +47,21 @@ public class Gare {
      * @param commune     the commune of the train station
      */
     public Gare(int codeGare, String nomGare, boolean estFret, boolean estVoyageur, Commune commune){
-        if (!idsUtilises.contains(codeGare) && nomGare != null && commune != null) {
-            this.codeGare = codeGare;
-            this.nomGare = nomGare;
-            this.estFret = estFret;
-            this.estVoyageur = estVoyageur;
-            this.commune = commune;
-            idsUtilises.add(codeGare);
-            commune.ajouterGare(this);
+        if (codeGare <= 0) {
+            throw new IllegalArgumentException("Invalid train station ID: " + codeGare);
         }
+        if (nomGare == null || nomGare.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid train station name: " + nomGare);
+        }
+        if(commune == null){
+            throw new IllegalArgumentException("Invalid Commune");
+        }
+        
+        this.codeGare = codeGare;
+        this.nomGare = nomGare;
+        this.estFret = estFret;
+        this.estVoyageur = estVoyageur;
+        this.commune = commune;
     }
 
     /* ----- Getters ----- */
@@ -191,8 +197,8 @@ public class Gare {
      * @param isEstVoyageur true if the train station accepts passenger trains
      * @return true if the train station allows both freight and passenger trains
      */
-    public boolean isEstFretAndIsEstVoyageur(boolean isEstFret, boolean isEstVoyageur) {
-        return isEstFret && isEstVoyageur;
+    public boolean isEstFretAndIsEstVoyageur() {
+        return this.estFret && this.estVoyageur;
     }
 
     /**

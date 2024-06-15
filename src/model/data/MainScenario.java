@@ -1,3 +1,4 @@
+package data;
 
 
 
@@ -9,11 +10,6 @@ import dao.AnneeService;
 import dao.CommuneService;
 import dao.DepartementService;
 import dao.GareService;
-import data.Aeroport;
-import data.Annee;
-import data.Commune;
-import data.Departement;
-import data.Gare;
 
 public class MainScenario {
 
@@ -29,16 +25,22 @@ public class MainScenario {
             // Fetch all departments
             List<Departement> departements = departementService.getAllDepartement();
             System.out.println("All Departments:");
-            /*for (Departement departement : departements) {
+            for (Departement departement : departements) {
                 System.out.println(departement);
-            }*/
+            }
+
+            List<Annee> annees = anneeService.getAllAnnee();
+            System.out.println("\nAll Years:");
+            for (Annee annee : annees) {
+                System.out.println(annee);
+            }
 
             // Fetch all communes
             List<Commune> communes = communeService.getAllCommunes();
             System.out.println("\nAll Communes:");
-            /*for (Commune commune : communes) {
+            for (Commune commune : communes) {
                 System.out.println(commune);
-            }*/
+            }
 
             // Fetch all airports
             List<Aeroport> aeroports = aeroportService.getAllAeroport();
@@ -54,12 +56,6 @@ public class MainScenario {
                 System.out.println(gare);
             }
 
-            // Fetch all years
-            List<Annee> annees = anneeService.getAllAnnee();
-            System.out.println("\nAll Years:");
-            for (Annee annee : annees) {
-                System.out.println(annee);
-            }
 
         } catch (SQLException e) {
             e.printStackTrace();
