@@ -74,7 +74,7 @@ public class Commune {
         if (departement == null || !isValidDepartement(departement)) {
             throw new IllegalArgumentException("Invalid department: " + departement);
         }
-        if (annee == null && !isValidYear(annee)) {
+        if (annee == null) {
             throw new IllegalArgumentException("Invalid year: " + annee);
         }
 
@@ -119,14 +119,7 @@ public class Commune {
 
 
 
-    private boolean isValidYear(Annee annee){
-        boolean validYear = false;
-        if(annee.getAnnee() == 2018 || annee.getAnnee() == 2019 || annee.getAnnee() == 2020 || annee.getAnnee() == 2021){
-            validYear = true;
-        }
-        return validYear;
 
-    }
 
 
 
