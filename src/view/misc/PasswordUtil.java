@@ -6,19 +6,26 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
-* PasswordUtil is a class allow to hash password with a salt
-* @author O.Gunes 
-*/
+ * The PasswordUtil class provides utility methods for hashing passwords using SHA-256 algorithm with a salt.
+ * 
+ * This class includes two main methods:
+ * <ul>
+ *   <li>{@link #hashPassword(String, byte[])}: Hashes a password using SHA-256 algorithm with provided salt.</li>
+ *   <li>{@link #getSalt()}: Generates a random salt used for password hashing.</li>
+ * </ul>
+ * 
+ * @author O.Gunes
+ */
 public class PasswordUtil {
 
     /**
-    * Allow to hash the password with the "SHA-256" algorithm
-    *
-    * @param password The plain password before hash
-    * @param salt The salt
-    * @return The hashed password
-    * @throws NoSuchAlgorithmException If the algorithm doesn't present in the environment
-    */
+     * Hashes the given password using SHA-256 algorithm with the provided salt.
+     * 
+     * @param password The plain password before hashing.
+     * @param salt The salt used in hashing.
+     * @return The hashed password encoded in Base64.
+     * @throws NoSuchAlgorithmException If the SHA-256 algorithm is not available in the environment.
+     */
     public static String hashPassword(String password, byte[] salt) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(salt);
@@ -27,11 +34,11 @@ public class PasswordUtil {
     }
 
     /**
-    * Allw to generate a salt
-    *
-    * @return Salt
-    * @throws NoSuchAlgorithmException If the algorithm doesn't present in the environment
-    */
+     * Generates a random salt for password hashing.
+     * 
+     * @return The generated salt as a byte array.
+     * @throws NoSuchAlgorithmException If the SHA1PRNG algorithm is not available in the environment.
+     */
     public static byte[] getSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[16];
