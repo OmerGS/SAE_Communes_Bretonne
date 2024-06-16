@@ -11,71 +11,116 @@ import java.util.ArrayList;
 */
 public class Commune {
     /**
-    * The unique number which represent the commune. 
-    */
+     * The unique number representing the commune.
+     */
     private int idCommune;
 
     /**
-    * The name of the commune. 
-    */
+     * The name of the commune.
+     */
     private String nomCommune;
 
     /**
-    * The number of house. 
-    */
+     * The number of houses.
+     */
     private int nbMaison;
 
     /**
-    * The number of appartment. 
-    */
+     * The number of apartments.
+     */
     private int nbAppart;
 
-
+    /**
+     * The average price of properties in the commune.
+     */
     private double prixMoyen;
+
+    /**
+     * The average price per square meter in the commune.
+     */
     private double prixM2Moyen;
+
+    /**
+     * The average surface area in the commune.
+     */
     private double surfaceMoy;
+
+    /**
+     * The total cultural expenses in the commune.
+     */
     private double depCulturellesTotales;
+
+    /**
+     * The total budget of the commune.
+     */
     private double budgetTotal;
+
+    /**
+     * The population of the commune.
+     */
     private int population;
 
+    /**
+     * The department of the commune.
+     *
+     * Allows connection with Departement.java
+     */
+    private Departement departement;
 
     /**
-    * The department of the commune. 
-    * 
-    * Allow connection with Departement.java 
-    */
-    private Departement departement;  
-
-    
-    /**
-    * List of neighbours communes. 
-    * 
-    * Allow a connection with itself (Commune.java) 
-    */
+     * List of neighboring communes.
+     *
+     * Allows a connection with itself (Commune.java)
+     */
     private ArrayList<Commune> communesVoisines;
 
+    /**
+     * The train station (Gare) associated with the commune.
+     */
     private Gare gare;
 
+    /**
+     * The year associated with the commune.
+     */
     private Annee annee;
-    
 
 
-    public Commune(Annee annee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, 
-                   double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, 
-                   int population, Departement departement) {
+
+    /**
+     * Constructs a new Commune object with the specified parameters.
+     *
+     * @param annee                 the year associated with the commune
+     * @param idCommune             the unique number which represents the commune
+     * @param nomCommune            the name of the commune
+     * @param nbMaison              the number of houses in the commune
+     * @param nbAppart              the number of apartments in the commune
+     * @param prixMoyen             the average price of properties in the commune
+     * @param prixM2Moyen           the average price per square meter in the commune
+     * @param surfaceMoy            the average surface area in the commune
+     * @param depCulturellesTotales the total cultural expenses in the commune
+     * @param budgetTotal           the total budget of the commune
+     * @param population            the population of the commune
+     * @param departement           the department of the commune
+     * @throws IllegalArgumentException if any of the parameters are invalid:
+     *                                  - if idCommune is not valid
+     *                                  - if nomCommune is null or empty
+     *                                  - if departement is null or invalid
+     *                                  - if annee is null
+     */
+    public Commune(Annee annee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
         this.communesVoisines = new ArrayList<>();
 
         if (!isValidIdCommune(idCommune)) {
-            throw new IllegalArgumentException("Invalid commune ID: " + idCommune);
+            throw new IllegalArgumentException("Identifiant de commune invalide : " + idCommune);
         }
         if (nomCommune == null || nomCommune.trim().isEmpty()) {
-            throw new IllegalArgumentException("Invalid commune name: " + nomCommune);
+            throw new IllegalArgumentException("Nom de commune invalide : " + nomCommune);
         }
         if (departement == null || !isValidDepartement(departement)) {
-            throw new IllegalArgumentException("Invalid department: " + departement);
+            throw new IllegalArgumentException("Département invalide : " + departement);
         }
         if (annee == null) {
-            throw new IllegalArgumentException("Invalid year: " + annee);
+            throw new IllegalArgumentException("Année invalide : " + annee);
         }
 
         this.annee = annee;
@@ -94,28 +139,6 @@ public class Commune {
 
 
 
-
-    /**
-     * Method which allows checking if the id of the commune is valid or not.
-     * 
-     * @param idCommune the id of the commune we want to validate
-     * @return false if not valid, else return true.
-     */
-    private boolean isValidIdCommune(int idCommune) {
-        boolean ret = true;
-        String idString = String.valueOf(idCommune);
-
-        // Check if the idCommune has exactly 5 digits
-        if (idString.length() != 5) {
-            ret = false;
-        } else {
-            // Check if the prefix is one of the valid values
-            String prefix = idString.substring(0, 2);
-            ret = prefix.equals("29") || prefix.equals("35") || prefix.equals("22") || prefix.equals("56");
-        }
-
-        return ret;
-    }
 
 
 
@@ -238,6 +261,11 @@ public class Commune {
     }
 
 
+    /**
+     * Returns the year associated with this commune.
+     *
+     * @return the year associated with this commune.
+     */
     public Annee getAnnee() {
         return this.annee;
     }
@@ -245,171 +273,141 @@ public class Commune {
 
 
 
-/* ------ Setters ------ */
+    /* ------ Setters ------ */
 
-/**
- * Sets the ID of the commune.
- *
- * @param idCommune The ID of the commune.
- */
-public void setIdCommune(int idCommune) {
-    if (isValidIdCommune(idCommune)) {
-        this.idCommune = idCommune;
-    } else {
-        throw new RuntimeException("Invalid commune ID: " + idCommune);
-    }
-}
-
-/**
- * Sets the name of the commune.
- *
- * @param nomCommune The name of the commune.
- */
-public void setNomCommune(String nomCommune) {
-    if (nomCommune != null && !nomCommune.trim().isEmpty()) {
-        this.nomCommune = nomCommune;
-    } else {
-        throw new RuntimeException("Invalid commune name: " + nomCommune);
-    }
-}
-
-/**
- * Sets the number of houses in the commune.
- *
- * @param nbMaison The number of houses.
- * @throws InvalidValueException If the number of houses is negative.
- */
-public void setNbMaison(int nbMaison) {
-    if(nbMaison >= 0){
-        this.nbMaison = nbMaison;
-    }else{
-        throw new RuntimeException("Parametre invalide");
-    }
-}
-
-/**
- * Sets the number of apartments in the commune.
- *
- * @param nbAppart The number of apartments.
- * @throws InvalidValueException If the number of apartments is negative.
- */
-public void setNbAppart(int nbAppart) {
-    if(nbAppart >= 0){
-        this.nbAppart = nbAppart;
-    }else{
-        throw new RuntimeException("Parametre invalide");
-    }
-}
-
-/**
- * Sets the average price of properties in the commune.
- *
- * @param prixMoyen The average price.
- * @throws InvalidValueException If the average price is negative.
- */
-public void setPrixMoyen(double prixMoyen) {
-    if(prixMoyen >= 0){
-        this.prixMoyen = prixMoyen;
-    }else{
-        throw new RuntimeException("Parametre invalide");
-    }
-}
-
-/**
- * Sets the average price per square meter in the commune.
- *
- * @param prixM2Moyen The average price per square meter.
- * @throws InvalidValueException If the average price per square meter is negative.
- */
-public void setPrixM2Moyen(double prixM2Moyen) {
-    if(prixM2Moyen >= 0){
-        this.prixM2Moyen = prixM2Moyen;
-    }else{
-        throw new RuntimeException("Parametre invalide");
-    }
-}
-
-/**
- * Sets the average surface area in the commune.
- *
- * @param surfaceMoy The average surface area.
- * @throws InvalidValueException If the average surface area is negative.
- */
-public void setSurfaceMoy(double surfaceMoy) {
-    if(surfaceMoy >= 0){
-        this.surfaceMoy = surfaceMoy;
-    }else{
-        throw new RuntimeException("Parametre invalide");
-    }
-}
-
-/**
- * Sets the total cultural expenses in the commune.
- *
- * @param depCulturellesTotales The total cultural expenses.
- * @throws InvalidValueException If the total cultural expenses are negative.
- */
-public void setDepCulturellesTotales(double depCulturellesTotales) {
-    if(depCulturellesTotales >= 0){
-        this.depCulturellesTotales = depCulturellesTotales;
-    }else{
-        throw new RuntimeException("Parametre invalide");
-    }
-}
-
-/**
- * Sets the total budget of the commune.
- *
- * @param budgetTotal The total budget.
- * @throws InvalidValueException If the total budget is negative.
- */
-public void setBudgetTotal(double budgetTotal) {
-    if(budgetTotal>= 0){
-        this.budgetTotal = budgetTotal;
-    }else{
-        throw new RuntimeException("Parametre invalide");
-    }
-}
-
-/**
- * Sets the population of the commune.
- *
- * @param population The population.
- * @throws InvalidValueException If the population is negative.
- */
-public void setPopulation(int population) {
-    if(population >= 0){
-        this.population = population;
-    }else{
-        throw new RuntimeException("Parametre invalide");
-    }
-}
-
-/**
- * Sets the department to which the commune belongs.
- *
- * @param departement The department.
- */
-public void setDepartement(Departement departement) {
-    if(departement != null){
-        if (departement.getIdDep() == 56 || departement.getIdDep() == 29 || departement.getIdDep() == 22 || departement.getIdDep() == 35) {
-            this.departement = departement;
+    /**
+     * Sets the ID of the commune.
+     *
+     * @param idCommune The ID of the commune.
+     * @throws IllegalArgumentException Si l'ID de la commune est invalide.
+     */
+    public void setIdCommune(int idCommune) {
+        if (isValidIdCommune(idCommune)) {
+            this.idCommune = idCommune;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("ID de commune invalide : " + idCommune);
         }
-    }else{
-        throw new IllegalArgumentException();
     }
-}
+
+    /**
+     * Sets the name of the commune.
+     *
+     * @param nomCommune The name of the commune.
+     * @throws IllegalArgumentException Si le nom de la commune est invalide.
+     */
+    public void setNomCommune(String nomCommune) {
+        if (nomCommune != null && !nomCommune.trim().isEmpty()) {
+            this.nomCommune = nomCommune;
+        } else {
+            throw new IllegalArgumentException("Nom de commune invalide : " + nomCommune);
+        }
+    }
+
+    /**
+     * Sets the number of houses in the commune.
+     *
+     * @param nbMaison The number of houses.
+     */
+    public void setNbMaison(int nbMaison) {
+        this.nbMaison = nbMaison;
+    }
+
+   /**
+     * Sets the number of apartments in the commune.
+     *
+     * @param nbAppart The number of apartments.
+     */
+    public void setNbAppart(int nbAppart) {
+        this.nbAppart = nbAppart;
+    }
+
+    /**
+     * Sets the average price of properties in the commune.
+     *
+     * @param prixMoyen The average price.
+     */
+    public void setPrixMoyen(double prixMoyen) {
+        this.prixMoyen = prixMoyen;
+    }
+
+    /**
+     * Sets the average price per square meter in the commune.
+     *
+     * @param prixM2Moyen The average price per square meter.
+     */
+    public void setPrixM2Moyen(double prixM2Moyen) {
+        this.prixM2Moyen = prixM2Moyen;
+    }
+
+    /**
+     * Sets the average surface area in the commune.
+     *
+     * @param surfaceMoy The average surface area.
+     */
+    public void setSurfaceMoy(double surfaceMoy) {
+        this.surfaceMoy = surfaceMoy;
+    }
+
+    /**
+     * Sets the total cultural expenses in the commune.
+     *
+     * @param depCulturellesTotales The total cultural expenses.
+     */
+    public void setDepCulturellesTotales(double depCulturellesTotales) {
+        this.depCulturellesTotales = depCulturellesTotales;
+    }
+
+    /**
+     * Sets the total budget of the commune.
+     *
+     * @param budgetTotal The total budget.
+     */
+    public void setBudgetTotal(double budgetTotal) {
+        this.budgetTotal = budgetTotal;
+    }
+
+    /**
+     * Sets the population of the commune.
+     *
+     * @param population The population.
+     */
+    public void setPopulation(int population) {
+        this.population = population;
+    }
 
 
-public void setAnnee(Annee annee) {
-    if(annee.getAnnee() >= 0){
-        this.annee = annee;
-    }else{
-        throw new RuntimeException("Parametre invalide");
+    /**
+     * Sets the department to which the commune belongs.
+     *
+     * @param departement The department.
+     * @throws IllegalArgumentException Si le département est invalide.
+     */
+    public void setDepartement(Departement departement) {
+        if (departement != null) {
+            if (departement.getIdDep() == 56 || departement.getIdDep() == 29 || departement.getIdDep() == 22 || departement.getIdDep() == 35) {
+                this.departement = departement;
+            } else {
+                throw new IllegalArgumentException("Département invalide : " + departement.getIdDep());
+            }
+        } else {
+            throw new IllegalArgumentException("Département invalide : null");
+        }
     }
-}
+
+    /**
+     * Sets the year associated with the commune.
+     *
+     * @param annee The year.
+     * @throws IllegalArgumentException Si l'année est négative.
+     */
+    public void setAnnee(Annee annee) {
+        if (annee.getAnnee() >= 0) {
+            this.annee = annee;
+        } else {
+            throw new IllegalArgumentException("Année invalide : " + annee.getAnnee());
+        }
+    }
+
 
 
     
@@ -420,6 +418,11 @@ public void setAnnee(Annee annee) {
 
 /* ------ Other Method ------ */
 
+   /**
+     * Returns a string representation of the Commune object.
+     *
+     * @return a string representation of the Commune object
+     */
     @Override
     public String toString() {
         return "Commune{" +
@@ -436,15 +439,29 @@ public void setAnnee(Annee annee) {
                 '}';
     }
 
-    
+    /**
+     * Adds a neighboring commune to the list of neighboring communes.
+     *
+     * @param commune the commune to add as a neighbor
+     */
     public void addVoisine(Commune commune) {
         this.communesVoisines.add(commune);
     }
 
+    /**
+     * Calculates the total number of properties (houses and apartments) in the commune.
+     *
+     * @return the total number of properties in the commune
+     */
     public int getProprieteTotal() {
         return nbMaison + nbAppart;
     }
-    
+
+    /**
+     * Calculates the average price per property (house or apartment) in the commune.
+     *
+     * @return the average price per property in the commune
+     */
     public double prixMoyenParPropriete() {
         double ret;
         int totalProprietes = getNbMaison() + getNbAppart();
@@ -455,6 +472,7 @@ public void setAnnee(Annee annee) {
         }
         return ret;
     }
+
     
     
     
@@ -544,29 +562,30 @@ public void setAnnee(Annee annee) {
     }
 
    /**
-     * Vérifie si la commune possède une gare.
+     * Checks if the commune has a train station (Gare).
      *
-     * @return true si la commune possède une gare, sinon false.
+     * @return true if the commune has a train station, otherwise false.
      */
     public boolean aUneGare() {
         return gare != null;
     }
 
     /**
-     * Renvoie la gare de la commune.
+     * Returns the train station (Gare) of the commune.
      *
-     * @return la gare de la commune, ou null si la commune n'a pas de gare.
+     * @return the train station of the commune, or null if the commune has no train station.
      */
     public Gare getGare() {
         return gare;
     }
 
     /**
-     * Ajoute une nouvelle gare à la commune.
+     * Adds a new train station (Gare) to the commune.
      *
-     * @param nouvelleGare la nouvelle gare à associer à la commune
+     * @param nouvelleGare the new train station to associate with the commune.
+     * @throws RuntimeException if the commune already has a train station.
      */
-    public void ajouterGare(Gare nouvelleGare) {
+    public void addGare(Gare nouvelleGare) {
         if (gare == null) {
             gare = nouvelleGare;
         } else {
@@ -574,12 +593,53 @@ public void setAnnee(Annee annee) {
         }
     }
 
+
+    /**
+     * Removes the association of this commune with a train station (Gare).
+     * If the commune is currently associated with a train station, it removes the association by setting the gare to null.
+     */
+    public void removeGare() {
+        if (gare != null) {
+            gare = null;
+        }
+    }
+
+
+    /**
+     * Method which allows checking if the id of the commune is valid or not.
+     * 
+     * @param idCommune the id of the commune we want to validate
+     * @return false if not valid, else return true.
+     */
+    private boolean isValidIdCommune(int idCommune) {
+        boolean ret = true;
+        String idString = String.valueOf(idCommune);
+
+        // Check if the idCommune has exactly 5 digits
+        if (idString.length() != 5) {
+            ret = false;
+        } else {
+            // Check if the prefix is one of the valid values
+            String prefix = idString.substring(0, 2);
+            ret = prefix.equals("29") || prefix.equals("35") || prefix.equals("22") || prefix.equals("56");
+        }
+
+        return ret;
+    }
+
+    /**
+     * Validates if a department is valid based on its ID.
+     *
+     * @param departement The department to validate.
+     * @return True if the department ID is valid (56, 29, 22, or 35), false otherwise.
+     */
     private boolean isValidDepartement(Departement departement) {
         int id = departement.getIdDep();
         boolean ret = false;
-        if(id == 56 || id == 29 || id == 22 || id == 35){
+        if (id == 56 || id == 29 || id == 22 || id == 35) {
             ret = true;
         }
         return ret;
     }
+
 }

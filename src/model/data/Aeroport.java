@@ -3,7 +3,7 @@ package data;
 /**
  * Represents an airport with a name, address, and a department.
  * This class ensures that the associated department has a valid code.
- * The valid codes have specific prefixes (29, 35, 22, 56) and are exactly 2 digits long.
+ * The valid codes have specific prefixes (29, 35, 22, 56).
  */
 public class Aeroport {
     private String nom;
@@ -13,16 +13,17 @@ public class Aeroport {
     /**
      * Constructs a new Aeroport with the specified name, address, and department.
      *
-     * @param nom     the name of the airport
-     * @param adresse the address of the airport
+     * @param nom         the name of the airport
+     * @param adresse     the address of the airport
      * @param departement the department associated with the airport
+     * @throws IllegalArgumentException if any parameter is invalid or the department ID is not valid
      */
     public Aeroport(String nom, String adresse, Departement departement) {
         if (nom == null || nom.trim().isEmpty() || adresse == null || adresse.trim().isEmpty() || departement == null) {
-            throw new IllegalArgumentException("Invalid parameters for Aeroport.");
+            throw new IllegalArgumentException("Paramètres invalides pour l'Aéroport.");
         }
         if (!isValidDepartement(departement)) {
-            throw new IllegalArgumentException("Invalid department ID: " + departement.getIdDep());
+            throw new IllegalArgumentException("ID de département invalide: " + departement.getIdDep());
         }
         this.nom = nom;
         this.adresse = adresse;
@@ -41,36 +42,12 @@ public class Aeroport {
     }
 
     /**
-     * Sets the name of the airport.
-     *
-     * @param nom the new name of the airport
-     */
-    public void setNom(String nom) {
-        if (nom == null || nom.trim().isEmpty()) {
-            throw new RuntimeException("The name of the airport cannot be null or empty.");
-        }
-        this.nom = nom;
-    }
-
-    /**
      * Returns the address of the airport.
      *
      * @return the address of the airport
      */
     public String getAdresse() {
         return adresse;
-    }
-
-    /**
-     * Sets the address of the airport.
-     *
-     * @param adresse the new address of the airport
-     */
-    public void setAdresse(String adresse) {
-        if (adresse == null || adresse.trim().isEmpty()) {
-            throw new RuntimeException("The address of the airport cannot be null or empty.");
-        }
-        this.adresse = adresse;
     }
 
     /**
@@ -83,24 +60,46 @@ public class Aeroport {
     }
 
     /**
+     * Sets the name of the airport.
+     *
+     * @param nom the new name of the airport
+     * @throws IllegalArgumentException if the name is null or empty
+     */
+    public void setNom(String nom) {
+        if (nom == null || nom.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le nom de l'aéroport ne peut pas être nul ou vide.");
+        }
+        this.nom = nom;
+    }
+
+    /**
+     * Sets the address of the airport.
+     *
+     * @param adresse the new address of the airport
+     * @throws IllegalArgumentException if the address is null or empty
+     */
+    public void setAdresse(String adresse) {
+        if (adresse == null || adresse.trim().isEmpty()) {
+            throw new IllegalArgumentException("L'adresse de l'aéroport ne peut pas être nulle ou vide.");
+        }
+        this.adresse = adresse;
+    }
+
+    /**
      * Sets the department associated with the airport.
      *
      * @param departement the new department associated with the airport
+     * @throws IllegalArgumentException if the department is null or the ID is not valid
      */
     public void setDepartement(Departement departement) {
-        if(departement != null){
-            if (departement.getIdDep() == 56 || departement.getIdDep() == 29 || departement.getIdDep() == 22 || departement.getIdDep() == 35) {
-                this.departement = departement;
-            } else {
-                throw new IllegalArgumentException();
-            }
-        }else{
-            throw new IllegalArgumentException();
+        if (departement == null) {
+            throw new IllegalArgumentException("Le département ne peut pas être nul.");
         }
+        if (!isValidDepartement(departement)) {
+            throw new IllegalArgumentException("ID de département invalide: " + departement.getIdDep());
+        }
+        this.departement = departement;
     }
-
-    
-
 
     /**
      * Returns a string representation of the airport.
@@ -117,23 +116,23 @@ public class Aeroport {
      *
      * @param otherAirport the other airport to compare with
      * @return true if both airports are in the same department, false otherwise
+     * @throws RuntimeException if one or both airports do not have a valid department
      */
     public boolean areInSameDepartment(Aeroport otherAirport) {
-        boolean ret = false;
-        if (otherAirport.departement != null) {
-            ret = this.departement.getIdDep() == otherAirport.departement.getIdDep();
-        } else {
-            throw new RuntimeException("One or both airports do not have a valid department.");
+        if (otherAirport.departement == null) {
+            throw new RuntimeException("Un ou les deux aéroports n'ont pas de département valide.");
         }
-        return ret;
+        return this.departement.getIdDep() == otherAirport.departement.getIdDep();
     }
 
+    /**
+     * Validates the department ID.
+     *
+     * @param departement the department to validate
+     * @return true if the department ID is valid, false otherwise
+     */
     private boolean isValidDepartement(Departement departement) {
         int id = departement.getIdDep();
         return id == 56 || id == 29 || id == 22 || id == 35;
     }
-
-
-
-    
 }

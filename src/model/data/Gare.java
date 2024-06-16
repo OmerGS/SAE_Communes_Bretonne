@@ -3,8 +3,6 @@ package data;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.naming.InvalidNameException;
-
 /**
  * Represents a train station (Gare) with a unique code, name, and information 
  * about its functionality for freight and passengers, along with its associated commune.
@@ -45,16 +43,17 @@ public class Gare {
      * @param estFret     true if the train station allows freight, false otherwise
      * @param estVoyageur true if the train station accepts passenger trains, false otherwise
      * @param commune     the commune of the train station
+     * @throws IllegalArgumentException if the provided parameters are invalid
      */
     public Gare(int codeGare, String nomGare, boolean estFret, boolean estVoyageur, Commune commune){
         if (codeGare <= 0) {
-            throw new IllegalArgumentException("Invalid train station ID: " + codeGare);
+            throw new IllegalArgumentException("Identifiant de la gare invalide : " + codeGare);
         }
         if (nomGare == null || nomGare.trim().isEmpty()) {
-            throw new IllegalArgumentException("Invalid train station name: " + nomGare);
+            throw new IllegalArgumentException("Nom de la gare invalide : " + nomGare);
         }
         if(commune == null){
-            throw new IllegalArgumentException("Invalid Commune");
+            throw new IllegalArgumentException("Commune invalide");
         }
         
         this.codeGare = codeGare;
@@ -117,16 +116,16 @@ public class Gare {
      * Sets the unique code of the train station.
      *
      * @param codeGare the new unique code of the train station
+     * @throws IllegalArgumentException if the new code is invalid or already in use
      */
     public void setCodeGare(int codeGare) {
         if (this.codeGare != codeGare) {
             if (idsUtilises.contains(codeGare)) {
-                throw new IllegalArgumentException("ID already in use: " + codeGare);
+                throw new IllegalArgumentException("Identifiant déjà utilisé : " + codeGare);
             }
             idsUtilises.remove(this.codeGare);
             this.codeGare = codeGare;
             idsUtilises.add(codeGare);
-            
         }
     }
 
@@ -134,10 +133,11 @@ public class Gare {
      * Sets the name of the train station.
      *
      * @param nomGare the new name of the train station
+     * @throws IllegalArgumentException if the provided name is null or empty
      */
     public void setNomGare(String nomGare){
         if (nomGare == null || nomGare.trim().isEmpty()) {
-            throw new RuntimeException("The name of the train station cannot be null or empty.");
+            throw new IllegalArgumentException("Le nom de la gare ne peut pas être vide ou null.");
         }
         this.nomGare = nomGare;
     }
@@ -164,16 +164,18 @@ public class Gare {
      * Sets the commune of the train station.
      *
      * @param commune the new commune of the train station
-     * @throws InvalidIdException if the id of the commune is invalid
+     * @throws IllegalArgumentException if the provided commune is null , if the ID of the commune is invalid
      */
     public void setCommune(Commune commune){
         if(commune != null){
             if (!isValidIdCommune(commune.getIdCommune())) {
-                throw new RuntimeException("Invalid commune ID: " + commune.getIdCommune());
+                throw new IllegalArgumentException("Identifiant de la commune invalide : " + commune.getIdCommune());
             }
+            this.commune.removeGare();
             this.commune = commune;
+            this.commune.addGare(this);
         }else{
-            throw new RuntimeException();
+            throw new IllegalArgumentException("Commune invalide.");
         }
 
     }
@@ -193,8 +195,6 @@ public class Gare {
     /**
      * Checks if the train station allows both freight and passenger trains.
      *
-     * @param isEstFret     true if the train station allows freight
-     * @param isEstVoyageur true if the train station accepts passenger trains
      * @return true if the train station allows both freight and passenger trains
      */
     public boolean isEstFretAndIsEstVoyageur() {
@@ -205,7 +205,7 @@ public class Gare {
      * Method which allows checking if the id of the commune is valid or not.
      * 
      * @param idCommune the id of the commune we want to validate
-     * @return false if not valid, else return true.
+     * @return true if the ID is valid, false otherwise
      */
     private boolean isValidIdCommune(int idCommune) {
         boolean ret = true;
@@ -222,9 +222,4 @@ public class Gare {
 
         return ret;
     }
-
-    
-
-
-
 }

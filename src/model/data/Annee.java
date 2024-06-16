@@ -1,8 +1,5 @@
 package data;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Represents a year with an associated inflation rate.
  */
@@ -26,7 +23,7 @@ public class Annee {
      */
     public Annee(int annee, double tauxInflation) {
         if (annee <= 0 || tauxInflation < 0 || tauxInflation > 100) {
-            throw new IllegalArgumentException("The year must be positive and the inflation rate must be between 0 and 100: " + annee + ", " + tauxInflation);
+            throw new IllegalArgumentException("L'année doit être positive et le taux d'inflation doit être compris entre 0 et 100: " + annee + ", " + tauxInflation);
         }
         this.annee = annee;
         this.tauxInflation = tauxInflation;
@@ -64,7 +61,7 @@ public class Annee {
         if (annee > 0) {
             this.annee = annee;
         } else {
-            throw new IllegalArgumentException("The year must be positive: " + annee);
+            throw new IllegalArgumentException("L'année doit être positive: " + annee);
         }
     }
 
@@ -102,7 +99,7 @@ public class Annee {
      */
     private boolean isValidTauxInflation(double tauxInflation) {
         if (tauxInflation < 0 || tauxInflation > 100) {
-            throw new IllegalArgumentException("Invalid inflation rate: " + tauxInflation);
+            throw new IllegalArgumentException("Taux d'inflation invalide: " + tauxInflation);
         }
         return true;
     }
@@ -116,15 +113,12 @@ public class Annee {
     public String compareInflation(Annee otherAnnee) {
         String ret;
         if (this.tauxInflation > otherAnnee.getTauxInflation()) {
-            ret = this.annee + " has a higher inflation rate than " + otherAnnee.getAnnee();
+            ret = this.annee + " a un taux d'inflation plus élevé que " + otherAnnee.getAnnee();
         } else if (this.tauxInflation < otherAnnee.getTauxInflation()) {
-            ret = this.annee + " has a lower inflation rate than " + otherAnnee.getAnnee();
+            ret = this.annee + " a un taux d'inflation plus bas que " + otherAnnee.getAnnee();
         } else {
-            ret = "Both years have the same inflation rate.";
+            ret = "Les deux années ont le même taux d'inflation.";
         }
         return ret;
     }
-
-
-
 }
