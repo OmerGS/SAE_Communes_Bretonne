@@ -4,6 +4,7 @@ package data;
  * Represents an airport with a name, address, and a department.
  * This class ensures that the associated department has a valid code.
  * The valid codes have specific prefixes (29, 35, 22, 56).
+ * @author R.Péron, O.Gunes, B.Campion
  */
 public class Aeroport {
     private String nom;

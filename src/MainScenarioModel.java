@@ -5,7 +5,9 @@ import data.Annee;
 import data.Commune;
 import data.Departement;
 import data.Gare;
-
+/**
+ * @author R.Péron, O.Gunes, B.Campion
+*/
 public class MainScenarioModel {
 
     private static Annee annee = new Annee(2020, 2.5);;
@@ -23,6 +25,7 @@ public class MainScenarioModel {
         testCulturalExpensesPerInhabitant();
         testCreationGare();
         testIsEstFretAndIsEstVoyageur();
+        scenarioDiagrammeSequence();
     }
 
    public static void testCreationDepartement() {
@@ -294,13 +297,29 @@ public class MainScenarioModel {
 
 
     public static void scenarioDiagrammeSequence() {
+        //Diagramme de séquence (298 à 311)
         Departement d = new Departement(22, "Cote d'Armor", 100000.0);
+        System.out.println(d + "\n");
         Annee a = new Annee(2019, 5.5);
+        System.out.println(a + "\n");
         Commune c1 = new Commune(a, 22142, "CommuneTest", 12, 14, 12, 11, 15, 14, 36, 14, d);
+        System.out.println(c1 + "\n");
         c1.addGare(new Gare(12546, "La gare", false, false, c1));
         Gare g = c1.getGare();
+        System.out.println(g + "\n");
         Commune c2 = new Commune(a,22459 , "Commune Test 2", 10, 15, 15, 15, 15, 15, 154, 12, d);
+        System.out.println(c2 + "\n");
         g.setCommune(c2);
+        System.out.println(g + "\n");
+
+        //
+        Aeroport ae = new Aeroport("aeroport 1", "adresse de l'aeroport", d);
+        d.addAeroport(ae);
+        d.addCommune(c2);
+        d.addCommune(c1);
+        System.out.println(d.getAeroport() + "\n");
+        System.out.println(d.getCommunes());
+
         
         
     }

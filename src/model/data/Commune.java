@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
 * Class who represents a commune with different parameters, we can manipulate it with different method. 
-* 
+* @author R.Péron, O.Gunes, B.Campion
 * 
 */
 public class Commune {

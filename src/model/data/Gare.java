@@ -6,6 +6,7 @@ import java.util.Set;
 /**
  * Represents a train station (Gare) with a unique code, name, and information 
  * about its functionality for freight and passengers, along with its associated commune.
+ * @author R.Péron, O.Gunes, B.Campion
  */
 public class Gare {
 
@@ -189,7 +190,7 @@ public class Gare {
      */
     @Override
     public String toString() {
-        return "Gare [codeGare=" + codeGare + ", nomGare=" + nomGare + ", estFret=" + estFret + ", estVoyageur=" + estVoyageur + "commune" + commune + "]";
+        return "Gare [codeGare = " + codeGare + ", nomGare = " + nomGare + ", estFret = " + estFret + ", estVoyageur = " + estVoyageur + ", commune = " + commune + "]";
     }
 
     /**

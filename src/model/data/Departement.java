@@ -5,6 +5,7 @@ import java.util.ArrayList;
 /**
  * Represents a department (Departement) with a unique id, name, investment in culture for 2019,
  * and a list of associated communes and airports.
+ * @author R.Péron, O.Gunes, B.Campion
  */
 public class Departement {
     

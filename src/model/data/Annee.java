@@ -2,6 +2,7 @@ package data;
 
 /**
  * Represents a year with an associated inflation rate.
+ * @author R.Péron, O.Gunes, B.Campion
  */
 public class Annee {
     /**
