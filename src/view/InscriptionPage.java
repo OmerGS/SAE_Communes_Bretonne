@@ -5,12 +5,14 @@ import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -56,11 +58,11 @@ public class InscriptionPage extends Application {
 
         // Champs avec placeholders
         this.firstNameField = new TextField();
-        this.firstNameField.setPromptText("Nom");
+        this.firstNameField.setPromptText("Pr\\u00E9nom");
         this.firstNameField.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
         this.lastNameField = new TextField();
-        this.lastNameField.setPromptText("Pr\u00E9nom");
+        this.lastNameField.setPromptText("Nom");
         this.lastNameField.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 30px; -fx-padding: 10px; -fx-font-family: 'Arial'; -fx-border-color: #ddd; -fx-border-radius: 30px;");
 
         HBox nameBox = new HBox(10, firstNameField, lastNameField);
@@ -148,10 +150,18 @@ public class InscriptionPage extends Application {
         Scene scene = new Scene(mainBox, 800, 600);
 
         // Configuration de la fenêtre
+
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("Region Bretagne");
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+
         primaryStage.show();
 
         // Liaison des événements
