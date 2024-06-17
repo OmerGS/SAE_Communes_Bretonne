@@ -71,10 +71,12 @@ public class Commune {
     
 
 
-    public Commune(Annee annee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, 
+    public Commune(Gare gare, Annee annee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, 
                    double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, 
                    int population, Departement departement) {
         this.communesVoisines = new ArrayList<>();
+
+        this.gare = gare;
 
         if (!isValidIdCommune(idCommune)) {
             throw new IllegalArgumentException("Invalid commune ID: " + idCommune);
@@ -504,11 +506,8 @@ public class Commune {
 
         for (Commune neighbor : this.communesVoisines) {
             maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
-            System.out.println("maxProperties: " + maxProperties);
             maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
-            System.out.println("maxBudget: " + maxBudget);
             maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
-            System.out.println("maxPopulation: " + maxPopulation);
         }
 
         ret = (this.getProprieteTotal() >= maxProperties) && (this.getBudgetTotal() >= maxBudget) && (this.getPopulation() >= maxPopulation);
@@ -593,9 +592,9 @@ public class Commune {
      */
     public void ajouterGare(Gare nouvelleGare) {
         if (gare == null) {
-            gare = nouvelleGare;
+            this.gare = nouvelleGare;
         } else {
-            throw new RuntimeException("Une commune ne peut avoir qu'une seule gare.");
+            this.gare = gare;
         }
     }
 

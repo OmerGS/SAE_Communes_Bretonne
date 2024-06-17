@@ -45,7 +45,7 @@ public class Gare {
     /**
      * The commune of the train station.
      */
-    private Commune commune; 
+    private int commune; 
 
     /**
      * Constructs a new Gare with the specified parameters.
@@ -56,15 +56,14 @@ public class Gare {
      * @param estVoyageur true if the train station accepts passenger trains, false otherwise
      * @param commune     the commune of the train station
      */
-    public Gare(int codeGare, String nomGare, boolean estFret, boolean estVoyageur, Commune commune){
-        if (!idsUtilises.contains(codeGare) && nomGare != null && commune != null) {
+    public Gare(int codeGare, String nomGare, boolean estFret, boolean estVoyageur, int commune){
+        if (!idsUtilises.contains(codeGare) && nomGare != null) {
             this.codeGare = codeGare;
             this.nomGare = nomGare;
             this.estFret = estFret;
             this.estVoyageur = estVoyageur;
             this.commune = commune;
             idsUtilises.add(codeGare);
-            commune.ajouterGare(this);
         }
     }
 
@@ -111,7 +110,7 @@ public class Gare {
      *
      * @return the commune of the train station
      */
-    public Commune getCommune() {
+    public int getCommune() {
         return commune;
     }
 
@@ -170,11 +169,8 @@ public class Gare {
      * @param commune the new commune of the train station
      * @throws InvalidIdException if the id of the commune is invalid
      */
-    public void setCommune(Commune commune){
-        if(commune != null){
-            if (!isValidIdCommune(commune.getIdCommune())) {
-                throw new RuntimeException("Invalid commune ID: " + commune.getIdCommune());
-            }
+    public void setCommune(int commune){
+        if(commune != 0){
             this.commune = commune;
         }else{
             throw new RuntimeException();

@@ -27,18 +27,15 @@ import java.util.Map;
  * }
  * </pre>
  * 
- * @author R.Peron
+ * @autor R.Peron
  */
 public class GareService {
-
-    private CommuneService communeService;
-
     /**
-     * Default constructor.
-     * Initializes the CommuneService instance.
+     * Constructor with dependency injection for CommuneService.
+     * 
+     * @param communeService an instance of CommuneService
      */
     public GareService() {
-        this.communeService = new CommuneService();
     }
 
     /**
@@ -51,13 +48,6 @@ public class GareService {
      */
     public List<Gare> getAllGares() throws SQLException {
         List<Gare> gares = new ArrayList<>();
-
-        // Fetch all communes
-        List<Commune> communeList = communeService.getAllCommunes();
-        Map<Integer, Commune> communeMap = new HashMap<>();
-        for (Commune commune : communeList) {
-            communeMap.put(commune.getIdCommune(), commune);
-        }
 
         String query = "SELECT g.codeGare, g.nomGare, g.estFret, g.estVoyageur, g.laCommune " +
                        "FROM Gare g " +
@@ -74,12 +64,8 @@ public class GareService {
                 boolean estVoyageur = resultSet.getBoolean("estVoyageur");
                 int laCommuneId = resultSet.getInt("laCommune");
 
-                // Get the corresponding commune from the map
-                Commune commune = communeMap.get(laCommuneId);
-
                 try {
-                    // Create a new Gare object and add it to the list
-                    Gare gare = new Gare(codeGare, nomGare, estFret, estVoyageur, commune);
+                    Gare gare = new Gare(codeGare, nomGare, estFret, estVoyageur, laCommuneId);
                     gares.add(gare);
                 } catch (InvalidCommuneIdException | InvalidCommuneNameException e) {
                     e.printStackTrace();
