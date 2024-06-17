@@ -309,15 +309,6 @@ public class MainPage extends Application {
         detailsButton.setOnAction(event -> {
             this.controller.showCommuneDetails(commune);
         });
-<<<<<<< HEAD
-
-        priceM2Label.setStyle("-fx-text-fill: #333;");
-        averagePriceLabel.setStyle("-fx-text-fill: #333;");
-        availableLabel.setStyle("-fx-text-fill: #333;");
-
-        row.getChildren().addAll(cityLabel, priceM2Label, averagePriceLabel, availableLabel, detailsButton);
-        return row;
-=======
         
         // Align button to the center
         VBox.setMargin(detailsButton, new Insets(10, 0, 0, 0)); // Adjust top margin for button
@@ -327,7 +318,6 @@ public class MainPage extends Application {
         returnHbox.getChildren().addAll(mainBox);
         
         return returnHbox;
->>>>>>> a743732a5dac835137f887cea6b709a55600626c
     }
     
     

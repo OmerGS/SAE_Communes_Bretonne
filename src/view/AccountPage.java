@@ -252,10 +252,13 @@ public class AccountPage extends Application {
         StackPane.setAlignment(nameField, Pos.CENTER_LEFT);
         StackPane.setAlignment(firstNameField, Pos.CENTER_LEFT);
         StackPane.setAlignment(emailField, Pos.CENTER_LEFT);
+        
+        Region spacerid = new Region();
+        spacerid.setMinWidth(40);
 
-        HBox nameBox = new HBox(10, new Label("Nom :"), nameStack);
-        HBox firstNameBox = new HBox(10, new Label("Prénom :"), firstNameStack);
-        HBox emailBox = new HBox(10, new Label("Email :"), emailStack);
+        HBox nameBox = new HBox(10, new Label("Nom :"), spacerid, nameStack);
+        HBox firstNameBox = new HBox(10, new Label("Pr\u00e9nom :"), spacerid, firstNameStack);
+        HBox emailBox = new HBox(10, new Label("Email :"),spacerid, emailStack);
 
         this.deleteButton = new Button("SUPPRIMER");
         deleteButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white;");

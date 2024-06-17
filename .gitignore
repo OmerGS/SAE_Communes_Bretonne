@@ -1,4 +1,5 @@
 # .gitignore
 config.properties
 mail.properties
+server.properties
 properties

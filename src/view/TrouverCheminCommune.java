@@ -9,8 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -42,12 +44,12 @@ public class TrouverCheminCommune extends Application {
         inputBox.setStyle("-fx-background-color: #000000; -fx-padding: 10; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
         this.startCommuneField = new TextField();
-        this.startCommuneField.setPromptText("Commune de départ");
+        this.startCommuneField.setPromptText("Commune de d\u00e9part");
         this.startCommuneField.setPrefWidth(150);
         this.startCommuneField.setStyle("-fx-background-color: #fff; -fx-border-color: #FFFFFF; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
         this.endCommuneField = new TextField();
-        this.endCommuneField.setPromptText("Commune d'arrivée");
+        this.endCommuneField.setPromptText("Commune d'arriv\u00e9e");
         this.endCommuneField.setPrefWidth(150);
         this.endCommuneField.setStyle("-fx-background-color: #fff; -fx-border-color: #FFFFFF; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
@@ -92,22 +94,26 @@ public class TrouverCheminCommune extends Application {
         topBar.setAlignment(Pos.CENTER_LEFT);
 
         // Logo
-        Label logo = new Label("Logo");
-        logo.setPrefWidth(50);
-        logo.setPrefHeight(50);
-        logo.setStyle("-fx-background-color: #ffffff; -fx-shape: \"M20 0 L40 20 L20 40 L0 20 Z\";");
+        ImageView logo = new ImageView("file:../resources/image/logo_bretagne.png");
+        logo.setFitWidth(50);
+        logo.setFitHeight(50);
+        logo.setClip(new Circle(25, 25, 25));
+        //logo.setStyle("-fx-background-color: #ffffff; -fx-shape: \"M20 0 L40 20 L20 40 L0 20 Z\";");
 
+        ImageView menuIcon = new ImageView(new Image("file:../resources/image/menu.png"));
+        menuIcon.setFitHeight(30);
+        menuIcon.setFitWidth(30);
 
-        Label userIcon = new Label("User");
-        userIcon.setPrefHeight(30);
-        userIcon.setPrefWidth(30);
-        userIcon.setStyle("-fx-background-color: #ffffff; -fx-shape: \"M0 0 L0 30 L30 15 Z\";");
+        ImageView userIcon = new ImageView("file:../resources/image/user.png");
+        userIcon.setFitHeight(30);
+        userIcon.setFitWidth(30);
+        //userIcon.setStyle("-fx-background-color: #ffffff; -fx-shape: \"M0 0 L0 30 L30 15 Z\";");
 
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        topBar.getChildren().addAll(logo, spacer, userIcon);
+        topBar.getChildren().addAll(logo, spacer, userIcon, menuIcon);
         return topBar;
     }
 
