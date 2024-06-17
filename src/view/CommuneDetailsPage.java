@@ -37,11 +37,12 @@ public class CommuneDetailsPage {
 
     public static void showCommune(Commune commune, Controller controller) {
         detailsStage = new Stage();
-        detailsStage.setTitle("Détails de la commune");
+        detailsStage.setTitle("D\u00e9tails de la commune");
 
         detailsBox = new VBox(20);
         detailsBox.setPadding(new Insets(20));
         detailsBox.setAlignment(Pos.TOP_CENTER);
+        detailsBox.setStyle("-fx-background-color: #87CEEB;");
 
         // Load random background image
         File folder = new File("../resources/image/fonds/");
@@ -64,7 +65,7 @@ public class CommuneDetailsPage {
         namePane.getChildren().add(nameLabel);
 
         // Create TitledPanes for general information and housing statistics
-        generalInfoPane = createTitledPane("Informations générales", createGeneralInfoBox(commune));
+        generalInfoPane = createTitledPane("Informations g\u00e9n\u00e9rales", createGeneralInfoBox(commune));
         housingStatsPane = createTitledPane("Statistiques de logement", createHousingStatsBox(commune));
 
         updateGeneralInfoBox(commune);
@@ -128,22 +129,29 @@ public class CommuneDetailsPage {
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
 
-        Label idLabel = new Label("ID: ");
+        Label idLabel = new Label("ID : ");
         idLabel.setStyle("-fx-font-size: 14px;");
+
+        Label depLabel = new Label("D\u00e9partement : ");
+        depLabel.setStyle("-fx-font-size: 14px;");
+
+        Label anneeLabel = new Label("Ann\u00e9e de donn\u00e9es : ");
+        anneeLabel.setStyle("-fx-font-size: 14px;");
         
-        Label populationLabel = new Label("Population: ");
+        Label populationLabel = new Label("Population : ");
         populationLabel.setStyle("-fx-font-size: 14px;");
         
-        Label importanteLabel = new Label("Importante: ");
+        Label importanteLabel = new Label("Importante : ");
         importanteLabel.setStyle("-fx-font-size: 14px;");
-        
-        Label anneeLabel = new Label("Année de données: ");
-        anneeLabel.setStyle("-fx-font-size: 14px;");
 
-        Label depCulturellesLabel = new Label("Dépenses culturelles totales: ");
+        Label depCulturellesLabel = new Label("D\u00e9penses culturelles totales : ");
         depCulturellesLabel.setStyle("-fx-font-size: 14px;");
 
-        box.getChildren().addAll(idLabel, populationLabel, importanteLabel, anneeLabel, depCulturellesLabel);
+        Label gareLabel = new Label("Gare : ");
+        depCulturellesLabel.setStyle("-fx-font-size: 14px;");
+        
+
+        box.getChildren().addAll(idLabel,depLabel, populationLabel, importanteLabel, anneeLabel, depCulturellesLabel, gareLabel);
         return box;
     }
 
@@ -152,19 +160,19 @@ public class CommuneDetailsPage {
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
 
-        Label nbMaisonLabel = new Label("Nombre de maisons: ");
+        Label nbMaisonLabel = new Label("Nombre de maisons : ");
         nbMaisonLabel.setStyle("-fx-font-size: 14px;");
         
-        Label nbAppartLabel = new Label("Nombre d'appartements: ");
+        Label nbAppartLabel = new Label("Nombre d'appartements : ");
         nbAppartLabel.setStyle("-fx-font-size: 14px;");
         
-        Label prixMoyenLabel = new Label("Prix moyen: ");
+        Label prixMoyenLabel = new Label("Prix moyen : ");
         prixMoyenLabel.setStyle("-fx-font-size: 14px;");
         
-        Label prixM2MoyenLabel = new Label("Prix moyen par m²: ");
+        Label prixM2MoyenLabel = new Label("Prix moyen par \u33A1 : ");
         prixM2MoyenLabel.setStyle("-fx-font-size: 14px;");
         
-        Label surfaceMoyLabel = new Label("Surface moyenne: ");
+        Label surfaceMoyLabel = new Label("Surface moyenne : ");
         surfaceMoyLabel.setStyle("-fx-font-size: 14px;");
     
 
@@ -176,16 +184,24 @@ public class CommuneDetailsPage {
         ((VBox) generalInfoPane.getContent()).getChildren().forEach(node -> {
             if (node instanceof Label) {
                 String labelText = ((Label) node).getText();
-                if (labelText.startsWith("ID: ")) {
-                    ((Label) node).setText("ID: " + formatValue(commune.getIdCommune()));
-                } else if (labelText.startsWith("Population: ")) {
-                    ((Label) node).setText("Population: " + formatValue(commune.getPopulation()));
-                } else if (labelText.startsWith("Importante: ")) {
-                    ((Label) node).setText("Importante: " + (commune.isMostImportant() ? "Oui" : "Non"));
-                } else if (labelText.startsWith("Année de données: ")) {
-                    ((Label) node).setText("Année de données: " + formatValue(commune.getAnnee().getAnnee()));
-                } else if (labelText.startsWith("Dépenses culturelles totales: ")) {
-                    ((Label) node).setText("Dépenses culturelles totales: " + formatValue(commune.getDepCulturellesTotales()));
+                if (labelText.startsWith("ID : ")) {
+                    ((Label) node).setText("ID : " + formatValue(commune.getIdCommune()));
+                } else if (labelText.startsWith("Population : ")) {
+                    ((Label) node).setText("Population : " + formatValue(commune.getPopulation()));
+                } else if (labelText.startsWith("Importante : ")) {
+                    ((Label) node).setText("Importante : " + (commune.isMostImportant() ? "Oui" : "Non"));
+                } else if (labelText.startsWith("Ann\u00e9e de donn\u00e9es : ")) {
+                    ((Label) node).setText("Ann\u00e9e de donn\u00e9es : " + formatValue(commune.getAnnee().getAnnee()));
+                } else if (labelText.startsWith("D\u00e9penses culturelles totales : ")) {
+                    ((Label) node).setText("D\u00e9penses culturelles totales : " + formatValue(commune.getDepCulturellesTotales()));
+                } else if (labelText.startsWith("D\u00e9partement : ")) {
+                    ((Label) node).setText("D\u00e9partement : " + formatValue(commune.getDepartement().getIdDep()));
+                }else if (labelText.startsWith("D\u00e9partement : ")) {
+                    if(commune.aUneGare()){
+                        ((Label) node).setText("Gare : " + formatValue(commune.getGare().getNomGare()));
+                    }else{
+                        ((Label) node).setText("Gare : Aucune");
+                    }
                 }
             }
         });
@@ -195,16 +211,16 @@ public class CommuneDetailsPage {
         ((VBox) housingStatsPane.getContent()).getChildren().forEach(node -> {
             if (node instanceof Label) {
                 String labelText = ((Label) node).getText();
-                if (labelText.startsWith("Nombre de maisons: ")) {
-                    ((Label) node).setText("Nombre de maisons: " + formatValue(commune.getNbMaison()));
-                } else if (labelText.startsWith("Nombre d'appartements: ")) {
-                    ((Label) node).setText("Nombre d'appartements: " + formatValue(commune.getNbAppart()));
-                } else if (labelText.startsWith("Prix moyen: ")) {
-                    ((Label) node).setText("Prix moyen: " + formatValue(commune.getPrixMoyen()));
-                } else if (labelText.startsWith("Prix moyen par m²: ")) {
-                    ((Label) node).setText("Prix moyen par m²: " + formatValue(commune.getPrixM2Moyen()));
-                } else if (labelText.startsWith("Surface moyenne: ")) {
-                    ((Label) node).setText("Surface moyenne: " + formatValue(commune.getSurfaceMoy()));
+                if (labelText.startsWith("Nombre de maisons : ")) {
+                    ((Label) node).setText("Nombre de maisons : " + formatValue(commune.getNbMaison()));
+                } else if (labelText.startsWith("Nombre d'appartements : ")) {
+                    ((Label) node).setText("Nombre d'appartements : " + formatValue(commune.getNbAppart()));
+                } else if (labelText.startsWith("Prix moyen : ")) {
+                    ((Label) node).setText("Prix moyen : " + formatValue(commune.getPrixMoyen()));
+                } else if (labelText.startsWith("Prix moyen par \u33A1 : ")) {
+                    ((Label) node).setText("Prix moyen par \u33A1 : " + formatValue(commune.getPrixM2Moyen()));
+                } else if (labelText.startsWith("Surface moyenne : ")) {
+                    ((Label) node).setText("Surface moyenne : " + formatValue(commune.getSurfaceMoy()));
                 }
             }
         });
@@ -243,7 +259,7 @@ public class CommuneDetailsPage {
             updateCommuneDetails(selectedCommune, controller);
         });
 
-        yearsComboBox.setPromptText("Sélectionnez une année");
+        yearsComboBox.setPromptText("S\u00e9lectionnez une ann\u00e9e");
         yearsComboBox.setMaxWidth(Double.MAX_VALUE);
 
         return yearsComboBox;

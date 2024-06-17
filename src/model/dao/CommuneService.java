@@ -205,4 +205,13 @@ public class CommuneService {
         }
         return null;
     }
+
+    public Commune getCommuneByid(int idCommune, List<Commune> allCommunes) throws SQLException {
+        for (Commune commune : allCommunes) {
+            if (commune.getIdCommune() == idCommune) {
+                return commune;
+            }
+        }
+        return null;
+    }
 }

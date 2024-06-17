@@ -319,6 +319,7 @@ public class MainScenarioModel {
         d.addCommune(c1);
         System.out.println(d.getAeroport() + "\n");
         System.out.println(d.getCommunes());
+        System.out.println(c2.aUneGare());
 
         
         
