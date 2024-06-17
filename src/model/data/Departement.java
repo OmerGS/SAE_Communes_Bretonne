@@ -181,7 +181,6 @@ public class Departement {
     @Override
     public String toString() {
         return "Departement [idDep=" + this.idDep + ", nomDep=" + this.nomDep + ", invesCulture2019=" + this.invesCulture2019 + "]";
-        return "Departement [idDep=" + this.idDep + ", nomDep=" + this.nomDep + ", invesCulture2019=" + this.invesCulture2019 + "]";
     }
 
     /**

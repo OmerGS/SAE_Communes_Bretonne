@@ -13,8 +13,6 @@ import java.util.Set;
 public class Gare {
 
     private static Set<Integer> idsUtilises = new HashSet<>();
-
-    private static Set<Integer> idsUtilises = new HashSet<>();
     /**
      * The unique code of the train station.
      */

@@ -59,9 +59,25 @@ public class MainPage extends Application {
         // Checkboxes for filters
         this.toutesLesCommunes = new Button("Toutes");
         this.morbihanFilterButton = new Button("Morbihan");
-        this.finistereFilterButton = new Button("Finistère");
-        this.coteArmorFilterButton = new Button("Côtes-d'Armor");
+        this.finistereFilterButton = new Button("Finist\u00e8re");
+        this.coteArmorFilterButton = new Button("C\u00f4tes-d'Armor");
         this.illeEtVilaineFilterButton = new Button("Ille-et-Vilaine");
+
+        // Style commun pour tous les boutons
+        String buttonStyle = "-fx-background-color: #007bff; " +
+                             "-fx-text-fill: #fff; " +
+                             "-fx-background-radius: 10px; " +
+                             "-fx-border-radius: 10px; " +
+                             "-fx-padding: 10px 20px; " +
+                             "-fx-font-size: 14px; " +
+                             "-fx-cursor: hand;";
+
+        // Appliquer le style à chaque bouton
+        toutesLesCommunes.setStyle(buttonStyle);
+        morbihanFilterButton.setStyle(buttonStyle);
+        finistereFilterButton.setStyle(buttonStyle);
+        coteArmorFilterButton.setStyle(buttonStyle);
+        illeEtVilaineFilterButton.setStyle(buttonStyle);
 
         HBox communeFilterBox = new HBox(5, toutesLesCommunes, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
 
@@ -255,7 +271,7 @@ public class MainPage extends Application {
     }
     
     private HBox createResultRow(Commune commune) {
-        HBox returnHbox = new HBox();
+       HBox returnHbox = new HBox();
         returnHbox.setAlignment(Pos.CENTER); // Center align the HBox
         
         VBox mainBox = new VBox(20); // Main VBox for entire structure with spacing of 10
