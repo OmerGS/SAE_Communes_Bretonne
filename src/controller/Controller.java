@@ -607,6 +607,30 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+    public void connectionClickedTrouverCheminCommune() {
+        try {
+            if (this.currentUser != null) {
+                System.out.println("Utilisateur actuel : " + this.currentUser.getEmail());
+                Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
+                this.accountPage.start(stage);
+
+                this.accountPage.getFirstNameLabel().setText(currentUser.getPrenom());
+                this.accountPage.getNameLabel().setText(currentUser.getNom());
+                this.accountPage.getEmailLink().setText(currentUser.getEmail());
+            } else {
+                System.out.println("Utilisateur non connecté.");
+                Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
+                this.connectionPage.start(stage);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+
+
+
 
 
 
@@ -645,6 +669,10 @@ public class Controller implements EventHandler<ActionEvent> {
 
             findPath(firstCommuneText, endCommuneText);
         }
+
+
+
+        
     }
 
     /**
@@ -1301,6 +1329,24 @@ public class Controller implements EventHandler<ActionEvent> {
         communeData();
         gareData();
         anneeData();
+        aeroportData();
+    }
+
+    public void aeroportData(){
+        String csvFile = "aeroportData.csv";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
+            // Écrire l'en-tête du CSV
+            writer.println("nom;adresse;departement");
+
+            // Écrire chaque Gare dans le fichier CSV
+            for (Annee annee : this.listeAnnee) {
+                writer.println(anneeToCSVRow(annee));
+            }
+            
+            System.out.println("Données exportées avec succès dans " + csvFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void anneeData(){
