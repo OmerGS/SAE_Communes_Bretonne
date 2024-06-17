@@ -6,3 +6,27 @@
     -fx-background-insets: 0;
     -fx-padding: 10px;
 }
+
+.city-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.price-label {
+    -fx-font-size: 14px;
+}
+
+.details-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.result-row {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #d3d3d3;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+}

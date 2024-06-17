@@ -18,6 +18,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import controller.Controller;
 
+/**
+ * The AccountPage class represents the user account page GUI.
+ * It displays user information and provides interaction options.
+ * 
+ * @author O.Gunes
+ */
 public class AccountPage extends Application {
     private Controller controller;
     private ImageView userIcon;
@@ -35,10 +41,11 @@ public class AccountPage extends Application {
     private TextField firstNameField;
     private TextField emailField;
 
-    public Controller getController() {
-        return controller;
-    }
-
+    /**
+     * Public getter for Save
+     * 
+     * @return
+     */
     public Button getSaveButton() {
         return saveButton;
     }

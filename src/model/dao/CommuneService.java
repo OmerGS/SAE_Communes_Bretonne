@@ -1,5 +1,6 @@
 package dao;
 
+import data.Annee;
 import data.Commune;
 import data.Departement;
 import data.exceptions.InvalidCommuneIdException;
@@ -15,6 +16,8 @@ public class CommuneService {
 
     private DepartementService departementService;
     private List<Departement> listeDepartement;
+    private AnneeService anneeService;
+    private List<Annee> listeAnnee;
 
     public CommuneService() {
         this.departementService = new DepartementService();
@@ -23,12 +26,28 @@ public class CommuneService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        this.anneeService = new AnneeService();
+        try {
+            this.listeAnnee = anneeService.getAllAnnee();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     private Departement findDepartementById(int departementId) {
         for (Departement departement : listeDepartement) {
             if (departement.getIdDep() == departementId) {
                 return departement;
+            }
+        }
+        return null;
+    }
+
+    private Annee findAnnneByYear(int lAnnee) {
+        for (Annee annee : listeAnnee) {
+            if (annee.getAnnee() == lAnnee) {
+                return annee;
             }
         }
         return null;
@@ -74,9 +93,11 @@ public class CommuneService {
                 double budgetTotal = resultSet.getDouble("budgetTotal");
                 int population = resultSet.getInt("population");
                 int lAnnee = resultSet.getInt("lAnnee");
+                
+                Annee anneeCommune = findAnnneByYear(lAnnee);
 
                 try {
-                    Commune commune = new Commune(lAnnee, idCommune, nomCommune, nbMaison, nbAppart, prixMoyen,
+                    Commune commune = new Commune(anneeCommune, idCommune, nomCommune, nbMaison, nbAppart, prixMoyen,
                             prixM2Moyen, surfaceMoyenne, depensesCulturellesTotales, budgetTotal, population, departementDeLaCommune);
 
                     // Ajouter la commune à la liste correspondante par année

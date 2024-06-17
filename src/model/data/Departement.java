@@ -8,13 +8,25 @@ import java.util.Set;
 
 
 /**
- * Represents a department (Departement) with a unique id, name, investment in culture for 2019,
- * and a list of associated communes.
+ * Represents a department (Departement) with a unique ID, name, investment in culture for 2019,
+ * and lists of associated communes and airports.
+ * This class ensures that each department has a unique ID and provides methods to access and modify its properties.
+ * It also maintains a static list of all department instances.
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ *     Departement dept = new Departement(1, "Example Department", 10000.0);
+ *     Commune commune = new Commune(12345, "Example Commune", 1000, dept);
+ *     dept.addCommune(commune);
+ * </pre>
+ * 
+ * @author R.Peron
  */
 public class Departement {
 
 
-    private static Set<Integer> idsUtilises = new HashSet<>();
+    private Set<Integer> idsUtilises = new HashSet<>();
+
     /**
      * The unique id of the department.
      */
@@ -51,7 +63,7 @@ public class Departement {
             this.idDep = idDep;
             this.nomDep = nomDep;
             this.invesCulture2019 = invesCulture2019;
-            idsUtilises.add(idDep);
+            this.idsUtilises.add(idDep);
             this.communes = new ArrayList<Commune>();
             this.aeroports = new ArrayList<Aeroport>();
             departements.add(this);

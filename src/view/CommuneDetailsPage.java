@@ -127,7 +127,7 @@ public class CommuneDetailsPage {
             "Dépenses culturelles totales: " + commune.getDepCulturellesTotales(),
             "Population: " + commune.getPopulation(),
             "Importante: " + (commune.isMostImportant() ? "Oui" : "Non"),
-            "Données recoltées en : " + commune.getlAnnee(),
+            "Données recoltées en : " + commune.getAnnee().getAnnee(),
         };
 
         for (int i = 0; i < infoTexts.length; i++) {
@@ -190,7 +190,7 @@ public class CommuneDetailsPage {
         }
 
         // Set default selection to the current year
-        yearsComboBox.setValue(commune.getlAnnee());
+        yearsComboBox.setValue(commune.getAnnee().getAnnee());
 
         yearsComboBox.setOnAction(event -> {
             int selectedYear = yearsComboBox.getValue();

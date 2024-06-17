@@ -11,18 +11,40 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service class to manage operations related to Departement entities.
+ * Provides methods to retrieve department data from the database.
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * DepartementService departementService = new DepartementService();
+ * List<Departement> departements = departementService.getAllDepartement();
+ * // Use 'departements' for further processing
+ * }
+ * </pre>
+ * 
+ * @author R.Peron
+ */
 public class DepartementService {
 
+    /**
+     * Default constructor.
+     */
     public DepartementService(){
 
     }
 
-    // Méthode pour récupérer toutes les communes depuis la base de données
+    /**
+     * Retrieves all departments from the database.
+     *
+     * @return a list of Departement objects
+     * @throws SQLException if there is an error accessing the database
+     */
     public List<Departement> getAllDepartement() throws SQLException {
         List<Departement> departements = new ArrayList<>();
         
         String query = "SELECT * FROM Departement";
-
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);

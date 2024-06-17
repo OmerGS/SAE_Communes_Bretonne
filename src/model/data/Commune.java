@@ -5,10 +5,21 @@ import java.util.ArrayList;
 
 
 /**
-* Class who represents a commune with different parameters, we can manipulate it with different method. 
-* 
-* @author O.Gunes, R.Peron, C.Brayan
-*/
+ * Class representing a commune with various parameters and methods for manipulation.
+ * 
+ * <p>This class includes details about a commune such as its ID, name, number of houses, number of apartments,
+ * average property price, average price per square meter, average surface area, cultural expenditures, total budget,
+ * population, and its department. It also manages neighboring communes and whether the commune has a train station (Gare).
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ *     Departement dept = new Departement(29, "Finistère", 200000.0);
+ *     Commune commune = new Commune(2023, 29001, "Brest", 1000, 500, 200000.0, 3000.0, 120.0, 50000.0, 1000000.0, 200000, dept);
+ * </pre>
+ * 
+ * @author O.Gunes
+ * @author R.Peron
+ */
 public class Commune {
     /**
     * The unique number which represent the commune. 
@@ -30,40 +41,13 @@ public class Commune {
     */
     private int nbAppart;
 
-    /**
-    * Average price of a house. 
-    */
+
     private double prixMoyen;
-
-    /**
-    * Average price of one square meter. 
-    */
     private double prixM2Moyen;
-
-    /**
-    * Average area of a house. 
-    */
     private double surfaceMoy;
-
-    /**
-    * The money spend on cultural activities. 
-    */
     private double depCulturellesTotales;
-
-    /**
-    * The budget of the commune 
-    */
     private double budgetTotal;
-
-    /**
-    * Number of human living in the commune. 
-    */
     private int population;
-
-    
-    private int lAnnee;
-
-    private Gare gare;
 
 
     /**
@@ -80,85 +64,47 @@ public class Commune {
     * Allow a connection with itself (Commune.java) 
     */
     private ArrayList<Commune> communesVoisines;
+
+    private Gare gare;
+
+    private Annee annee;
     
 
 
-    public Commune(int lAnnee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, int population, Departement departement) {
-        this.communesVoisines = new ArrayList<Commune>();
+    public Commune(Annee annee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, 
+                   double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, 
+                   int population, Departement departement) {
+        this.communesVoisines = new ArrayList<>();
 
-        this.lAnnee = lAnnee;
-
-        //idCommune
-        if (isValidIdCommune(idCommune)) {
-            this.idCommune = idCommune;
-        } else {
-            throw new RuntimeException("Numéro de commune invalide : " + idCommune);
+        if (!isValidIdCommune(idCommune)) {
+            throw new IllegalArgumentException("Invalid commune ID: " + idCommune);
+        }
+        if (nomCommune == null || nomCommune.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid commune name: " + nomCommune);
+        }
+        if (departement == null || !isValidDepartement(departement)) {
+            throw new IllegalArgumentException("Invalid department: " + departement);
+        }
+        if (annee == null) {
+            throw new IllegalArgumentException("Invalid year: " + annee);
         }
 
-        //nomCommune
-        if (nomCommune != null && !nomCommune.trim().isEmpty()) {
-            this.nomCommune = nomCommune;
-        } else {
-            throw new RuntimeException("Nom de commune invalide : " + nomCommune);
-        }
-
-        if(departement != null && ((departement.getIdDep() == 29 || departement.getIdDep() == 56 || departement.getIdDep() == 35 || departement.getIdDep() == 22))){
-            this.departement= departement;
-        } else {
-            throw new RuntimeException("Département invalide : " + departement.getNomDep());
-        }
-
-
-        this.nbMaison = validateNonNegativeValueInt(nbMaison, "Nombre de maisons");
-        this.nbAppart = validateNonNegativeValueInt(nbAppart, "Nombre d'appartement");
-        this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Prix moyen");
-        this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Prix m2 moyen");
-        this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Surface moyenne");
-        this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Dépenses culturelles totales");
-        this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Budget total");
-        this.population = validateNonNegativeValueInt(population, "Population");
-
-
-        
+        this.annee = annee;
+        this.idCommune = idCommune;
+        this.nomCommune = nomCommune;
+        this.nbMaison = nbMaison;
+        this.nbAppart = nbAppart;
+        this.prixMoyen = prixMoyen;
+        this.prixM2Moyen = prixM2Moyen;
+        this.surfaceMoy = surfaceMoy;
+        this.depCulturellesTotales = depCulturellesTotales;
+        this.budgetTotal = budgetTotal;
+        this.population = population;
+        this.departement = departement;
     }
 
-    /**
-    * Method which allow to check if parameters is >= 0. 
-    * Signature for double and fieldName
-    *
-    * @param value the parameters which we want to check
-    * @param fieldName the fieldname of global var.
-    * @return double
-    * @throws IllegalArgumentException if provided value is negative
-    */
-    private double validateNonNegativeValueDouble(double value, String fieldName) {
-        double ret = -1;
-        if (value >= 0 || value == -1) {
-            ret = value;
-        } else {
-            throw new IllegalArgumentException(fieldName + " invalide : " + value);
-        }
-        return ret;
-    }
 
-    /**
-    * Method which allow to check if parameters is >= 0. 
-    * Signature for int and fieldName
-    *
-    * @param value the parameters which we want to check
-    * @param fieldName the fieldname of global var.
-    * @return int
-    * @throws IllegalArgumentException if provided value is negative
-    */
-    private int validateNonNegativeValueInt(int value, String fieldName) {
-        int ret = -1;
-        if (value >= 0 || value == -1) {
-            ret = value;
-        } else {
-            throw new IllegalArgumentException(fieldName + " invalide : " + value);
-        }
-        return ret;
-    }
+
 
     /**
      * Method which allows checking if the id of the commune is valid or not.
@@ -186,9 +132,6 @@ public class Commune {
 
 
 
-
-
-
 /* ------ Getters ------ */
 
     /**
@@ -197,16 +140,7 @@ public class Commune {
      * @return The ID of the commune.
      */
     public int getIdCommune() {
-        return this.idCommune;
-    }
-
-    /**
-    * Return the year of the commune. 
-    *
-    * @return The year of commune.
-    */
-    public int getlAnnee(){
-        return(this.lAnnee);
+        return idCommune;
     }
 
     /**
@@ -306,7 +240,17 @@ public class Commune {
      * @return The list of neighboring communes.
      */
     public ArrayList<Commune> getCommunesVoisines() {
-        return this.communesVoisines;
+        return communesVoisines;
+    }
+
+
+    /**
+     * Getter for the private variable annee
+     * 
+     * @return Annee instance for that commune.
+     */
+    public Annee getAnnee() {
+        return this.annee;
     }
 
 
@@ -347,7 +291,11 @@ public class Commune {
      * @throws InvalidValueException If the number of houses is negative.
      */
     public void setNbMaison(int nbMaison) {
-        this.nbMaison = validateNonNegativeValueInt(nbMaison, "Number of houses");
+        if(nbMaison >= 0){
+            this.nbMaison = nbMaison;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
     }
 
     /**
@@ -357,7 +305,11 @@ public class Commune {
      * @throws InvalidValueException If the number of apartments is negative.
      */
     public void setNbAppart(int nbAppart) {
-        this.nbAppart = validateNonNegativeValueInt(nbAppart, "Number of apartments");
+        if(nbAppart >= 0){
+            this.nbAppart = nbAppart;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
     }
 
     /**
@@ -367,7 +319,11 @@ public class Commune {
      * @throws InvalidValueException If the average price is negative.
      */
     public void setPrixMoyen(double prixMoyen) {
-        this.prixMoyen = validateNonNegativeValueDouble(prixMoyen, "Average price");
+        if(prixMoyen >= 0){
+            this.prixMoyen = prixMoyen;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
     }
 
     /**
@@ -377,7 +333,11 @@ public class Commune {
      * @throws InvalidValueException If the average price per square meter is negative.
      */
     public void setPrixM2Moyen(double prixM2Moyen) {
-        this.prixM2Moyen = validateNonNegativeValueDouble(prixM2Moyen, "Average price per square meter");
+        if(prixM2Moyen >= 0){
+            this.prixM2Moyen = prixM2Moyen;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
     }
 
     /**
@@ -387,7 +347,11 @@ public class Commune {
      * @throws InvalidValueException If the average surface area is negative.
      */
     public void setSurfaceMoy(double surfaceMoy) {
-        this.surfaceMoy = validateNonNegativeValueDouble(surfaceMoy, "Average surface area");
+        if(surfaceMoy >= 0){
+            this.surfaceMoy = surfaceMoy;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
     }
 
     /**
@@ -397,7 +361,11 @@ public class Commune {
      * @throws InvalidValueException If the total cultural expenses are negative.
      */
     public void setDepCulturellesTotales(double depCulturellesTotales) {
-        this.depCulturellesTotales = validateNonNegativeValueDouble(depCulturellesTotales, "Total cultural expenses");
+        if(depCulturellesTotales >= 0){
+            this.depCulturellesTotales = depCulturellesTotales;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
     }
 
     /**
@@ -407,7 +375,11 @@ public class Commune {
      * @throws InvalidValueException If the total budget is negative.
      */
     public void setBudgetTotal(double budgetTotal) {
-        this.budgetTotal = validateNonNegativeValueDouble(budgetTotal, "Total budget");
+        if(budgetTotal>= 0){
+            this.budgetTotal = budgetTotal;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
     }
 
     /**
@@ -417,28 +389,39 @@ public class Commune {
      * @throws InvalidValueException If the population is negative.
      */
     public void setPopulation(int population) {
-        this.population = validateNonNegativeValueInt(population, "Population");
+        if(population >= 0){
+            this.population = population;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
     }
 
     /**
      * Sets the department to which the commune belongs.
      *
      * @param departement The department.
-     * @throws IllegalArgumentException If the provided department code is invalid.
      */
     public void setDepartement(Departement departement) {
-        String departementString = String.valueOf(departement);
-        if (departementString.length() == 2) {
-            String prefix = departementString.substring(0, 2);
-            if (prefix.equals("29") || prefix.equals("22") || prefix.equals("56") || prefix.equals("35")) {
+        if(departement != null){
+            if (departement.getIdDep() == 56 || departement.getIdDep() == 29 || departement.getIdDep() == 22 || departement.getIdDep() == 35) {
                 this.departement = departement;
             } else {
-                throw new IllegalArgumentException("The department code must be 29, 22, 56, or 35.");
+                throw new IllegalArgumentException();
             }
-        } else {
-            throw new IllegalArgumentException("The department code must be a two-digit number.");
+        }else{
+            throw new IllegalArgumentException();
         }
     }
+
+
+    public void setAnnee(Annee annee) {
+        if(annee.getAnnee() >= 0){
+            this.annee = annee;
+        }else{
+            throw new RuntimeException("Parametre invalide");
+        }
+    }
+
 
     
 
@@ -464,15 +447,29 @@ public class Commune {
                 '}';
     }
 
-    
+    /**
+     * Allow to add neighbour to this commune
+     * 
+     * @param commune The neighbour
+     */
     public void addVoisine(Commune commune) {
         this.communesVoisines.add(commune);
     }
 
+    /**
+     * Allow to get the total amount of Property.
+     * 
+     * @return The total of property for this commune
+     */
     public int getProprieteTotal() {
         return nbMaison + nbAppart;
     }
     
+    /**
+     * Allow to get the average price for a property in this commune
+     * 
+     * @return Average price (double)
+     */
     public double prixMoyenParPropriete() {
         double ret;
         int totalProprietes = getNbMaison() + getNbAppart();
@@ -486,9 +483,7 @@ public class Commune {
     
     
     
-    public boolean hasNeighboringCommunes() {
-        return communesVoisines != null && !communesVoisines.isEmpty();
-    }
+
 
    
     
@@ -502,26 +497,22 @@ public class Commune {
     */
     public boolean isMostImportant() {
         boolean ret = true;
-        // Check if the commune has neighboring communes
-        if (!hasNeighboringCommunes()) {
-            ret = false;
-        }
-        if(ret){
-            // Initialize variables to keep track of the maximum values
-            int maxProperties = 0;
-            double maxBudget = 0;
-            double maxPopulation = 0;
 
-            // Iterate through neighboring communes to find the maximum values
-            for (Commune neighbor : communesVoisines) {
-                maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
-                maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
-                maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
-            }
-            ret = (getProprieteTotal() >= maxProperties) && (getBudgetTotal() >= maxBudget) && (getPopulation() >= maxPopulation);
+        int maxProperties = -2;
+        double maxBudget = -2;
+        double maxPopulation = -2;
+
+        for (Commune neighbor : this.communesVoisines) {
+            maxProperties = Math.max(maxProperties, neighbor.getProprieteTotal());
+            System.out.println("maxProperties: " + maxProperties);
+            maxBudget = Math.max(maxBudget, neighbor.getBudgetTotal());
+            System.out.println("maxBudget: " + maxBudget);
+            maxPopulation = Math.max(maxPopulation, neighbor.getPopulation());
+            System.out.println("maxPopulation: " + maxPopulation);
         }
 
-        // Check if the current commune has the maximum values
+        ret = (this.getProprieteTotal() >= maxProperties) && (this.getBudgetTotal() >= maxBudget) && (this.getPopulation() >= maxPopulation);
+
         return ret;
     }
 
@@ -535,7 +526,7 @@ public class Commune {
     public String highestNeighboursPrice() {
         String ret = null; 
         // Check if the commune has neighboring communes
-        if (!hasNeighboringCommunes()) {
+        if (!(communesVoisines != null && !communesVoisines.isEmpty())) {
             return ret;
         }
 
@@ -560,24 +551,30 @@ public class Commune {
     * Calculates the ratio of cultural expenses per inhabitant.
     *
     * @return The ratio of cultural expenses per inhabitant.
-    * @throws ArithmeticException If the population is zero.
     */
     public double culturalExpensesPerInhabitant() {
-        // Check if population is not zero
+        double ret;
         if (getPopulation() == 0) {
-            throw new ArithmeticException("Population cannot be zero.");
+            ret = 0;
+        }else{
+            ret = getDepCulturellesTotales() / getPopulation();
         }
+        
 
-        return getDepCulturellesTotales() / getPopulation();
+        return ret;
     }
 
-    /**
+   /**
      * Vérifie si la commune possède une gare.
      *
      * @return true si la commune possède une gare, sinon false.
      */
     public boolean aUneGare() {
-        return gare != null;
+        boolean returnValue = false;
+        if(this.gare != null){
+            returnValue = true;
+        }
+        return(returnValue);
     }
 
     /**
@@ -586,7 +583,7 @@ public class Commune {
      * @return la gare de la commune, ou null si la commune n'a pas de gare.
      */
     public Gare getGare() {
-        return gare;
+        return(this.gare);
     }
 
     /**
@@ -600,5 +597,20 @@ public class Commune {
         } else {
             throw new RuntimeException("Une commune ne peut avoir qu'une seule gare.");
         }
+    }
+
+    /**
+     * Private method to check if a department is valid
+     * 
+     * @param departement Object of department we need to check
+     * @return True if valid, otherwise return false.
+     */
+    private boolean isValidDepartement(Departement departement) {
+        int id = departement.getIdDep();
+        boolean ret = false;
+        if(id == 56 || id == 29 || id == 22 || id == 35){
+            ret = true;
+        }
+        return ret;
     }
 }
