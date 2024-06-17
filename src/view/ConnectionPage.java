@@ -70,13 +70,8 @@ public class ConnectionPage extends Application {
     */
     @Override
     public void start(Stage primaryStage) {
-<<<<<<< HEAD
-        // Image pour le logo
-        ImageView logo = new ImageView(new Image("file:../resources/image/personnageH.png"));
-=======
         // Image for the logo
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
->>>>>>> 2dda6acefd1132686002beaf51cb3764746c3eeb
         logo.setFitWidth(100);
         logo.setFitHeight(100);
         logo.setClip(new Circle(50, 50, 50));

@@ -203,6 +203,8 @@ public class MainPage extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Recherche de villes");
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
         primaryStage.show();
 
         this.searchField.setOnKeyTyped(event -> {
