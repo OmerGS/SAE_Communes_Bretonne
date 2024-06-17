@@ -35,6 +35,7 @@ public class MainPage extends Application {
     private Button reloadDatabase;
     private Button editData;
     private int nbCommune;
+    private Button exportDataButton;
 
 
     public MainPage(Controller controller){
@@ -55,13 +56,27 @@ public class MainPage extends Application {
         filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
 
 
-
         // Checkboxes for filters
         this.toutesLesCommunes = new Button("Toutes");
         this.morbihanFilterButton = new Button("Morbihan");
         this.finistereFilterButton = new Button("Finistère");
         this.coteArmorFilterButton = new Button("Côtes-d'Armor");
         this.illeEtVilaineFilterButton = new Button("Ille-et-Vilaine");
+
+        String buttonStyle = "-fx-background-color: #007bff; " +
+                             "-fx-text-fill: #fff; " +
+                             "-fx-background-radius: 10px; " +
+                             "-fx-border-radius: 10px; " +
+                             "-fx-padding: 10px 20px; " +
+                             "-fx-font-size: 14px; " +
+                             "-fx-cursor: hand;";
+
+        // Appliquer le style à chaque bouton
+        this.toutesLesCommunes.setStyle(buttonStyle);
+        this.morbihanFilterButton.setStyle(buttonStyle);
+        this.finistereFilterButton.setStyle(buttonStyle);
+        this.coteArmorFilterButton.setStyle(buttonStyle);
+        this.illeEtVilaineFilterButton.setStyle(buttonStyle);
 
         HBox communeFilterBox = new HBox(5, toutesLesCommunes, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
 
@@ -241,14 +256,15 @@ public class MainPage extends Application {
         this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.editData.setOnAction(this.controller);
 
-        Label exportDataLabel = new Label("Exporter Données");
-        exportDataLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.exportDataButton = new Button("Exporter Données");
+        this.exportDataButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.exportDataButton.setOnAction(this.controller);
 
         this.reloadDatabase = new Button("Rechargez la base de données");
         this.reloadDatabase.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.reloadDatabase.setOnAction(this.controller);
 
-        menuBox.getChildren().addAll(this.cheminCourtButton, editData, exportDataLabel, this.reloadDatabase);
+        menuBox.getChildren().addAll(this.cheminCourtButton, editData, exportDataButton, this.reloadDatabase);
         return menuBox;
     }
 
@@ -379,6 +395,10 @@ public class MainPage extends Application {
                 };
             }
         });
+    }
+
+    public Button getExportButton(){
+        return(this.exportDataButton);
     }
 
     public TextField getSearchField() {
