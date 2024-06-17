@@ -1,6 +1,9 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * Represents a department (Departement) with a unique id, name, investment in culture for 2019,
@@ -177,6 +180,7 @@ public class Departement {
 
     @Override
     public String toString() {
+        return "Departement [idDep=" + this.idDep + ", nomDep=" + this.nomDep + ", invesCulture2019=" + this.invesCulture2019 + "]";
         return "Departement [idDep=" + this.idDep + ", nomDep=" + this.nomDep + ", invesCulture2019=" + this.invesCulture2019 + "]";
     }
 

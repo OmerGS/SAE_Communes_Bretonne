@@ -7,6 +7,9 @@ package data;
  * @author R.Péron, O.Gunes, B.Campion
  */
 public class Aeroport {
+    /**
+     * Name of the Airport
+     */
     private String nom;
     private String adresse;
     private Departement departement;
@@ -80,6 +83,7 @@ public class Aeroport {
      * @throws IllegalArgumentException if the address is null or empty
      */
     public void setAdresse(String adresse) {
+    public void setAdresse(String adresse) {
         if (adresse == null || adresse.trim().isEmpty()) {
             throw new IllegalArgumentException("L'adresse de l'aéroport ne peut pas être nulle ou vide.");
         }
@@ -110,6 +114,7 @@ public class Aeroport {
     @Override
     public String toString() {
         return "Aeroport [nom=" + nom + ", adresse=" + adresse + ", departement=" + departement + "]";
+        return "Aeroport [nom=" + nom + ", adresse=" + adresse + ", departement=" + departement + "]";
     }
 
     /**
@@ -137,3 +142,4 @@ public class Aeroport {
         return id == 56 || id == 29 || id == 22 || id == 35;
     }
 }
+

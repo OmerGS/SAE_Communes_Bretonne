@@ -1,0 +1,53 @@
+<!--This is an attempt to make an interractive maps in the software, render in browser is very clean, but it isn't good in the JavaFX code
+so I change my strategy for display the Path between two communes with a PythonCode -->
+
+
+<!-- @author O.Gunes -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carte de la Bretagne</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var map = L.map('map').setView([48.202, -2.9326], 8); // Center on Bretagne
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© Region Bretagne',
+                updateWhenZooming: false, // Performance optimization
+                updateWhenIdle: true // Performance optimization
+            }).addTo(map);
+
+            // Example data for communes (latitude, longitude, name)
+            var communes = [
+                { "lat": 48.1147, "lng": -1.6794, "name": "Rennes" },
+                { "lat": 48.3904, "lng": -4.4861, "name": "Brest" },
+                { "lat": 47.2184, "lng": -1.5536, "name": "Nantes" }
+            ];
+
+            // Add markers to the map
+            communes.forEach(function (commune) {
+                L.marker([commune.lat, commune.lng]).addTo(map)
+                    .bindPopup(commune.name);
+            });
+        });
+    </script>
+</body>
+</html>

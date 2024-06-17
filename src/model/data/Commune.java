@@ -274,6 +274,7 @@ public class Commune {
 
 
     /* ------ Setters ------ */
+    /* ------ Setters ------ */
 
     /**
      * Sets the ID of the commune.
@@ -524,6 +525,7 @@ public class Commune {
         String ret = null; 
         // Check if the commune has neighboring communes
         if (!(communesVoisines != null && !communesVoisines.isEmpty())) {
+        if (!(communesVoisines != null && !communesVoisines.isEmpty())) {
             return ret;
         }
 
@@ -550,6 +552,7 @@ public class Commune {
     * @return The ratio of cultural expenses per inhabitant.
     */
     public double culturalExpensesPerInhabitant() {
+        double ret;
         double ret;
         if (getPopulation() == 0) {
             ret = 0;

@@ -6,11 +6,33 @@ import java.sql.*;
 import java.util.Properties;
 
 /**
-* Class of debbuging which display the users present in the database
-* @author O.Gunes 
-*/
+ * Class to retrieve and print users from the database.
+ * This class connects to the database using configuration properties
+ * and executes a SQL query to fetch user information.
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * public static void main(String[] args) {
+ *     printUserDatabase.printUsers();
+ * }
+ * </pre>
+ * 
+ * @author O.Gunes
+ */
 public class printUserDatabase {
+
+    /**
+     * Main method to retrieve and print users from the database.
+     */
     public static void main(String[] args) {
+        printUsers();
+    }
+
+    /**
+     * Retrieves and prints users from the database.
+     */
+    public static void printUsers() {
         Properties props = new Properties();
         try (FileInputStream fis = new FileInputStream("../properties/config.properties")) {
             props.load(fis);
@@ -19,48 +41,46 @@ public class printUserDatabase {
             return;
         }
 
-        // Informations de connexion à la base de données
+        // Database connection information
         String url = props.getProperty("db.url");
-        String utilisateur = props.getProperty("db.user"); 
-        String motDePasse = props.getProperty("db.password");
+        String user = props.getProperty("db.user");
+        String password = props.getProperty("db.password");
         
-        // Requête SQL
-        String requeteSQL = "SELECT * FROM Utilisateur";
+        // SQL query
+        String sqlQuery = "SELECT * FROM Utilisateur";
         
         try {
-            // Connexion à la base de données
-            Connection connexion = DriverManager.getConnection(url, utilisateur, motDePasse);
+            // Establishing database connection
+            Connection connection = DriverManager.getConnection(url, user, password);
             
-            // Création de la déclaration
-            Statement declaration = connexion.createStatement();
-
-
+            // Creating statement
+            Statement statement = connection.createStatement();
             
-            // Exécution de la requête SQL
-            ResultSet resultat = declaration.executeQuery(requeteSQL);
+            // Executing SQL query
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
             
-            // Parcours et affichage des résultats
-            while (resultat.next()) {
-                int id = resultat.getInt("id");
-                String nom = resultat.getString("nom");
-                String prenom = resultat.getString("prenom");
-                String email = resultat.getString("email");
-                String mot2Passe = resultat.getString("motDePasse");
-                int admin = resultat.getInt("isAdmin");
+            // Iterating through results and printing user information
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom");
+                String prenom = resultSet.getString("prenom");
+                String email = resultSet.getString("email");
+                String motDePasse = resultSet.getString("motDePasse");
+                int isAdmin = resultSet.getInt("isAdmin");
 
                 System.out.println("ID : " + id);
                 System.out.println("Nom : " + nom);
                 System.out.println("Prenom : " + prenom);
                 System.out.println("Email : " + email);
-                System.out.println("mot2Passe : " + mot2Passe);
-                System.out.println("Admin : " + admin);
+                System.out.println("Mot de passe : " + motDePasse);
+                System.out.println("Admin : " + isAdmin);
                 System.out.println("------------------------------------------");
             }
             
-            // Fermeture des ressources
-            resultat.close();
-            declaration.close();
-            connexion.close();
+            // Closing resources
+            resultSet.close();
+            statement.close();
+            connection.close();
             
         } catch (SQLException e) {
             e.printStackTrace();

@@ -2,6 +2,8 @@ package data;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a train station (Gare) with a unique code, name, and information 
@@ -9,6 +11,8 @@ import java.util.Set;
  * @author R.Péron, O.Gunes, B.Campion
  */
 public class Gare {
+
+    private static Set<Integer> idsUtilises = new HashSet<>();
 
     private static Set<Integer> idsUtilises = new HashSet<>();
     /**

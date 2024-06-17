@@ -1,6 +1,7 @@
 # .gitignore
 config.properties
 mail.properties
+<<<<<<< HEAD
 properties
 <<<<<<< HEAD
 SAE_Communes_Bretonne
@@ -8,3 +9,6 @@ SAE_Communes_Bretonne
 ControllerAModifier.java
 MainPageAModif.java
 >>>>>>> 6bbeec101af73dbd229729206d2b35326b038aec
+=======
+properties
+>>>>>>> a743732a5dac835137f887cea6b709a55600626c

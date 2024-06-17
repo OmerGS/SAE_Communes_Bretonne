@@ -2,7 +2,24 @@ package data;
 
 /**
  * Represents a year with an associated inflation rate.
- * @author R.Péron, O.Gunes, B.Campion
+ * <p>
+ * This class encapsulates the year and its corresponding inflation rate, providing
+ * methods to get and set these values.
+ * </p>
+ *
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * Annee annee2022 = new Annee(2022, 2.5);
+ * Annee annee2023 = new Annee(2023, 3.0);
+ * String comparaison = annee2022.compareInflation(annee2023);
+ * }
+ * </pre>
+ *
+ * @see InvalidIdException
+ * @see InvalidDoubleException
+ * 
+ * @autor O.Gunes
  */
 public class Annee {
     /**
@@ -35,7 +52,7 @@ public class Annee {
     /**
      * Returns the year.
      *
-     * @return the year
+     * @return the year (int)
      */
     public int getAnnee() {
         return annee;
@@ -44,7 +61,7 @@ public class Annee {
     /**
      * Returns the inflation rate.
      *
-     * @return the inflation rate
+     * @return the inflation rate (int)
      */
     public double getTauxInflation() {
         return tauxInflation;
@@ -91,18 +108,18 @@ public class Annee {
     }
 
     /**
-     * Checks if the inflation rate is valid.
-     * The rate is considered valid if it is between 0 and 100 (inclusive).
+     * Compares the inflation rate of this year with another year.
      *
      * @param tauxInflation the inflation rate to validate
      * @return true if the rate is valid, false otherwise
      * @throws IllegalArgumentException if the inflation rate is not between 0 and 100
      */
     private boolean isValidTauxInflation(double tauxInflation) {
+        boolean ret = true;
         if (tauxInflation < 0 || tauxInflation > 100) {
             throw new IllegalArgumentException("Taux d'inflation invalide: " + tauxInflation);
         }
-        return true;
+        return ret;
     }
 
     /**

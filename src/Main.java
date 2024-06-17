@@ -12,17 +12,18 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Controller controller = new Controller();
 
         primaryStage.getIcons().add(new Image("file:../resources/image/logo_bretagne.png"));
-
-        MainPage mainPage = new MainPage();
-        mainPage.start(primaryStage);
+        Controller controller = new Controller();
         
-        /*
-        ConnectionPage connectionPage = new ConnectionPage();
+        //AccountPage mainPage = new AccountPage(controller);
+        //mainPage.start(primaryStage);
+        
+
+        
+        MainPage connectionPage = new MainPage(controller);
         connectionPage.start(primaryStage);
-        */
+        
         
     }
 }

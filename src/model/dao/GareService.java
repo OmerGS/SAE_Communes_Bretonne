@@ -14,14 +14,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class to manage operations related to Gare entities.
+ * Provides methods to retrieve railway station data from the database.
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * GareService gareService = new GareService();
+ * List<Gare> gares = gareService.getAllGares();
+ * // Use 'gares' for further processing
+ * }
+ * </pre>
+ * 
+ * @author R.Peron
+ */
 public class GareService {
 
     private CommuneService communeService;
 
+    /**
+     * Default constructor.
+     * Initializes the CommuneService instance.
+     */
     public GareService() {
         this.communeService = new CommuneService();
     }
 
+    /**
+     * Retrieves all railway stations from the database.
+     * This method fetches all communes first and then associates each railway station
+     * with its corresponding commune.
+     *
+     * @return a list of Gare objects
+     * @throws SQLException if there is an error accessing the database
+     */
     public List<Gare> getAllGares() throws SQLException {
         List<Gare> gares = new ArrayList<>();
 
@@ -47,10 +74,11 @@ public class GareService {
                 boolean estVoyageur = resultSet.getBoolean("estVoyageur");
                 int laCommuneId = resultSet.getInt("laCommune");
 
-                // Get the corresponding commune
+                // Get the corresponding commune from the map
                 Commune commune = communeMap.get(laCommuneId);
 
                 try {
+                    // Create a new Gare object and add it to the list
                     Gare gare = new Gare(codeGare, nomGare, estFret, estVoyageur, commune);
                     gares.add(gare);
                 } catch (InvalidCommuneIdException | InvalidCommuneNameException e) {

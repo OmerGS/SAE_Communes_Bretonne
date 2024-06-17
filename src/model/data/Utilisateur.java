@@ -1,8 +1,17 @@
 package data;
 
 /**
-* Utilisateur is a class which represent the user of app.
-* @author O.Gunes 
+ * The {@code Utilisateur} class represents a user of the application.
+ * It stores basic information about the user including their name, email, password, and a salt for password hashing.
+ * This class provides getter and setter methods for these fields.
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ *     Utilisateur user = new Utilisateur("Doe", "John", "john.doe@example.com", "password123", "salt123");
+ *     System.out.println(user.getNom());
+ * </pre>
+ * 
+ * @author O.Gunes
 */
 public class Utilisateur {
     /**
@@ -19,6 +28,24 @@ public class Utilisateur {
     * The mail of the user.
     */
     private String email;
+
+    public void setNom(String nom){
+        if(nom != null){
+            this.nom = nom;
+        }
+    }
+
+    public void setPrenom(String prenom) {
+        if(prenom != null){
+            this.prenom = prenom;
+        }
+    }
+
+    public void setEmail(String email) {
+        if(email != null){
+            this.email = email;
+        }
+    }
 
     /**
     * The password of the user. 
@@ -86,6 +113,4 @@ public class Utilisateur {
         this.motDePasse = motDePasse;
         this.salt = salt;
     }
-
-    
 }
