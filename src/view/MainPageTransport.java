@@ -19,7 +19,7 @@ import javafx.util.Callback;
 
 import java.util.List;
 
-/*public class MainPageAeroport extends Application {
+/*public class MainPageTransport extends Application {
     private ListView<Aeroport> aeroportListView = new ListView<>();
     private TextField searchField;
     private Controller controller;
@@ -37,7 +37,7 @@ import java.util.List;
     private Button exportDataButton;
 
 
-   /*  public MainPageAeroport(Controller controller){
+   /*  public MainPageTransport(Controller controller){
         this.controller = controller;
         this.controller.setMainPageAeroport(this);
         loadCommunes();

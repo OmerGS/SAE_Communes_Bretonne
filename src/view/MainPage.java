@@ -211,8 +211,6 @@ public class MainPage extends Application {
         mainPane.getChildren().addAll(centerBox, menuBox);
         StackPane.setAlignment(menuBox, Pos.CENTER_RIGHT);
 
-        // Ensure menuBox is tightly aligned to the right side of centerBox
-        menuBox.translateXProperty().bind(menuBox.widthProperty().add(mainPane.widthProperty()).subtract(110).negate());
 
         // Main container with topBar and main content
         BorderPane root = new BorderPane();
