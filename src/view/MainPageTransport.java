@@ -20,7 +20,7 @@ import javafx.util.Callback;
 import java.util.List;
 
 /*public class MainPageTransport extends Application {
-    private ListView<Aeroport> aeroportListView = new ListView<>();
+    /*private ListView<Aeroport> aeroportListView = new ListView<>();
     private TextField searchField;
     private Controller controller;
     private Label resultsLabel;
@@ -37,7 +37,7 @@ import java.util.List;
     private Button exportDataButton;
 
 
-   /*  public MainPageTransport(Controller controller){
+    public MainPageTransport(Controller controller){
         this.controller = controller;
         this.controller.setMainPageAeroport(this);
         loadCommunes();
@@ -196,8 +196,8 @@ import java.util.List;
         centerBox.setAlignment(Pos.TOP_CENTER);
         centerBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6C7BD0 0%, white 50%, #6C7BD0 100%);");
 
-        centerBox.getChildren().addAll(resultsBox, communeListView);
-        VBox.setVgrow(communeListView, Priority.ALWAYS);
+        centerBox.getChildren().addAll(resultsBox, transportListView);
+        VBox.setVgrow(transportListView, Priority.ALWAYS);
 
         // Menu box for the side menu
         menuBox = createMenuBox();

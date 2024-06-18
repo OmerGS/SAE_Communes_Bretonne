@@ -19,7 +19,7 @@ import javafx.util.Callback;
 
 import java.util.List;
 
-public class MainPage extends Application {
+public class MainPageAdmin extends Application {
     private ListView<Commune> communeListView = new ListView<>();
     private TextField searchField;
     private Controller controller;
@@ -39,10 +39,10 @@ public class MainPage extends Application {
     private Button exportDataButton;
 
 
-    public MainPage(Controller controller){
-        this.controller = controller;
-        this.controller.setMainPage(this);
-        loadCommunes();
+    public MainPageAdmin(Controller controller){
+       /* this.controller = controller;
+        this.controller.setMainPageAdmin(this);
+        loadCommunes();*/
     }
 
 
@@ -326,7 +326,7 @@ public class MainPage extends Application {
         infoHBox.getChildren().addAll(leftVBox, communeLabel, rightVBox);
         
         // Button for showing more details
-        Button detailsButton = new Button("Voir plus");
+        Button detailsButton = new Button("Modifier");
         detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
         detailsButton.setOnAction(event -> {
             this.controller.showCommuneDetails(commune);
