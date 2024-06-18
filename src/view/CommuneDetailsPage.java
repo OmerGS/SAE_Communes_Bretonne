@@ -8,8 +8,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -29,6 +35,11 @@ public class CommuneDetailsPage {
     private static ComboBox<Integer> yearsComboBox;
     private static Label nameLabel;
     private static Stage detailsStage;
+
+    private static TitledPane generalInfoPane;
+    private static TitledPane housingStatsPane;
+    private static StackPane whitePane;
+    private static Image backgroundImageLoc;
 
     private static TitledPane generalInfoPane;
     private static TitledPane housingStatsPane;
@@ -62,6 +73,7 @@ public class CommuneDetailsPage {
 
         nameLabel = new Label(commune.getNomCommune());
         nameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(one-pass-box, black, 8, 0.0, 2, 0);");
+        nameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(one-pass-box, black, 8, 0.0, 2, 0);");
         namePane.getChildren().add(nameLabel);
 
         // Create TitledPanes for general information and housing statistics
@@ -86,6 +98,7 @@ public class CommuneDetailsPage {
         // Section neighboring communes
         Label neighborsLabel = new Label("Communes voisines:");
         neighborsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        neighborsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
         neighborsPane = new FlowPane();
         neighborsPane.setHgap(10);
@@ -97,12 +110,16 @@ public class CommuneDetailsPage {
         // Create ComboBox containing years
         yearsComboBox = createYearsComboBox(commune, controller);
         yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
+        yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
 
         Button closeButton = new Button("Fermer");
+        closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
         closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
         closeButton.setOnAction(event -> detailsStage.close());
 
         detailsBox.getChildren().addAll(
+            namePane, generalInfoPane, housingStatsPane, whitePane, neighborsLabel, neighborsPane,
+            yearsComboBox, closeButton
             namePane, generalInfoPane, housingStatsPane, whitePane, neighborsLabel, neighborsPane,
             yearsComboBox, closeButton
         );
@@ -235,6 +252,7 @@ public class CommuneDetailsPage {
             for (Commune neighbor : neighbors) {
                 Button neighborButton = new Button(neighbor.getNomCommune());
                 neighborButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
+                neighborButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
                 neighborButton.setOnAction(event -> showCommune(neighbor, controller));
                 neighborsPane.getChildren().add(neighborButton);
             }
@@ -263,6 +281,14 @@ public class CommuneDetailsPage {
         yearsComboBox.setMaxWidth(Double.MAX_VALUE);
 
         return yearsComboBox;
+    }
+
+    private static String formatValue(Object value) {
+        String ret = value.toString();
+        if (value instanceof Number && ((Number) value).doubleValue() < 0) {
+            ret = "Information indisponible";
+        }
+        return ret;
     }
 
     private static String formatValue(Object value) {

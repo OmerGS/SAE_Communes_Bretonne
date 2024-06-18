@@ -11,8 +11,11 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 
 import dao.CommuneService;
+import dao.GareService;
 import dao.UserService;
+import data.Annee;
 import data.Commune;
+import data.Gare;
 import data.Utilisateur;
 import view.AccountPage;
 import view.CommuneDetailsPage;
@@ -26,7 +29,9 @@ import view.misc.CustomAlert;
 import view.ForgotPassword;
 
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import java.util.TimerTask;
@@ -121,6 +126,14 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     private String pendingNewEmail;
 
+    private List<Gare> listeGare;
+
+    private GareService gareService;
+
+    private CommuneService communeService;
+
+    private List<Annee> listeAnnee;
+
     /**
     * The constructor of Controller. 
     * @param connectionPage
@@ -136,6 +149,9 @@ public class Controller implements EventHandler<ActionEvent> {
         this.accountPage = new AccountPage(this);
         this.envoieCodeValidation = new CodeAlert(this);
         this.mainPage = mainPage;
+
+        this.communeService = new CommuneService();
+        this.gareService = new GareService();
     }
 
     /**
@@ -151,6 +167,9 @@ public class Controller implements EventHandler<ActionEvent> {
         this.trouverCheminCommune = new TrouverCheminCommune(this);
         this.accountPage = new AccountPage(this);
         this.envoieCodeValidation = new CodeAlert(this);
+
+        this.communeService = new CommuneService();
+        this.gareService = new GareService();
     }
 
     /**
@@ -474,8 +493,17 @@ public class Controller implements EventHandler<ActionEvent> {
         if(e.getSource() == this.mainPage.getReloadDatabase()){
             this.mainPage.loadCommunes(getCommunesFromDataBase());
             this.listeUtilisateur = this.userServices.loadAllUsers();
+            try {
+                this.listeGare = this.gareService.getAllGares();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
 
             CustomAlert.showAlert("Chargement Base de Donnees", "Le chargement est fini.");
+        }
+
+        if(e.getSource() == this.mainPage.getExportButton()){
+            exportData();
         }
     }
 
@@ -631,12 +659,10 @@ public class Controller implements EventHandler<ActionEvent> {
     * @param endCommuneName The name of the destination commune.
     */
     public void findPath(String startCommuneName, String endCommuneName) {
-        CommuneService service = new CommuneService();
-
         try {
             // Step 1: Retrieve the starting and ending communes by name
-            Commune startCommune = service.getCommuneByName(startCommuneName, this.communeToute);
-            Commune endCommune = service.getCommuneByName(endCommuneName, this.communeToute);
+            Commune startCommune = this.communeService.getCommuneByName(startCommuneName, this.communeToute);
+            Commune endCommune = this.communeService.getCommuneByName(endCommuneName, this.communeToute);
 
             // Step 2: Check if either the start or end commune is not found
             if (startCommune == null || endCommune == null) {
@@ -651,7 +677,7 @@ public class Controller implements EventHandler<ActionEvent> {
             }
 
             // Step 4: Find the path between the start and end communes
-            List<Commune> path = service.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune(), this.communeToute);
+            List<Commune> path = this.communeService.cheminEntreCommune(startCommune.getIdCommune(), endCommune.getIdCommune(), this.communeToute);
 
             // Step 5: Check if a path is found
             if (path.isEmpty()) {
@@ -1169,12 +1195,10 @@ public class Controller implements EventHandler<ActionEvent> {
     * @return ArrayList<Commune> which contains the most recent year for each commune.
     */
     public ArrayList<Commune> getCommunesFromDataBase(){
-        this.communesRecente = new ArrayList<>();
-        CommuneService communeService = new CommuneService();
-    
+        this.communesRecente = new ArrayList<>();    
         try {
             // we get all commune with getAllCommunes of communeService (call the database)
-            this.communeToute = communeService.getAllCommunes();
+            this.communeToute = this.communeService.getAllCommunes();
             
             // in the beginning the most recentyear is -1. (it's hard to make data of commune before -1).
             int mostRecentYear = -1;
@@ -1254,5 +1278,115 @@ public class Controller implements EventHandler<ActionEvent> {
         }
 
         return(returnCommune);
+    }
+
+
+    public void getAllGareFromDatabase(){
+        try {
+            this.listeGare = this.gareService.getAllGares();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+    public void exportData(){
+        this.listeGare = this.communeService.getListeGare();
+        this.listeAnnee = this.communeService.getListeAnnee();
+
+        communeData();
+        gareData();
+        anneeData();
+    }
+
+    public void anneeData(){
+        String csvFile = "anneeData.csv";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
+            // Écrire l'en-tête du CSV
+            writer.println("annee;tauxInflation");
+
+            // Écrire chaque Gare dans le fichier CSV
+            for (Annee annee : this.listeAnnee) {
+                writer.println(anneeToCSVRow(annee));
+            }
+            
+            System.out.println("Données exportées avec succès dans " + csvFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String anneeToCSVRow(Annee annee) {
+        return annee.getAnnee() + ";" +
+               annee.getTauxInflation();
+                            
+    }
+
+
+
+
+
+
+
+    public void gareData(){
+        String csvFile = "gareData.csv";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
+            // Écrire l'en-tête du CSV
+            writer.println("CodeGare;NomGare;Fret;Voyageur;idCommune");
+
+            // Écrire chaque Gare dans le fichier CSV
+            for (Gare gare : this.listeGare) {
+                writer.println(gareToCSVRow(gare));
+            }
+            
+            System.out.println("Données exportées avec succès dans " + csvFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String gareToCSVRow(Gare gare) {
+        return gare.getCodeGare() + ";" +
+               gare.getNomGare() + ";" +
+               gare.isEstFret() + ";" + 
+               gare.isEstVoyageur() + ";" +
+               gare.getCommune();               
+    }
+
+    public void communeData(){
+        String csvFile = "communeData.csv";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
+            // Écrire l'en-tête du CSV
+            writer.println("idCommune;nomCommune;Annee;nbMaison;nbAppart;prixMoyen;prixM2Moyen;surfaceMoy;depCulturellesTotales;budgetTotal;population;departement;gare");
+
+            // Écrire chaque commune dans le fichier CSV
+            for (Commune commune : this.communeToute) {
+                writer.println(communeToCSVRow(commune) + ";");
+            }
+            
+            System.out.println("Données exportées avec succès dans " + csvFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String communeToCSVRow(Commune commune) {
+        return commune.getIdCommune() + ";" +
+               commune.getNomCommune() + ";" +
+               commune.getAnnee().getAnnee() + ";" +
+               commune.getNbMaison() + ";" +
+               commune.getNbAppart() + ";" +
+               commune.getPrixMoyen() + ";" +
+               commune.getPrixM2Moyen() + ";" +
+               commune.getSurfaceMoy() + ";" +
+               commune.getDepCulturellesTotales() + ";" +
+               commune.getBudgetTotal() + ";" +
+               commune.getPopulation() + ";" +
+               commune.getDepartement().getIdDep() + ";" +
+               commune.getGare();
     }
 }

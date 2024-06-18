@@ -3,6 +3,7 @@ package dao;
 import data.Annee;
 import data.Commune;
 import data.Departement;
+import data.Gare;
 import data.exceptions.InvalidCommuneIdException;
 import data.exceptions.InvalidCommuneNameException;
 
@@ -16,9 +17,13 @@ public class CommuneService {
 
     private DepartementService departementService;
     private List<Departement> listeDepartement;
+    
     private AnneeService anneeService;
     private List<Annee> listeAnnee;
 
+    private GareService gareService;
+    private List<Gare> listeGare;
+    
     public CommuneService() {
         this.departementService = new DepartementService();
         try {
@@ -29,6 +34,13 @@ public class CommuneService {
         this.anneeService = new AnneeService();
         try {
             this.listeAnnee = anneeService.getAllAnnee();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        this.gareService = new GareService();
+        try {
+            this.listeGare = gareService.getAllGares();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -48,6 +60,15 @@ public class CommuneService {
         for (Annee annee : listeAnnee) {
             if (annee.getAnnee() == lAnnee) {
                 return annee;
+            }
+        }
+        return null;
+    }
+
+    private Gare findGareByCommuneId(int communeId){
+        for(Gare gare : listeGare){
+            if(gare.getCommune() == communeId){
+                return gare;
             }
         }
         return null;
@@ -82,6 +103,7 @@ public class CommuneService {
 
                 // Find the corresponding Departement object
                 Departement departementDeLaCommune = findDepartementById(leDepartement);
+                Gare gare = findGareByCommuneId(idCommune);
 
                 // Récupération des données annuelles
                 int nbMaison = resultSet.getInt("nbMaison");
@@ -97,7 +119,7 @@ public class CommuneService {
                 Annee anneeCommune = findAnnneByYear(lAnnee);
 
                 try {
-                    Commune commune = new Commune(anneeCommune, idCommune, nomCommune, nbMaison, nbAppart, prixMoyen,
+                    Commune commune = new Commune(gare, anneeCommune, idCommune, nomCommune, nbMaison, nbAppart, prixMoyen,
                             prixM2Moyen, surfaceMoyenne, depensesCulturellesTotales, budgetTotal, population, departementDeLaCommune);
 
                     // Ajouter la commune à la liste correspondante par année
@@ -206,12 +228,12 @@ public class CommuneService {
         return null;
     }
 
-    public Commune getCommuneByid(int idCommune, List<Commune> allCommunes) throws SQLException {
-        for (Commune commune : allCommunes) {
-            if (commune.getIdCommune() == idCommune) {
-                return commune;
-            }
-        }
-        return null;
+
+    public List<Gare> getListeGare(){
+        return(this.listeGare);
+    }
+
+    public List<Annee> getListeAnnee(){
+        return(this.listeAnnee);
     }
 }
