@@ -410,6 +410,9 @@ public class MainPage extends Application {
     public TextField getSearchField() {
         return this.searchField;
     }
+    public Button getTransport(){
+        return this.transportButton;
+    }
 
     public Label getNumberOfRow() {
         return this.resultsLabel;

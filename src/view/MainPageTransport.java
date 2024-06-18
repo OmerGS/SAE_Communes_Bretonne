@@ -1,4 +1,4 @@
-package view;
+/*package view;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -15,31 +15,35 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import controller.Controller;
 import data.Aeroport;
+import data.Commune;
+import data.Gare;
 import javafx.util.Callback;
 
 import java.util.List;
 
-/*public class MainPageTransport extends Application {
-    /*private ListView<Aeroport> aeroportListView = new ListView<>();
+public class MainPageTransport extends Application {
+    private ListView<Object> transporListView = new ListView<>();
+    private ListView<Aeroport> aeroportListView = new ListView<>();
+    private ListView<Gare> gareListView = new ListView<>();
     private TextField searchField;
     private Controller controller;
     private Label resultsLabel;
     private ImageView userIcon;
     private VBox menuBox;
-    private Button toutsLesAeroport;
-    private Button morbihanFilterButton;
-    private Button finistereFilterButton;
-    private Button coteArmorFilterButton;
-    private Button illeEtVilaineFilterButton;
+    private Button aeroportButton;
+    private Button gareButton;
     private Button reloadDatabase;
     private Button editData;
     private int nbAeroport;
+    private int nbGare;
     private Button exportDataButton;
+    private Button touts;
+    private Button communeButton;
 
 
     public MainPageTransport(Controller controller){
         this.controller = controller;
-        this.controller.setMainPageAeroport(this);
+        this.controller.setMainPageTransport(this);
         loadCommunes();
     }
 
@@ -55,11 +59,9 @@ import java.util.List;
         filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
 
         // Checkboxes for filters
-        this.toutsLesAeroport = new Button("Touts");
-        this.morbihanFilterButton = new Button("Morbihan");
-        this.finistereFilterButton = new Button("Finistère");
-        this.coteArmorFilterButton = new Button("Côtes-d'Armor");
-        this.illeEtVilaineFilterButton = new Button("Ille-et-Vilaine");
+        this.touts = new Button("Touts");
+        this.aeroportButton = new Button("Aeroport");
+        this.gareButton = new Button("Gare");
 
         String buttonStyle = "-fx-background-color: #C4C5CF; " + 
                      "-fx-text-fill: #000000; " +      
@@ -71,19 +73,15 @@ import java.util.List;
 
 
         // Appliquer le style à chaque bouton
-        this.toutsLesAeroport.setStyle(buttonStyle);
-        this.morbihanFilterButton.setStyle(buttonStyle);
-        this.finistereFilterButton.setStyle(buttonStyle);
-        this.coteArmorFilterButton.setStyle(buttonStyle);
-        this.illeEtVilaineFilterButton.setStyle(buttonStyle);
+        this.touts.setStyle(buttonStyle);
+        this.aeroportButton.setStyle(buttonStyle);
+        this.gareButton.setStyle(buttonStyle);
 
-        HBox communeFilterBox = new HBox(5, toutsLesAeroport, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
+        HBox communeFilterBox = new HBox(5, touts, aeroportButton, gareButton);
 
-        this.toutsLesAeroport.setOnAction(this.controller);
-        this.morbihanFilterButton.setOnAction(this.controller);
-        this.finistereFilterButton.setOnAction(this.controller);
-        this.coteArmorFilterButton.setOnAction(this.controller);
-        this.illeEtVilaineFilterButton.setOnAction(this.controller);
+        this.touts.setOnAction(this.controller);
+        this.aeroportButton.setOnAction(this.controller);
+        this.gareButton.setOnAction(this.controller);
 
         // HBox for results label and filter button
         HBox resultsBox = new HBox(10);
@@ -175,9 +173,9 @@ import java.util.List;
         aeroportListView.setMaxWidth(800);  // Set maximum width
 
         // Custom cell factory to display Commune objects
-        aeroportListView.setCellFactory(new Callback<>() {
+        transporListView.setCellFactory(new Callback<>() {
             @Override
-            public ListCell<Aeroport> call(ListView<Aeroport> listView) {
+            public ListCell<Aeroport> call(ListView<Object> list) {
                 return new ListCell<>() {
                     @Override
                     protected void updateItem(Aeroport aeroport, boolean empty) {
@@ -250,6 +248,10 @@ import java.util.List;
         menuBox.setAlignment(Pos.CENTER_RIGHT);
         menuBox.setMaxWidth(400);
 
+        this.communeButton = new Button("Commune");
+        this.communeButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        this.communeButton.setOnAction(this.controller);
+
         this.editData = new Button("Modifier les données");
         this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.editData.setOnAction(this.controller);
@@ -270,62 +272,6 @@ import java.util.List;
         menuBox.setVisible(!menuBox.isVisible());
     }
     
-    private HBox createResultRow(Aeroport aeroport) {
-        HBox returnHbox = new HBox();
-        returnHbox.setAlignment(Pos.CENTER); // Center align the HBox
-        
-        VBox mainBox = new VBox(20); // Main VBox for entire structure with spacing of 10
-        mainBox.setAlignment(Pos.CENTER); // Center align the VBox
-        mainBox.setPadding(new Insets(10)); // Add padding for spacing around the VBox
-        
-        // HBox for left and right information labels
-        HBox infoHBox = new HBox(40); // HBox for left and right info labels with spacing of 10
-        infoHBox.setAlignment(Pos.CENTER); // Center align horizontally
-        
-        // Left VBox for infos1 and infos2
-        HBox leftVBox = new HBox(20); // VBox for left info labels with spacing of 5
-        leftVBox.setAlignment(Pos.CENTER_LEFT); // Align to the left vertically
-        
-        // Infos1 label
-        Label info1Label = new Label("Departement " + aeroport.getDepartement().getNomDep());
-        info1Label.setStyle("-fx-font-size: 12px;");
-        
-        leftVBox.getChildren().addAll(info1Label);
-        
-        // Right VBox for infos3 and infos4
-        HBox rightVBox = new HBox(10); // VBox for right info labels with spacing of 5
-        rightVBox.setAlignment(Pos.CENTER_RIGHT); // Align to the right vertically
-
-        // Infos2 label
-        Label info2Label = new Label("Adresse " + aeroport.getAdresse());
-        info2Label.setStyle("-fx-font-size: 12px;");
-        
-        
-        rightVBox.getChildren().addAll(info2Label);
-        
-        // Commune name label
-        Label communeLabel = new Label(aeroport.getNom());
-        communeLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-        
-        // Add left and right VBoxes to infoHBox
-        infoHBox.getChildren().addAll(leftVBox, communeLabel, rightVBox);
-        
-        // Button for showing more details
-        Button detailsButton = new Button("Voir plus");
-        detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        detailsButton.setOnAction(event -> {
-            this.controller.showAeroportDetails(aeroport);
-        });
-        
-        // Align button to the center
-        VBox.setMargin(detailsButton, new Insets(10, 0, 0, 0)); // Adjust top margin for button
-        
-        // Add elements to the main VBox
-        mainBox.getChildren().addAll(infoHBox, detailsButton);
-        returnHbox.getChildren().addAll(mainBox);
-        
-        return returnHbox;
-    }
     
     
     
@@ -404,24 +350,8 @@ import java.util.List;
         return this.userIcon;
     }
 
-    public Button getToutsLesAeroport() {
-        return toutsLesAeroport;
-    }
-
-    public Button getMorbihanFilterButton() {
-        return morbihanFilterButton;
-    }
-
-    public Button getFinistereFilterButton() {
-        return finistereFilterButton;
-    }
-
-    public Button getCoteArmorFilterButton() {
-        return coteArmorFilterButton;
-    }
-
-    public Button getIlleEtVilaineFilterButton() {
-        return illeEtVilaineFilterButton;
+    public Button getCommuneButton(){
+        return this.communeButton;
     }
 
     public Button getReloadDatabase() {
