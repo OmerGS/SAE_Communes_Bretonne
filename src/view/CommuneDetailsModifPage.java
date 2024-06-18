@@ -56,6 +56,7 @@ public class CommuneDetailsModifPage {
     private TextField gareTextField;
 
     private Button saveButton;
+    private Button plusyearsButton;
 
     public void showCommune(Commune commune, Controller controller) {
         detailsStage = new Stage();
@@ -108,6 +109,7 @@ public class CommuneDetailsModifPage {
         yearsComboBox = createYearsComboBox(commune, controller);
         yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
         saveButton = new Button("Sauvegarder");
+        plusyearsButton = new Button("+ année");
         Button closeButton = new Button("Fermer");
         closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
         closeButton.setOnAction(event -> detailsStage.close());
@@ -365,6 +367,10 @@ public class CommuneDetailsModifPage {
 
     public Button getSaveButton(){
         return this.saveButton;
+    }
+
+    public Button getplusyearsButton(){
+        return this.plusyearsButton;
     }
 
 }
