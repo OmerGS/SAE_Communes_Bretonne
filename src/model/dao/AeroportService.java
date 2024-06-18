@@ -103,4 +103,69 @@ public class AeroportService {
         }
         return aeroports;
     }
+
+
+    public void insertAeroport(Aeroport aeroport) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "INSERT INTO Aeroport (nom, adresse, leDepartement) VALUES (?, ?, ?)";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, aeroport.getNom());
+                preparedStatement.setString(2, aeroport.getAdresse());
+                preparedStatement.setInt(3, aeroport.getDepartement().getIdDep());
+                preparedStatement.executeUpdate();
+                System.out.println("Aéroport inséré avec succès dans la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateAeroport(String nom, String newAdresse, int newDepartementId) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "UPDATE Aeroport SET adresse = ?, leDepartement = ? WHERE nom = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, newAdresse);
+                preparedStatement.setInt(2, newDepartementId);
+                preparedStatement.setString(3, nom);
+                preparedStatement.executeUpdate();
+                System.out.println("Aéroport mis à jour avec succès.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dropAeroport(String nom) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Aeroport WHERE nom = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, nom);
+                preparedStatement.executeUpdate();
+                System.out.println("Aéroport supprimé avec succès de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void dropAllAeroports() {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Aeroport";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.executeUpdate();
+                System.out.println("Tous les aéroports ont été supprimés de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

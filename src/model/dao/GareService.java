@@ -74,4 +74,74 @@ public class GareService {
         }
         return gares;
     }
+
+    public void insertGare(Gare gare) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "INSERT INTO Gare (codeGare, nomGare, estFret, estVoyageur, laCommune) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setInt(1, gare.getCodeGare());
+                preparedStatement.setString(2, gare.getNomGare());
+                preparedStatement.setBoolean(3, gare.isEstFret());
+                preparedStatement.setBoolean(4, gare.isEstVoyageur());
+                preparedStatement.setInt(5, gare.getCommune());
+
+                preparedStatement.executeUpdate();
+                System.out.println("Gare insérée avec succès dans la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateGare(int codeGare, String newNomGare, boolean newEstFret, boolean newEstVoyageur, int newLaCommune) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "UPDATE Gare SET nomGare = ?, estFret = ?, estVoyageur = ?, laCommune = ? WHERE codeGare = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, newNomGare);
+                preparedStatement.setBoolean(2, newEstFret);
+                preparedStatement.setBoolean(3, newEstVoyageur);
+                preparedStatement.setInt(4, newLaCommune);
+                preparedStatement.setInt(5, codeGare);
+
+                preparedStatement.executeUpdate();
+                System.out.println("Gare mise à jour avec succès.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dropGare(int codeGare) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Gare WHERE codeGare = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setInt(1, codeGare);
+
+                preparedStatement.executeUpdate();
+                System.out.println("Gare supprimée avec succès de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dropAllGares() {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Gare";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.executeUpdate();
+                System.out.println("Toutes les gares ont été supprimées de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
