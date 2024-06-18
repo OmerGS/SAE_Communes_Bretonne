@@ -55,6 +55,8 @@ public class CommuneDetailsModifPage {
     private TextField depCulturellesTextField;
     private TextField gareTextField;
 
+    private Button saveButton;
+
     public void showCommune(Commune commune, Controller controller) {
         detailsStage = new Stage();
         detailsStage.setTitle("D\u00e9tails de la commune");
@@ -105,14 +107,14 @@ public class CommuneDetailsModifPage {
         // Create ComboBox containing years
         yearsComboBox = createYearsComboBox(commune, controller);
         yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
-
+        saveButton = new Button("Sauvegarder");
         Button closeButton = new Button("Fermer");
         closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
         closeButton.setOnAction(event -> detailsStage.close());
 
         detailsBox.getChildren().addAll(
             namePane, generalInfoPane, housingStatsPane, neighborsLabel, neighborsPane,
-            yearsComboBox, closeButton
+            yearsComboBox, saveButton, closeButton
         );
 
         ScrollPane scrollPane = new ScrollPane(detailsBox);
@@ -359,6 +361,10 @@ public class CommuneDetailsModifPage {
 
     public String getSurfaceMoyenneText() {
         return surfaceMoyenneTextField.getText();
+    }
+
+    public Button getSaveButton(){
+        return this.saveButton;
     }
 
 }
