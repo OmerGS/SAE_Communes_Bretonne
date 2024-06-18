@@ -332,6 +332,27 @@ public class CommuneService {
             e.printStackTrace();
         }
     }
+
+
+    public void dropAllCommunes() {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteCommuneSQL = "DELETE FROM Commune";
+            String requeteDonneeAnneeSQL = "DELETE FROM DonneesAnnuelles";
+            String requeteVoisinSQL = "DELETE FROM Voisinage";
+            try (PreparedStatement preparedStatementCommune = connexion.prepareStatement(requeteCommuneSQL); 
+            PreparedStatement preparedStatementDonneeAnnee = connexion.prepareStatement(requeteDonneeAnneeSQL);
+            PreparedStatement preparedStatementVoisin = connexion.prepareStatement(requeteVoisinSQL)) {
+                preparedStatementCommune.executeUpdate();
+                preparedStatementDonneeAnnee.executeUpdate();
+                preparedStatementVoisin.executeUpdate();
+                System.out.println("Toutes les communes ont été supprimées de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
     
     
