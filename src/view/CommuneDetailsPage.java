@@ -7,14 +7,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
@@ -32,30 +30,17 @@ import java.util.Random;
 import controller.Controller;
 
 public class CommuneDetailsPage {
-    private VBox detailsBox;
-    private FlowPane neighborsPane;
-    private ComboBox<Integer> yearsComboBox;
-    private Label nameLabel;
-    private Stage detailsStage;
+    private static VBox detailsBox;
+    private static FlowPane neighborsPane;
+    private static ComboBox<Integer> yearsComboBox;
+    private static Label nameLabel;
+    private static Stage detailsStage;
 
-    private TitledPane generalInfoPane;
-    private TitledPane housingStatsPane;
+    private static TitledPane generalInfoPane;
+    private static TitledPane housingStatsPane;
+    private static Image backgroundImageLoc;
 
-    private TextField nbMaisonsTextField;
-    private TextField nbAppartTextField;
-    private TextField prixMoyenTextField;
-    private TextField prixM2MoyenTextField;
-    private TextField surfaceMoyenneTextField;
-
-
-    private TextField idTextField;
-    private TextField departementTextField;
-    private TextField anneeTextField;
-    private TextField populationTextField;
-    private TextField depCulturellesTextField;
-    private TextField gareTextField;
-
-    public void showCommune(Commune commune, Controller controller) {
+    public static void showCommune(Commune commune, Controller controller) {
         detailsStage = new Stage();
         detailsStage.setTitle("D\u00e9tails de la commune");
 
@@ -125,7 +110,7 @@ public class CommuneDetailsPage {
         detailsStage.showAndWait();
     }
 
-    private TitledPane createTitledPane(String title, VBox content) {
+    private static TitledPane createTitledPane(String title, VBox content) {
         TitledPane pane = new TitledPane();
         pane.setText(title);
         pane.setContent(content);
@@ -134,140 +119,130 @@ public class CommuneDetailsPage {
         return pane;
     }
 
-    private VBox createGeneralInfoBox(Commune commune) {
+    private static VBox createGeneralInfoBox(Commune commune) {
         VBox box = new VBox(10);
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
-
+    
         Label idLabel = new Label("ID : ");
         idLabel.setStyle("-fx-font-size: 14px;");
-        idTextField = new TextField();
-        idTextField.setEditable(false); // Le TextField ID est non modifiable
-        StackPane idPane = new StackPane(idLabel, idTextField);
-
-        Label depLabel = new Label("Département : ");
+    
+        Label depLabel = new Label("D\u00e9partement : ");
         depLabel.setStyle("-fx-font-size: 14px;");
-        departementTextField = new TextField();
-        departementTextField.setEditable(false);
-        StackPane depPane = new StackPane(depLabel, departementTextField);
-
-        Label anneeLabel = new Label("Année de données : ");
+    
+        Label anneeLabel = new Label("Ann\u00e9e de donn\u00e9es : ");
         anneeLabel.setStyle("-fx-font-size: 14px;");
-        anneeTextField = new TextField();
-        anneeTextField.setEditable(false);
-        StackPane anneePane = new StackPane(anneeLabel, anneeTextField);
-
+        
         Label populationLabel = new Label("Population : ");
         populationLabel.setStyle("-fx-font-size: 14px;");
-        populationTextField = new TextField();
-        populationTextField.setEditable(false);
-        StackPane populationPane = new StackPane(populationLabel, populationTextField);
-
+        
         Label importanteLabel = new Label("Importante : ");
-
-        Label depCulturellesLabel = new Label("Dépenses culturelles totales : ");
+        importanteLabel.setStyle("-fx-font-size: 14px;");
+    
+        Label depCulturellesLabel = new Label("D\u00e9penses culturelles totales : ");
         depCulturellesLabel.setStyle("-fx-font-size: 14px;");
-        depCulturellesTextField = new TextField();
-        depCulturellesTextField.setEditable(false);
-        StackPane depCulturellesPane = new StackPane(depCulturellesLabel, depCulturellesTextField);
-
+    
         Label gareLabel = new Label("Gare : ");
-        gareLabel.setStyle("-fx-font-size: 14px;");
-        gareTextField = new TextField();
-        gareTextField.setEditable(false);
-        StackPane garePane = new StackPane(gareLabel, gareTextField);
-
-        box.getChildren().addAll(idPane, depPane, populationPane, importanteLabel, anneePane, depCulturellesPane, garePane);
+        depCulturellesLabel.setStyle("-fx-font-size: 14px;");
+        
+        box.getChildren().addAll(idLabel, depLabel, populationLabel, importanteLabel, anneeLabel, depCulturellesLabel, gareLabel);
         return box;
     }
     
-    private VBox createHousingStatsBox(Commune commune) {
+    private static VBox createHousingStatsBox(Commune commune) {
         VBox box = new VBox(10);
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
-
+    
         Label nbMaisonLabel = new Label("Nombre de maisons : ");
         nbMaisonLabel.setStyle("-fx-font-size: 14px;");
-        nbMaisonsTextField = new TextField(); // Initialisation du TextField
-        HBox nbMaisonsBox = new HBox(10, nbMaisonLabel, nbMaisonsTextField);
-        box.getChildren().add(nbMaisonsBox);
-
+        
         Label nbAppartLabel = new Label("Nombre d'appartements : ");
         nbAppartLabel.setStyle("-fx-font-size: 14px;");
-        nbAppartTextField = new TextField(); // Initialisation du TextField
-        HBox nbAppartBox = new HBox(10, nbAppartLabel, nbAppartTextField);
-        box.getChildren().add(nbAppartBox);
-
+        
         Label prixMoyenLabel = new Label("Prix moyen : ");
         prixMoyenLabel.setStyle("-fx-font-size: 14px;");
-        prixMoyenTextField = new TextField(); // Initialisation du TextField
-        HBox prixMoyenBox = new HBox(10, prixMoyenLabel, prixMoyenTextField);
-        box.getChildren().add(prixMoyenBox);
-
+        
         Label prixM2MoyenLabel = new Label("Prix moyen par \u33A1 : ");
         prixM2MoyenLabel.setStyle("-fx-font-size: 14px;");
-        prixM2MoyenTextField = new TextField(); // Initialisation du TextField
-        HBox prixM2MoyenBox = new HBox(10, prixM2MoyenLabel, prixM2MoyenTextField);
-        box.getChildren().add(prixM2MoyenBox);
-
+        
         Label surfaceMoyLabel = new Label("Surface moyenne : ");
         surfaceMoyLabel.setStyle("-fx-font-size: 14px;");
-        surfaceMoyenneTextField = new TextField(); // Initialisation du TextField
-        HBox surfaceMoyenneBox = new HBox(10, surfaceMoyLabel, surfaceMoyenneTextField);
-        box.getChildren().add(surfaceMoyenneBox);
-
+    
+        box.getChildren().addAll(nbMaisonLabel, nbAppartLabel, prixMoyenLabel, prixM2MoyenLabel, surfaceMoyLabel);
         return box;
     }
     
-    
 
 
-    private void updateGeneralInfoBox(Commune commune) {
-        idTextField.setText("ID : " + commune.getIdCommune());
-        departementTextField.setText("Département : " + commune.getDepartement().getIdDep());
-        if (commune.getPopulation() < 0) {
-            populationTextField.setText("Population : Information indisponible");
-        } else {
-            populationTextField.setText("Population : " + commune.getPopulation() + " habitants");
-        }
-        anneeTextField.setText("Année de données : " + commune.getAnnee().getAnnee());
-        if (commune.getDepCulturellesTotales() < 0) {
-            depCulturellesTextField.setText("Dépenses culturelles totales : Information indisponible");
-        } else {
-            depCulturellesTextField.setText("Dépenses culturelles totales : " + commune.getDepCulturellesTotales() + " €");
-        }
-        if (commune.aUneGare()) {
-            gareTextField.setText("Gare : " + commune.getGare().getNomGare());
-        } else {
-            gareTextField.setText("Gare : Aucune");
-        }
-    }
-    
-
-    private void updateHousingStatsBox(Commune commune) {
-        nbMaisonsTextField.setText(String.valueOf(commune.getNbMaison()));
-        nbAppartTextField.setText(String.valueOf(commune.getNbAppart()));
-
-        if (commune.getPrixMoyen() < 0) {
-            prixMoyenTextField.setText("Information indisponible");
-        } else {
-            prixMoyenTextField.setText(commune.getPrixMoyen() + " €");
-        }
-
-        if (commune.getPrixM2Moyen() < 0) {
-            prixM2MoyenTextField.setText("Information indisponible");
-        } else {
-            prixM2MoyenTextField.setText(commune.getPrixM2Moyen() + " €");
-        }
-
-        if (commune.getSurfaceMoy() < 0) {
-            surfaceMoyenneTextField.setText("Information indisponible");
-        } else {
-            surfaceMoyenneTextField.setText(commune.getSurfaceMoy() + " m²");
-        }
+    private static void updateGeneralInfoBox(Commune commune) {
+        ((VBox) generalInfoPane.getContent()).getChildren().forEach(node -> {
+            if (node instanceof Label) {
+                String labelText = ((Label) node).getText();
+                if (labelText.startsWith("ID : ")) {
+                    ((Label) node).setText("ID : " + commune.getIdCommune());
+                } else if (labelText.startsWith("Population : ")) {
+                    ((Label) node).setText("Population : " + commune.getPopulation() + " habitants");
+                    if(commune.getPopulation() < 0){
+                        ((Label) node).setText("Population : Information indisponible");
+                    }else{
+                        ((Label) node).setText("Population : " + commune.getPopulation() + " habitants");
+                    }
+                } else if (labelText.startsWith("Importante : ")) {
+                    ((Label) node).setText("Importante : " + (commune.isMostImportant() ? "Oui" : "Non"));
+                } else if (labelText.startsWith("Ann\u00e9e de donn\u00e9es : ")) {
+                    ((Label) node).setText("Ann\u00e9e de donn\u00e9es : " + commune.getAnnee().getAnnee());
+                } else if (labelText.startsWith("D\u00e9penses culturelles totales : ")) {
+                    if(commune.getDepCulturellesTotales() < 0){
+                        ((Label) node).setText("D\u00e9penses culturelles totales : Information indisponible");
+                    }else{
+                        ((Label) node).setText("D\u00e9penses culturelles totales : " + commune.getDepCulturellesTotales() + " \u20ac");
+                    }
+                } else if (labelText.startsWith("D\u00e9partement : ")) {
+                    ((Label) node).setText("D\u00e9partement : " + commune.getDepartement().getIdDep());
+                }else if (labelText.startsWith("Gare : ")) {
+                    if(commune.aUneGare()){
+                        ((Label) node).setText("Gare : " + commune.getGare().getNomGare());
+                    }else{
+                        ((Label) node).setText("Gare : Aucune");
+                    }
+                }
+            }
+        });
     }
 
-    private void updateNeighborsPane(Commune commune, Controller controller) {
+    private static void updateHousingStatsBox(Commune commune) {
+        ((VBox) housingStatsPane.getContent()).getChildren().forEach(node -> {
+            if (node instanceof Label) {
+                String labelText = ((Label) node).getText();
+                if (labelText.startsWith("Nombre de maisons : ")) {
+                    ((Label) node).setText("Nombre de maisons : " + commune.getNbMaison());
+                } else if (labelText.startsWith("Nombre d'appartements : ")) {
+                    ((Label) node).setText("Nombre d'appartements : " + commune.getNbAppart());
+                } else if (labelText.startsWith("Prix moyen : ")) {
+                    if(commune.getPrixMoyen() < 0){
+                        ((Label) node).setText("Prix moyen : Information indisponible");
+                    }else{
+                        ((Label) node).setText("Prix moyen : " + commune.getPrixMoyen() +  " \u20ac");
+                    }
+                } else if (labelText.startsWith("Prix moyen par \u33A1 : ")) {
+                    if(commune.getPrixM2Moyen() < 0){
+                        ((Label) node).setText("Prix moyen par \u33A1 : Information indisponible");
+                    }else{
+                        ((Label) node).setText("Prix moyen par \u33A1 : " + commune.getPrixM2Moyen() +  " \u20ac");
+                    }
+                } else if (labelText.startsWith("Surface moyenne : ")) {
+                    if(commune.getSurfaceMoy() < 0){
+                        ((Label) node).setText("Surface moyenne : Information indisponible");
+                    }else{
+                        ((Label) node).setText("Surface moyenne : " + commune.getSurfaceMoy() +  " \u20ac");
+                    }
+                }
+            }
+        });
+    }
+
+    private static void updateNeighborsPane(Commune commune, Controller controller) {
         neighborsPane.getChildren().clear();
         ArrayList<Commune> neighbors = commune.getCommunesVoisines();
         if (neighbors.isEmpty()) {
@@ -283,7 +258,7 @@ public class CommuneDetailsPage {
         }
     }
 
-    private ComboBox<Integer> createYearsComboBox(Commune commune, Controller controller) {
+   private static ComboBox<Integer> createYearsComboBox(Commune commune, Controller controller) {
         yearsComboBox = new ComboBox<>();
 
         ArrayList<Integer> years = controller.getYearsForCommune(commune);
@@ -308,57 +283,11 @@ public class CommuneDetailsPage {
     }
 
 
-    public void updateCommuneDetails(Commune commune, Controller controller) {
+    public static void updateCommuneDetails(Commune commune, Controller controller) {
         nameLabel.setText(commune.getNomCommune());
         updateNeighborsPane(commune, controller);
         updateGeneralInfoBox(commune);
         updateHousingStatsBox(commune);
-    }
-
-
-    public String getIdTextFieldValue() {
-        return idTextField.getText();
-    }
-
-    public String getDepartementTextFieldValue() {
-        return departementTextField.getText();
-    }
-
-    public String getAnneeTextFieldValue() {
-        return anneeTextField.getText();
-    }
-
-    public String getPopulationTextFieldValue() {
-        return populationTextField.getText();
-    }
-
-    public String getDepCulturellesTextFieldValue() {
-        return depCulturellesTextField.getText();
-    }
-
-    public String getGareTextFieldValue() {
-        return gareTextField.getText();
-    }
-
-    // Méthodes pour récupérer les valeurs des TextField
-    public String getNbMaisonsText() {
-        return nbMaisonsTextField.getText();
-    }
-
-    public String getNbAppartementsText() {
-        return nbAppartTextField.getText();
-    }
-
-    public String getPrixMoyenText() {
-        return prixMoyenTextField.getText();
-    }
-
-    public String getPrixM2MoyenText() {
-        return prixM2MoyenTextField.getText();
-    }
-
-    public String getSurfaceMoyenneText() {
-        return surfaceMoyenneTextField.getText();
     }
 
 }
