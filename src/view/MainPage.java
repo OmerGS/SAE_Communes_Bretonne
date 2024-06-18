@@ -373,7 +373,6 @@ public class MainPage extends Application {
     }
 
     public void updateCommunesListView(List<Commune> communes) {
-        System.out.println("Updating ListView with " + communes.size() + " communes.");
         this.communeListView.getItems().clear();
         this.communeListView.getItems().addAll(communes);
 
