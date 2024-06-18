@@ -183,7 +183,7 @@ public class AccountPage extends Application {
         StackPane.setAlignment(menuBox, Pos.TOP_RIGHT); // Position the menu box in the top right
 
         VBox mainBox = new VBox(10);
-        mainBox.setStyle("-fx-background-color: #87CEEB;"); // Blue background
+        mainBox.setStyle("-fx-background: linear-gradient(blue, pink);"); // Blue background
         mainBox.getChildren().addAll(topBar, mainPane);
         VBox.setVgrow(mainPane, Priority.ALWAYS);
 
@@ -256,8 +256,8 @@ public class AccountPage extends Application {
         Region spacerid = new Region();
         spacerid.setMinWidth(40);
 
-        HBox nameBox = new HBox(10, new Label("Nom :"), spacerid, nameStack);
-        HBox firstNameBox = new HBox(10, new Label("Pr\u00e9nom :"), spacerid, firstNameStack);
+        HBox nameBox = new HBox(10, new Label("Nom :"), nameStack);
+        HBox firstNameBox = new HBox(10, new Label("Pr\u00e9nom :"), firstNameStack);
         HBox emailBox = new HBox(10, new Label("Email :"),spacerid, emailStack);
 
         this.deleteButton = new Button("SUPPRIMER");

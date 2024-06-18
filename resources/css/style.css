@@ -30,3 +30,8 @@
     -fx-background-radius: 10px;
     -fx-padding: 10px;
 }
+
+.degrade-horizontal {
+    -fx-background-color: linear-gradient(to bottom, #2200fc, #8800ff);
+  }
+  

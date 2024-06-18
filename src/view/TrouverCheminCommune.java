@@ -111,8 +111,6 @@ public class TrouverCheminCommune extends Application {
         logo.setFitHeight(50);
         logo.setClip(new Circle(25, 25, 25));
         //logo.setStyle("-fx-background-color: #ffffff; -fx-shape: \"M20 0 L40 20 L20 40 L0 20 Z\";");
-<<<<<<< HEAD
-=======
 
         ImageView menuIcon = null;
         try {
@@ -124,18 +122,8 @@ public class TrouverCheminCommune extends Application {
         }
 
         menuIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> toggleMenu());
->>>>>>> bb1e3ebe5e6076ec511f47f46cf61d8b4bd868c8
 
-        ImageView menuIcon = new ImageView(new Image("file:../resources/image/menu.png"));
-        menuIcon.setFitHeight(30);
-        menuIcon.setFitWidth(30);
 
-<<<<<<< HEAD
-        ImageView userIcon = new ImageView("file:../resources/image/user.png");
-        userIcon.setFitHeight(30);
-        userIcon.setFitWidth(30);
-        //userIcon.setStyle("-fx-background-color: #ffffff; -fx-shape: \"M0 0 L0 30 L30 15 Z\";");
-=======
         this.userIcon = null;
         try {
             this.userIcon = new ImageView(new Image("file:../resources/image/user.png"));
@@ -144,7 +132,6 @@ public class TrouverCheminCommune extends Application {
         } catch (NullPointerException e) {
             System.out.println("user.png not found");
         }
->>>>>>> bb1e3ebe5e6076ec511f47f46cf61d8b4bd868c8
 
 
         this.userIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -154,11 +141,7 @@ public class TrouverCheminCommune extends Application {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-<<<<<<< HEAD
-        topBar.getChildren().addAll(logo, spacer, userIcon, menuIcon);
-=======
         topBar.getChildren().addAll(logo, spacer, this.userIcon, menuIcon);
->>>>>>> bb1e3ebe5e6076ec511f47f46cf61d8b4bd868c8
         return topBar;
     }
 
