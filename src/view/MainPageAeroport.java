@@ -14,33 +14,32 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import controller.Controller;
-import data.Commune;
+import data.Aeroport;
 import javafx.util.Callback;
 
 import java.util.List;
 
-public class MainPage extends Application {
-    private ListView<Commune> communeListView = new ListView<>();
+/*public class MainPageAeroport extends Application {
+    private ListView<Aeroport> aeroportListView = new ListView<>();
     private TextField searchField;
     private Controller controller;
     private Label resultsLabel;
     private ImageView userIcon;
     private VBox menuBox;
-    private Button cheminCourtButton;
-    private Button toutesLesCommunes;
+    private Button toutsLesAeroport;
     private Button morbihanFilterButton;
     private Button finistereFilterButton;
     private Button coteArmorFilterButton;
     private Button illeEtVilaineFilterButton;
     private Button reloadDatabase;
     private Button editData;
-    private int nbCommune;
+    private int nbAeroport;
     private Button exportDataButton;
 
 
-    public MainPage(Controller controller){
+   /*  public MainPageAeroport(Controller controller){
         this.controller = controller;
-        this.controller.setMainPage(this);
+        this.controller.setMainPageAeroport(this);
         loadCommunes();
     }
 
@@ -48,7 +47,7 @@ public class MainPage extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Initialize resultsLabel
-        this.resultsLabel = new Label(this.nbCommune + " r\u00e9sultats");
+        this.resultsLabel = new Label(this.nbAeroport + " r\u00e9sultats");
         this.resultsLabel.setStyle("-fx-font-size: 18px; -fx-padding: 10px; -fx-text-fill: white;");
 
         // Create filter button
@@ -56,7 +55,7 @@ public class MainPage extends Application {
         filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
 
         // Checkboxes for filters
-        this.toutesLesCommunes = new Button("Toutes");
+        this.toutsLesAeroport = new Button("Touts");
         this.morbihanFilterButton = new Button("Morbihan");
         this.finistereFilterButton = new Button("Finistère");
         this.coteArmorFilterButton = new Button("Côtes-d'Armor");
@@ -72,15 +71,15 @@ public class MainPage extends Application {
 
 
         // Appliquer le style à chaque bouton
-        this.toutesLesCommunes.setStyle(buttonStyle);
+        this.toutsLesAeroport.setStyle(buttonStyle);
         this.morbihanFilterButton.setStyle(buttonStyle);
         this.finistereFilterButton.setStyle(buttonStyle);
         this.coteArmorFilterButton.setStyle(buttonStyle);
         this.illeEtVilaineFilterButton.setStyle(buttonStyle);
 
-        HBox communeFilterBox = new HBox(5, toutesLesCommunes, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
+        HBox communeFilterBox = new HBox(5, toutsLesAeroport, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
 
-        this.toutesLesCommunes.setOnAction(this.controller);
+        this.toutsLesAeroport.setOnAction(this.controller);
         this.morbihanFilterButton.setOnAction(this.controller);
         this.finistereFilterButton.setOnAction(this.controller);
         this.coteArmorFilterButton.setOnAction(this.controller);
@@ -172,19 +171,19 @@ public class MainPage extends Application {
         topBar.getChildren().addAll(logo, searchBox, spacer, userBox);
 
         // ListView to display communes
-        communeListView.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        communeListView.setMaxWidth(800);  // Set maximum width
+        aeroportListView.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        aeroportListView.setMaxWidth(800);  // Set maximum width
 
         // Custom cell factory to display Commune objects
-        communeListView.setCellFactory(new Callback<>() {
+        aeroportListView.setCellFactory(new Callback<>() {
             @Override
-            public ListCell<Commune> call(ListView<Commune> listView) {
+            public ListCell<Aeroport> call(ListView<Aeroport> listView) {
                 return new ListCell<>() {
                     @Override
-                    protected void updateItem(Commune commune, boolean empty) {
-                        super.updateItem(commune, empty);
-                        if (commune != null) {
-                            HBox row = createResultRow(commune);
+                    protected void updateItem(Aeroport aeroport, boolean empty) {
+                        super.updateItem(aeroport, empty);
+                        if (aeroport != null) {
+                            HBox row = createResultRow(aeroport);
                             setGraphic(row);
                         }
                     }
@@ -251,10 +250,6 @@ public class MainPage extends Application {
         menuBox.setAlignment(Pos.CENTER_RIGHT);
         menuBox.setMaxWidth(400);
 
-        this.cheminCourtButton = new Button("Chemin Entre 2 commune");
-        this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.cheminCourtButton.setOnAction(this.controller);
-
         this.editData = new Button("Modifier les données");
         this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.editData.setOnAction(this.controller);
@@ -267,7 +262,7 @@ public class MainPage extends Application {
         this.reloadDatabase.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.reloadDatabase.setOnAction(this.controller);
 
-        menuBox.getChildren().addAll(this.cheminCourtButton, editData, exportDataButton, this.reloadDatabase);
+        menuBox.getChildren().addAll(editData, exportDataButton, this.reloadDatabase);
         return menuBox;
     }
 
@@ -275,7 +270,7 @@ public class MainPage extends Application {
         menuBox.setVisible(!menuBox.isVisible());
     }
     
-    private HBox createResultRow(Commune commune) {
+    private HBox createResultRow(Aeroport aeroport) {
         HBox returnHbox = new HBox();
         returnHbox.setAlignment(Pos.CENTER); // Center align the HBox
         
@@ -292,31 +287,24 @@ public class MainPage extends Application {
         leftVBox.setAlignment(Pos.CENTER_LEFT); // Align to the left vertically
         
         // Infos1 label
-        Label info1Label = new Label("Important\n" + commune.isMostImportant());
+        Label info1Label = new Label("Departement " + aeroport.getDepartement().getNomDep());
         info1Label.setStyle("-fx-font-size: 12px;");
         
-        // Infos2 label
-        Label info2Label = new Label("Prix m2\n" + commune.getPrixM2Moyen());
-        info2Label.setStyle("-fx-font-size: 12px;");
-        
-        leftVBox.getChildren().addAll(info1Label, info2Label);
+        leftVBox.getChildren().addAll(info1Label);
         
         // Right VBox for infos3 and infos4
         HBox rightVBox = new HBox(10); // VBox for right info labels with spacing of 5
         rightVBox.setAlignment(Pos.CENTER_RIGHT); // Align to the right vertically
+
+        // Infos2 label
+        Label info2Label = new Label("Adresse " + aeroport.getAdresse());
+        info2Label.setStyle("-fx-font-size: 12px;");
         
-        // Infos3 label
-        Label info3Label = new Label("Prix Moyen\n" + commune.getPrixMoyen());
-        info3Label.setStyle("-fx-font-size: 12px;");
         
-        // Infos4 label
-        Label info4Label = new Label("Gare\n" + commune.aUneGare());
-        info4Label.setStyle("-fx-font-size: 12px;");
-        
-        rightVBox.getChildren().addAll(info3Label, info4Label);
+        rightVBox.getChildren().addAll(info2Label);
         
         // Commune name label
-        Label communeLabel = new Label(commune.getNomCommune());
+        Label communeLabel = new Label(aeroport.getNom());
         communeLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         
         // Add left and right VBoxes to infoHBox
@@ -326,7 +314,7 @@ public class MainPage extends Application {
         Button detailsButton = new Button("Voir plus");
         detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
         detailsButton.setOnAction(event -> {
-            this.controller.showCommuneDetails(commune);
+            this.controller.showAeroportDetails(aeroport);
         });
         
         // Align button to the center
@@ -360,21 +348,21 @@ public class MainPage extends Application {
     
 
     private void loadCommunes() {
-        List<Commune> communes = controller.getCommunesFromDataBase();
-        this.nbCommune = communes.size();
-        communeListView.getItems().addAll(communes);
+        List<Aeroport> aeroports = controller.getAeroportsFromDataBase();
+        this.nbAeroport = aeroports.size();
+        aeroportListView.getItems().addAll(aeroports);
     }
 
 
-    public void loadCommunes(List<Commune> communes) {
-        communeListView.getItems().addAll(communes);
+    public void loadCommunes(List<Aeroport> aeroports) {
+        aeroportListView.getItems().addAll(aeroports);
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    public void updateCommunesListView(List<Commune> communes) {
+    public void updateCommunesListView(List<Aeroport> communes) {
         System.out.println("Updating ListView with " + communes.size() + " communes.");
         this.communeListView.getItems().clear();
         this.communeListView.getItems().addAll(communes);
@@ -416,12 +404,8 @@ public class MainPage extends Application {
         return this.userIcon;
     }
 
-    public Button getButtonCheminLePlusCourt(){
-        return(this.cheminCourtButton);
-    }
-
-    public Button getToutesLesCommunes() {
-        return toutesLesCommunes;
+    public Button getToutsLesAeroport() {
+        return toutsLesAeroport;
     }
 
     public Button getMorbihanFilterButton() {
@@ -447,4 +431,4 @@ public class MainPage extends Application {
     public Button getEditData() {
         return editData;
     }
-}
+}*/

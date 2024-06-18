@@ -5,6 +5,8 @@
 .list-view {
     -fx-background-insets: 0;
     -fx-padding: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 .city-label {

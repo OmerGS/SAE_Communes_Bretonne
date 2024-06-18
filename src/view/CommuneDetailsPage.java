@@ -38,12 +38,6 @@ public class CommuneDetailsPage {
 
     private static TitledPane generalInfoPane;
     private static TitledPane housingStatsPane;
-    private static StackPane whitePane;
-    private static Image backgroundImageLoc;
-
-    private static TitledPane generalInfoPane;
-    private static TitledPane housingStatsPane;
-    private static StackPane whitePane;
     private static Image backgroundImageLoc;
 
     public static void showCommune(Commune commune, Controller controller) {
@@ -53,7 +47,7 @@ public class CommuneDetailsPage {
         detailsBox = new VBox(20);
         detailsBox.setPadding(new Insets(20));
         detailsBox.setAlignment(Pos.TOP_CENTER);
-        detailsBox.setStyle("-fx-background-color: #87CEEB;");
+        detailsBox.setStyle("-fx-background-color: linear-gradient(to right, #E0F7FA 0%, #0288D1 100%);");
 
         // Load random background image
         File folder = new File("../resources/image/fonds/");
@@ -73,7 +67,6 @@ public class CommuneDetailsPage {
 
         nameLabel = new Label(commune.getNomCommune());
         nameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(one-pass-box, black, 8, 0.0, 2, 0);");
-        nameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(one-pass-box, black, 8, 0.0, 2, 0);");
         namePane.getChildren().add(nameLabel);
 
         // Create TitledPanes for general information and housing statistics
@@ -83,21 +76,8 @@ public class CommuneDetailsPage {
         updateGeneralInfoBox(commune);
         updateHousingStatsBox(commune);
 
-        File fileLoc = new File("../resources/image/blanc.png");
-        backgroundImageLoc = new Image(fileLoc.toURI().toString());
-        ImageView backgroundImageView2 = new ImageView(backgroundImageLoc);
-        backgroundImageView2.setFitWidth(600);
-        backgroundImageView2.setPreserveRatio(true);
-
-        // Section commune name with background
-        whitePane = new StackPane();
-        whitePane.setAlignment(Pos.CENTER);
-        whitePane.setPadding(new Insets(80));
-        whitePane.setStyle("-fx-background-image: url('" + fileLoc.toURI().toString() + "'); -fx-background-size: cover;");
-
         // Section neighboring communes
         Label neighborsLabel = new Label("Communes voisines:");
-        neighborsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         neighborsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
         neighborsPane = new FlowPane();
@@ -110,22 +90,19 @@ public class CommuneDetailsPage {
         // Create ComboBox containing years
         yearsComboBox = createYearsComboBox(commune, controller);
         yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
-        yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
 
         Button closeButton = new Button("Fermer");
-        closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
         closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
         closeButton.setOnAction(event -> detailsStage.close());
 
         detailsBox.getChildren().addAll(
-            namePane, generalInfoPane, housingStatsPane, whitePane, neighborsLabel, neighborsPane,
-            yearsComboBox, closeButton
-            namePane, generalInfoPane, housingStatsPane, whitePane, neighborsLabel, neighborsPane,
+            namePane, generalInfoPane, housingStatsPane, neighborsLabel, neighborsPane,
             yearsComboBox, closeButton
         );
 
         ScrollPane scrollPane = new ScrollPane(detailsBox);
         scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
 
         Scene detailsScene = new Scene(scrollPane, 700, 800);
         detailsStage.setScene(detailsScene);
@@ -138,6 +115,7 @@ public class CommuneDetailsPage {
         pane.setText(title);
         pane.setContent(content);
         pane.setStyle("-fx-font-size: 16px;");
+        pane.setMaxWidth(Double.MAX_VALUE);
         return pane;
     }
 
@@ -145,13 +123,13 @@ public class CommuneDetailsPage {
         VBox box = new VBox(10);
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
-
+    
         Label idLabel = new Label("ID : ");
         idLabel.setStyle("-fx-font-size: 14px;");
-
+    
         Label depLabel = new Label("D\u00e9partement : ");
         depLabel.setStyle("-fx-font-size: 14px;");
-
+    
         Label anneeLabel = new Label("Ann\u00e9e de donn\u00e9es : ");
         anneeLabel.setStyle("-fx-font-size: 14px;");
         
@@ -160,23 +138,22 @@ public class CommuneDetailsPage {
         
         Label importanteLabel = new Label("Importante : ");
         importanteLabel.setStyle("-fx-font-size: 14px;");
-
+    
         Label depCulturellesLabel = new Label("D\u00e9penses culturelles totales : ");
         depCulturellesLabel.setStyle("-fx-font-size: 14px;");
-
+    
         Label gareLabel = new Label("Gare : ");
         depCulturellesLabel.setStyle("-fx-font-size: 14px;");
         
-
-        box.getChildren().addAll(idLabel,depLabel, populationLabel, importanteLabel, anneeLabel, depCulturellesLabel, gareLabel);
+        box.getChildren().addAll(idLabel, depLabel, populationLabel, importanteLabel, anneeLabel, depCulturellesLabel, gareLabel);
         return box;
     }
-
+    
     private static VBox createHousingStatsBox(Commune commune) {
         VBox box = new VBox(10);
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
-
+    
         Label nbMaisonLabel = new Label("Nombre de maisons : ");
         nbMaisonLabel.setStyle("-fx-font-size: 14px;");
         
@@ -192,30 +169,40 @@ public class CommuneDetailsPage {
         Label surfaceMoyLabel = new Label("Surface moyenne : ");
         surfaceMoyLabel.setStyle("-fx-font-size: 14px;");
     
-
         box.getChildren().addAll(nbMaisonLabel, nbAppartLabel, prixMoyenLabel, prixM2MoyenLabel, surfaceMoyLabel);
         return box;
     }
+    
+
 
     private static void updateGeneralInfoBox(Commune commune) {
         ((VBox) generalInfoPane.getContent()).getChildren().forEach(node -> {
             if (node instanceof Label) {
                 String labelText = ((Label) node).getText();
                 if (labelText.startsWith("ID : ")) {
-                    ((Label) node).setText("ID : " + formatValue(commune.getIdCommune()));
+                    ((Label) node).setText("ID : " + commune.getIdCommune());
                 } else if (labelText.startsWith("Population : ")) {
-                    ((Label) node).setText("Population : " + formatValue(commune.getPopulation()));
+                    ((Label) node).setText("Population : " + commune.getPopulation() + " habitants");
+                    if(commune.getPopulation() < 0){
+                        ((Label) node).setText("Population : Information indisponible");
+                    }else{
+                        ((Label) node).setText("Population : " + commune.getPopulation() + " habitants");
+                    }
                 } else if (labelText.startsWith("Importante : ")) {
                     ((Label) node).setText("Importante : " + (commune.isMostImportant() ? "Oui" : "Non"));
                 } else if (labelText.startsWith("Ann\u00e9e de donn\u00e9es : ")) {
-                    ((Label) node).setText("Ann\u00e9e de donn\u00e9es : " + formatValue(commune.getAnnee().getAnnee()));
+                    ((Label) node).setText("Ann\u00e9e de donn\u00e9es : " + commune.getAnnee().getAnnee());
                 } else if (labelText.startsWith("D\u00e9penses culturelles totales : ")) {
-                    ((Label) node).setText("D\u00e9penses culturelles totales : " + formatValue(commune.getDepCulturellesTotales()));
+                    if(commune.getDepCulturellesTotales() < 0){
+                        ((Label) node).setText("D\u00e9penses culturelles totales : Information indisponible");
+                    }else{
+                        ((Label) node).setText("D\u00e9penses culturelles totales : " + commune.getDepCulturellesTotales() + " \u20ac");
+                    }
                 } else if (labelText.startsWith("D\u00e9partement : ")) {
-                    ((Label) node).setText("D\u00e9partement : " + formatValue(commune.getDepartement().getIdDep()));
-                }else if (labelText.startsWith("D\u00e9partement : ")) {
+                    ((Label) node).setText("D\u00e9partement : " + commune.getDepartement().getIdDep());
+                }else if (labelText.startsWith("Gare : ")) {
                     if(commune.aUneGare()){
-                        ((Label) node).setText("Gare : " + formatValue(commune.getGare().getNomGare()));
+                        ((Label) node).setText("Gare : " + commune.getGare().getNomGare());
                     }else{
                         ((Label) node).setText("Gare : Aucune");
                     }
@@ -229,15 +216,27 @@ public class CommuneDetailsPage {
             if (node instanceof Label) {
                 String labelText = ((Label) node).getText();
                 if (labelText.startsWith("Nombre de maisons : ")) {
-                    ((Label) node).setText("Nombre de maisons : " + formatValue(commune.getNbMaison()));
+                    ((Label) node).setText("Nombre de maisons : " + commune.getNbMaison());
                 } else if (labelText.startsWith("Nombre d'appartements : ")) {
-                    ((Label) node).setText("Nombre d'appartements : " + formatValue(commune.getNbAppart()));
+                    ((Label) node).setText("Nombre d'appartements : " + commune.getNbAppart());
                 } else if (labelText.startsWith("Prix moyen : ")) {
-                    ((Label) node).setText("Prix moyen : " + formatValue(commune.getPrixMoyen()));
+                    if(commune.getPrixMoyen() < 0){
+                        ((Label) node).setText("Prix moyen : Information indisponible");
+                    }else{
+                        ((Label) node).setText("Prix moyen : " + commune.getPrixMoyen() +  " \u20ac");
+                    }
                 } else if (labelText.startsWith("Prix moyen par \u33A1 : ")) {
-                    ((Label) node).setText("Prix moyen par \u33A1 : " + formatValue(commune.getPrixM2Moyen()));
+                    if(commune.getPrixM2Moyen() < 0){
+                        ((Label) node).setText("Prix moyen par \u33A1 : Information indisponible");
+                    }else{
+                        ((Label) node).setText("Prix moyen par \u33A1 : " + commune.getPrixM2Moyen() +  " \u20ac");
+                    }
                 } else if (labelText.startsWith("Surface moyenne : ")) {
-                    ((Label) node).setText("Surface moyenne : " + formatValue(commune.getSurfaceMoy()));
+                    if(commune.getSurfaceMoy() < 0){
+                        ((Label) node).setText("Surface moyenne : Information indisponible");
+                    }else{
+                        ((Label) node).setText("Surface moyenne : " + commune.getSurfaceMoy() +  " \u20ac");
+                    }
                 }
             }
         });
@@ -283,21 +282,6 @@ public class CommuneDetailsPage {
         return yearsComboBox;
     }
 
-    private static String formatValue(Object value) {
-        String ret = value.toString();
-        if (value instanceof Number && ((Number) value).doubleValue() < 0) {
-            ret = "Information indisponible";
-        }
-        return ret;
-    }
-
-    private static String formatValue(Object value) {
-        String ret = value.toString();
-        if (value instanceof Number && ((Number) value).doubleValue() < 0) {
-            ret = "Information indisponible";
-        }
-        return ret;
-    }
 
     public static void updateCommuneDetails(Commune commune, Controller controller) {
         nameLabel.setText(commune.getNomCommune());
@@ -306,7 +290,4 @@ public class CommuneDetailsPage {
         updateHousingStatsBox(commune);
     }
 
-    public Image getImageLoc(){
-        return this.backgroundImageLoc;
-    }
 }

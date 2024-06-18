@@ -10,7 +10,7 @@ import data.Gare;
 */
 public class MainScenarioModel {
 
-    private static Annee annee = new Annee(2020, 2.5);;
+    /*private static Annee annee = new Annee(2020, 2.5);;
 
     public static void main(String[] args) {
         testCreationDepartement();
@@ -324,7 +324,7 @@ public class MainScenarioModel {
         
         
     }
-
+*/
     
 }
 

@@ -9,12 +9,15 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
-
+import dao.AeroportService;
 import dao.CommuneService;
+import dao.DepartementService;
 import dao.GareService;
 import dao.UserService;
+import data.Aeroport;
 import data.Annee;
 import data.Commune;
+import data.Departement;
 import data.Gare;
 import data.Utilisateur;
 import view.AccountPage;
@@ -133,6 +136,10 @@ public class Controller implements EventHandler<ActionEvent> {
     private CommuneService communeService;
 
     private List<Annee> listeAnnee;
+
+    private List<Aeroport> listeAeroport;
+
+    private List<Departement> listeDepartement;
 
     /**
     * The constructor of Controller. 
@@ -607,6 +614,30 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+    public void connectionClickedTrouverCheminCommune() {
+        try {
+            if (this.currentUser != null) {
+                System.out.println("Utilisateur actuel : " + this.currentUser.getEmail());
+                Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
+                this.accountPage.start(stage);
+
+                this.accountPage.getFirstNameLabel().setText(currentUser.getPrenom());
+                this.accountPage.getNameLabel().setText(currentUser.getNom());
+                this.accountPage.getEmailLink().setText(currentUser.getEmail());
+            } else {
+                System.out.println("Utilisateur non connecté.");
+                Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
+                this.connectionPage.start(stage);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+
+
+
 
 
 
@@ -645,6 +676,35 @@ public class Controller implements EventHandler<ActionEvent> {
 
             findPath(firstCommuneText, endCommuneText);
         }
+
+        if(e.getSource() == this.trouverCheminCommune.getExportDataButton()){
+            exportData();
+        }
+
+        if(e.getSource() == this.trouverCheminCommune.getPagePrincipalButton()){
+            try {
+                Stage stage = (Stage) this.trouverCheminCommune.getPagePrincipalButton().getScene().getWindow();
+                this.mainPage.start(stage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        if(e.getSource() == this.trouverCheminCommune.getReloadDatabaseButton()){
+            this.communeToute = getCommunesFromDataBase();
+            this.listeUtilisateur = this.userServices.loadAllUsers();
+            try {
+                this.listeGare = this.gareService.getAllGares();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+
+            CustomAlert.showAlert("Chargement Base de Donnees", "La base de données a etait recharge");
+        }
+
+
+
+        
     }
 
     /**
@@ -858,9 +918,20 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     public void verifyAdmin(){
         if (!isAdmin()) {
-            this.mainPage.getEditData().setDisable(true);
-            
+            this.mainPage.getEditData().setDisable(true);            
             //System.out.println("No admin !");
+        } else {
+            this.mainPage.getEditData().setDisable(false);
+        }
+    }
+
+
+    public void verifyAdminTrouverChemin(){
+        if(!isAdmin()){
+            this.trouverCheminCommune.getEditData().setDisable(true);
+        } else {
+            this.trouverCheminCommune.getEditData().setDisable(false);
+
         }
     }
 
@@ -1297,10 +1368,82 @@ public class Controller implements EventHandler<ActionEvent> {
     public void exportData(){
         this.listeGare = this.communeService.getListeGare();
         this.listeAnnee = this.communeService.getListeAnnee();
+        try {
+            this.listeAeroport = new AeroportService().getAllAeroport();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try{
+            this.listeDepartement = new DepartementService().getAllDepartement();
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
 
         communeData();
         gareData();
         anneeData();
+        aeroportData();
+        departementData();
+    }
+
+    public void departementData(){
+        String csvFile = "departementData.csv";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
+            // Écrire l'en-tête du CSV
+            writer.println("nomDep;idDep;invesCulture;aeroports");
+
+            // Écrire chaque Gare dans le fichier CSV
+            for (Departement departement : this.listeDepartement) {
+                writer.println(departmentToCSVRow(departement));
+            }
+            
+            System.out.println("Données exportées avec succès dans " + csvFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String departmentToCSVRow(Departement department) {
+        StringBuilder sb = new StringBuilder();
+        
+        // Append department fields
+        sb.append(department.getNomDep()).append(";");
+        sb.append(department.getIdDep()).append(";");
+        sb.append(department.getInvesCulture2019()).append(";");
+    
+        // Append aeroport names
+        for (Aeroport aeroport : this.listeAeroport) {
+            if(aeroport.getDepartement().getIdDep() == department.getIdDep()){
+                sb.append(aeroport.getNom()).append(",");
+            }
+        }
+        sb.deleteCharAt(sb.length() - 1); // Remove the last comma
+        
+        return sb.toString();
+    }
+    
+
+    public void aeroportData(){
+        String csvFile = "aeroportData.csv";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
+            // Écrire l'en-tête du CSV
+            writer.println("nom;adresse;departement");
+
+            // Écrire chaque Gare dans le fichier CSV
+            for (Aeroport aeroport : this.listeAeroport) {
+                writer.println(aeroportToCSVRow(aeroport));
+            }
+            
+            System.out.println("Données exportées avec succès dans " + csvFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String aeroportToCSVRow(Aeroport aeroport) {
+        return aeroport.getNom() + ";" +
+               aeroport.getAdresse() + ";" +
+               aeroport.getDepartement().getIdDep();                      
     }
 
     public void anneeData(){
