@@ -40,7 +40,6 @@ public class TrouverCheminCommune extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.TOP_CENTER);
@@ -70,6 +69,8 @@ public class TrouverCheminCommune extends Application {
         this.findPathButton = new Button("Trouver Chemin");
         this.findPathButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
         this.findPathButton.setOnAction(this.controller);
+
+        this.controller.verifyAdminTrouverChemin();
 
         this.resultLabel = new Label();
         this.resultLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
@@ -205,5 +206,21 @@ public class TrouverCheminCommune extends Application {
 
     public ImageView getImageUserIcon() {
         return this.userIcon;
+    }
+
+    public Button getExportDataButton(){
+        return this.exportDataButton;
+    }
+
+    public Button getPagePrincipalButton(){
+        return this.pagePrincipale;
+    }
+
+    public Button getReloadDatabaseButton(){
+        return this.reloadDatabase;
+    }
+
+    public Button getEditData(){
+        return this.editData;
     }
 }
