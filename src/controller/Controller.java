@@ -36,6 +36,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 
 import java.util.TimerTask;
@@ -639,6 +641,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
         if(e.getSource() == this.mainPage.getExportButton()){
             exportData();
+            CustomAlert.showAlert("Export des données", "Les données ont bien était exporté");
         }
     }
 
@@ -825,6 +828,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
         if(e.getSource() == this.trouverCheminCommune.getExportDataButton()){
             exportData();
+            CustomAlert.showAlert("Export des données", "Les données ont bien était exporté");
         }
 
         if(e.getSource() == this.trouverCheminCommune.getPagePrincipalButton()){
@@ -1498,6 +1502,9 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
 
+    /**
+    * Allow to get all gare from GareService and put them into listeGare.
+    */
     public void getAllGareFromDatabase(){
         try {
             this.listeGare = this.gareService.getAllGares();
@@ -1509,6 +1516,13 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+
+
+
+
+
+
+    //! EXPORT DES DONNEES
 
 
     public void exportData() {
@@ -1540,7 +1554,7 @@ public class Controller implements EventHandler<ActionEvent> {
             // Écrire l'en-tête du CSV
             writer.println("nomDep;idDep;invesCulture;aeroports");
 
-            // Écrire chaque Gare dans le fichier CSV
+            // Écrire chaque Departement dans le fichier CSV
             for (Departement departement : this.listeDepartement) {
                 writer.println(departmentToCSVRow(departement));
             }
@@ -1578,7 +1592,7 @@ public class Controller implements EventHandler<ActionEvent> {
             // Écrire l'en-tête du CSV
             writer.println("nom;adresse;departement");
 
-            // Écrire chaque Gare dans le fichier CSV
+            // Écrire chaque Aeroport dans le fichier CSV
             for (Aeroport aeroport : this.listeAeroport) {
                 writer.println(aeroportToCSVRow(aeroport));
             }
@@ -1601,7 +1615,7 @@ public class Controller implements EventHandler<ActionEvent> {
             // Écrire l'en-tête du CSV
             writer.println("annee;tauxInflation");
 
-            // Écrire chaque Gare dans le fichier CSV
+            // Écrire chaque Annee dans le fichier CSV
             for (Annee annee : this.listeAnnee) {
                 writer.println(anneeToCSVRow(annee));
             }
@@ -1648,7 +1662,7 @@ public class Controller implements EventHandler<ActionEvent> {
             // Écrire l'en-tête du CSV
             writer.println("idCommune;nomCommune;Annee;nbMaison;nbAppart;prixMoyen;prixM2Moyen;surfaceMoy;depCulturellesTotales;budgetTotal;population;departement;gare");
 
-            // Écrire chaque commune dans le fichier CSV
+            // Écrire chaque Commune dans le fichier CSV
             for (Commune commune : this.communeToute) {
                 writer.println(communeToCSVRow(commune));
             }
@@ -1677,14 +1691,15 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private void createZip() {
         String zipFile = "dataExport.zip";
+        String[] csvFiles = {"departementData.csv", "aeroportData.csv", "anneeData.csv", "gareData.csv", "communeData.csv"};
+
         try (FileOutputStream fos = new FileOutputStream(zipFile);
              ZipOutputStream zos = new ZipOutputStream(fos)) {
 
-            addToZipFile("departementData.csv", zos);
-            addToZipFile("aeroportData.csv", zos);
-            addToZipFile("anneeData.csv", zos);
-            addToZipFile("gareData.csv", zos);
-            addToZipFile("communeData.csv", zos);
+            for (String csvFile : csvFiles) {
+                addToZipFile(csvFile, zos);
+                Files.delete(Paths.get(csvFile));  // Delete the CSV file after adding it to the zip
+            }
 
             System.out.println("Fichiers compressés avec succès dans " + zipFile);
         } catch (IOException e) {
