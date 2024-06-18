@@ -8,6 +8,8 @@ import java.util.Timer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import dao.AeroportService;
 import dao.CommuneService;
@@ -21,6 +23,8 @@ import data.Departement;
 import data.Gare;
 import data.Utilisateur;
 import view.AccountPage;
+import view.AdministratorsPage;
+import view.CommuneDetailsModifPage;
 import view.CommuneDetailsPage;
 import view.ConnectionPage;
 import view.InscriptionPage;
@@ -146,11 +150,16 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private List<Departement> listeDepartement;
 
+    private AdministratorsPage administratorsPage;
+
+    private CommuneDetailsModifPage communeDetailsModifPage;
+
     /**
     * The constructor of Controller. 
     * @param connectionPage
     */
     public Controller(MainPage mainPage) {
+        this.communeDetailsModifPage = new CommuneDetailsModifPage();
         this.userServices = new UserService();
         this.listeUtilisateur = this.userServices.loadAllUsers();
         this.connectionPage = new ConnectionPage(this);
@@ -160,6 +169,7 @@ public class Controller implements EventHandler<ActionEvent> {
         this.trouverCheminCommune = new TrouverCheminCommune(this);
         this.accountPage = new AccountPage(this);
         this.envoieCodeValidation = new CodeAlert(this);
+        this.administratorsPage = new AdministratorsPage(this);
         this.mainPage = mainPage;
 
         this.communeService = new CommuneService();
@@ -170,6 +180,7 @@ public class Controller implements EventHandler<ActionEvent> {
     * The Empty constructor of controller 
     */
     public Controller() {
+        this.communeDetailsModifPage = new CommuneDetailsModifPage();
         this.userServices = new UserService();
         this.listeUtilisateur = this.userServices.loadAllUsers();
         this.connectionPage = new ConnectionPage(this);
@@ -178,6 +189,7 @@ public class Controller implements EventHandler<ActionEvent> {
         this.resetPassword = new ResetPassword(this);
         this.trouverCheminCommune = new TrouverCheminCommune(this);
         this.accountPage = new AccountPage(this);
+        this.administratorsPage = new AdministratorsPage(this);
         this.envoieCodeValidation = new CodeAlert(this);
 
         this.communeService = new CommuneService();
@@ -236,6 +248,10 @@ public class Controller implements EventHandler<ActionEvent> {
 
         // Redirect Actions into CodeAlert.
         handleCodeAlertActions(e);
+
+        handleAdministratorPageActions(e);
+
+        handleCommuneDetailsModifPage(e);
     }
 
 
@@ -629,6 +645,7 @@ public class Controller implements EventHandler<ActionEvent> {
         // If the user clicked on reload database, we call database for had the data stored in the database.
         if(e.getSource() == this.mainPage.getReloadDatabase()){
             this.mainPage.loadCommunes(getCommunesFromDataBase());
+            this.administratorsPage.loadCommunes(getCommunesFromDataBase());
             this.listeUtilisateur = this.userServices.loadAllUsers();
             try {
                 this.listeGare = this.gareService.getAllGares();
@@ -642,6 +659,11 @@ public class Controller implements EventHandler<ActionEvent> {
         if(e.getSource() == this.mainPage.getExportButton()){
             exportData();
             CustomAlert.showAlert("Export des données", "Les données ont bien était exporté");
+        }
+
+        if(e.getSource() == this.mainPage.getEditData()){
+            Stage stage = (Stage) this.mainPage.getExportButton().getScene().getWindow();
+            this.administratorsPage.start(stage);
         }
     }
 
@@ -754,34 +776,383 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-    public void connectionClickedTrouverCheminCommune() {
-        try {
-            if (this.currentUser != null) {
-                System.out.println("Utilisateur actuel : " + this.currentUser.getEmail());
-                Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
-                this.accountPage.start(stage);
 
-                this.accountPage.getFirstNameLabel().setText(currentUser.getPrenom());
-                this.accountPage.getNameLabel().setText(currentUser.getNom());
-                this.accountPage.getEmailLink().setText(currentUser.getEmail());
-                String utilisateurEtat = "";
-                if(this.userServices.userIsAdmin(currentUser.getEmail()) == 1){
-                    this.currentUser.setAdmin(true);
-                    utilisateurEtat = "Administrateur";
-                } else {
-                    this.currentUser.setAdmin(false);
-                    utilisateurEtat = "Utilisateur";
-                }
-                this.accountPage.getAdmin().setText(utilisateurEtat);
-            } else {
-                System.out.println("Utilisateur non connecté.");
-                Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
-                this.connectionPage.start(stage);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //! AdministratorPage
+
+    private void handleAdministratorPageActions(ActionEvent e) {
+        // if search field is triggered.
+        if(e.getSource() == this.administratorsPage.getSearchField()){
+            // get the text from search field.
+            String searchText = this.administratorsPage.getSearchField().getText().trim();
+
+            // we handle search event with the text of input.
+            handleSearchEventAdminPage(searchText);
+        }
+
+        // when user clicked to CheminLePlusCourt button we launch trouverCheminCommune page.
+        if(e.getSource() == this.administratorsPage.getButtonCheminLePlusCourt()){
+            try {
+                Stage stage = (Stage) this.administratorsPage.getButtonCheminLePlusCourt().getScene().getWindow();
+                this.trouverCheminCommune.start(stage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        }
+
+        // if user clicked on the button finistere we display only the commune in the Finistere department.
+        if(e.getSource() == this.administratorsPage.getFinistereFilterButton()){
+            applyFilterAdminPage(29);
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+            this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyleFocused);
+            this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getIlleEtVilaineFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getToutesLesCommunes().setStyle(buttonStyle);
+        }
+
+        // if user clicked on the button Morbihan, we display only the commune in the Morbihan department.
+        if(e.getSource() == this.administratorsPage.getMorbihanFilterButton()){
+            applyFilterAdminPage(56);
+
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+                this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyle);
+                this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyle);
+                this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyleFocused);
+                this.administratorsPage.getIlleEtVilaineFilterButton().setStyle(buttonStyle);
+                this.administratorsPage.getToutesLesCommunes().setStyle(buttonStyle);
+        }
+
+        // if user clicked on the button CoteArmor, we display only the commune in the CoteArmor department.
+        if(e.getSource() == this.administratorsPage.getCoteArmorFilterButton()){
+            applyFilterAdminPage(22);
+
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+                this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyle);
+                this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyleFocused);
+                this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyle);
+                this.administratorsPage.getIlleEtVilaineFilterButton().setStyle(buttonStyle);
+                this.administratorsPage.getToutesLesCommunes().setStyle(buttonStyle);
+        }
+
+        // if user clicked on the button IlleEtVillaine, we display only the commune in the IlleEtVillaine department.
+        if(e.getSource() == this.administratorsPage.getIlleEtVilaineFilterButton()){
+            applyFilterAdminPage(35);
+
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+            this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getIlleEtVilaineFilterButton().setStyle(buttonStyleFocused);
+            this.administratorsPage.getToutesLesCommunes().setStyle(buttonStyle);
+        }
+
+        // if the user clicked on all communes, we display all communes.
+        if(e.getSource() == this.administratorsPage.getToutesLesCommunes()){
+            getCommuneAdminPage();
+
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+            this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getIlleEtVilaineFilterButton().setStyle(buttonStyle);
+            this.administratorsPage.getToutesLesCommunes().setStyle(buttonStyle);
+            this.administratorsPage.getToutesLesCommunes().setStyle(buttonStyleFocused);
+        }
+
+        // If the user clicked on reload database, we call database for had the data stored in the database.
+        if(e.getSource() == this.administratorsPage.getReloadDatabase()){
+            this.administratorsPage.loadCommunes(getCommunesFromDataBase());
+            this.listeUtilisateur = this.userServices.loadAllUsers();
+            try {
+                this.listeGare = this.gareService.getAllGares();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+
+            CustomAlert.showAlert("Chargement Base de Donnees", "Le chargement est fini.");
+        }
+
+        if(e.getSource() == this.administratorsPage.getExportButton()){
+            exportData();
+            CustomAlert.showAlert("Export des données", "Les données ont bien était exporté");
+        }
+
+        if(e.getSource() == this.administratorsPage.getEditData()){
+            Stage stage = (Stage) this.administratorsPage.getExportButton().getScene().getWindow();
+            this.administratorsPage.start(stage);
         }
     }
+
+
+    /**
+    * Allow to search a commune and update the view, from the list of commune. 
+    * @param searchText User input
+    */
+    public void handleSearchEventAdminPage(String searchText) {
+        List<Commune> filteredCommunes = getFilteredCommunesAdminPage(searchText);
+        this.administratorsPage.updateCommunesListView(filteredCommunes);
+        this.administratorsPage.getNumberOfRow().setText(filteredCommunes.size() + " r\u00e9sultats");
+    }  
+
+    /**
+    * Search commune in the department specified in parameters, create an ArrayList containing all of these commune.
+    * and change the mainPage list with the filteredCommune list.
+    * @param idDep The Department ID.
+    */
+    public void applyFilterAdminPage(int idDep) {
+        ArrayList<Commune> filterList = new ArrayList<Commune>();
+
+        for (Commune commune : this.communesRecente) {
+            if (commune.getDepartement().getIdDep() == idDep) {
+                filterList.add(commune);
+            }
+        }        
+
+        this.administratorsPage.updateCommunesListView(filterList);
+        this.administratorsPage.getNumberOfRow().setText(filterList.size() + " r\u00e9sultats");
+    }
+
+     /**
+    * Change the list of commune displayed in the MainPage, with all communes (we display in the mainPage only most recent commune). 
+    */
+    public void getCommuneAdminPage(){
+        this.administratorsPage.updateCommunesListView(this.communesRecente);
+        this.administratorsPage.getNumberOfRow().setText(this.communesRecente.size() + " r\u00e9sultats");
+    }
+
+     /**
+    * search all communes starts with the users input and put them into an ArrayList
+    * @param searchText the name of the commune we search.
+    * @return An ArrayList of commune.
+    */
+    public ArrayList<Commune> getFilteredCommunesAdminPage(String searchText) {
+        ArrayList<Commune> allCommunes = this.communesRecente;
+        ArrayList<Commune> filteredCommunes = new ArrayList<>();
+        
+        
+        String lowerCaseSearchText = searchText.toLowerCase();
+        for (Commune commune : allCommunes) {
+            if (commune.getNomCommune().toLowerCase().startsWith(lowerCaseSearchText)) {
+                filteredCommunes.add(commune);
+            }
+        }
+        //Change result label with the numbers of commune found.
+        this.administratorsPage.getNumberOfRow().setText(filteredCommunes.size() + " r\u00e9sultats");
+        return filteredCommunes;
+    }
+
+    /**
+    * Open a pop-up styled page for had all data from a commune.
+    * @param commune
+    */
+    public void editCommuneDetails(Commune commune){
+        try {
+            this.communeDetailsModifPage.showCommune(commune, this);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // ! ----- CommuneDetailsPage
+
+
+
+
+    private void handleCommuneDetailsModifPage(ActionEvent e){
+        if(e.getSource() == this.communeDetailsModifPage.getSaveButton()){
+            this.communeService.updateCommuneEtDonneesAnnuelles(Integer.parseInt(this.communeDetailsModifPage.getIdTextFieldValue()), 
+            Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText()), 
+            Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText()), 
+            Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText()), 
+            Integer.parseInt(this.communeDetailsModifPage.getPrixM2MoyenText()), 
+            Integer.parseInt(this.communeDetailsModifPage.getSurfaceMoyenneText()), 
+            Integer.parseInt(this.communeDetailsModifPage.getDepCulturellesTextFieldValue()), 
+            Integer.parseInt(this.communeDetailsModifPage.getBudgetTotalField().getText()), 
+            Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue()), 
+            Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()));
+
+            Commune communeAvantModif = this.communeDetailsModifPage.getCommuneAvantModif();
+
+            communeAvantModif.setNbMaison(Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText()));
+            communeAvantModif.setNbAppart(Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText()));
+            communeAvantModif.setPrixMoyen(Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText()));
+            communeAvantModif.setPrixM2Moyen(Integer.parseInt(this.communeDetailsModifPage.getPrixM2MoyenText()));
+            communeAvantModif.setSurfaceMoy(Integer.parseInt(this.communeDetailsModifPage.getSurfaceMoyenneText()));
+            communeAvantModif.setDepCulturellesTotales(Integer.parseInt(this.communeDetailsModifPage.getDepCulturellesTextFieldValue()));
+            communeAvantModif.setBudgetTotal(Integer.parseInt(this.communeDetailsModifPage.getBudgetTotalField().getText()));
+            communeAvantModif.setPopulation(Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue()));
+
+            this.administratorsPage.updateCommunesListView(this.communesRecente);
+            this.mainPage.updateCommunesListView(this.communesRecente);
+        }
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -927,7 +1298,34 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
-    
+    public void connectionClickedTrouverCheminCommune() {
+        try {
+            if (this.currentUser != null) {
+                System.out.println("Utilisateur actuel : " + this.currentUser.getEmail());
+                Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
+                this.accountPage.start(stage);
+
+                this.accountPage.getFirstNameLabel().setText(currentUser.getPrenom());
+                this.accountPage.getNameLabel().setText(currentUser.getNom());
+                this.accountPage.getEmailLink().setText(currentUser.getEmail());
+                String utilisateurEtat = "";
+                if(this.userServices.userIsAdmin(currentUser.getEmail()) == 1){
+                    this.currentUser.setAdmin(true);
+                    utilisateurEtat = "Administrateur";
+                } else {
+                    this.currentUser.setAdmin(false);
+                    utilisateurEtat = "Utilisateur";
+                }
+                this.accountPage.getAdmin().setText(utilisateurEtat);
+            } else {
+                System.out.println("Utilisateur non connecté.");
+                Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
+                this.connectionPage.start(stage);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 
 

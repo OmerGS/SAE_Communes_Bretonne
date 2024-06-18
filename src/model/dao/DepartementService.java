@@ -65,4 +65,73 @@ public class DepartementService {
         }
         return departements;
     }
+
+
+
+
+    public void updateDepartement(int idDep, String newNomDep, double newInvestCulture2019) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "UPDATE Departement SET nomDep = ?, investissementCulturel2019 = ? WHERE idDep = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setString(1, newNomDep);
+                preparedStatement.setDouble(2, newInvestCulture2019);
+                preparedStatement.setInt(3, idDep);
+                preparedStatement.executeUpdate();
+                System.out.println("Département mis à jour avec succès.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void insertDepartement(Departement departement) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "INSERT INTO Departement (idDep, nomDep, investissementCulturel2019) VALUES (?, ?, ?)";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setInt(1, departement.getIdDep());
+                preparedStatement.setString(2, departement.getNomDep());
+                preparedStatement.setDouble(3, departement.getInvesCulture2019());
+                preparedStatement.executeUpdate();
+                System.out.println("Département inséré avec succès dans la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void dropDepartement(int idDep) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Departement WHERE idDep = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setInt(1, idDep);
+                preparedStatement.executeUpdate();
+                System.out.println("Département supprimé avec succès de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void dropAllDepartements() {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Departement";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.executeUpdate();
+                System.out.println("Tous les départements ont été supprimés de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -72,4 +72,69 @@ public class AnneeService {
         }
         return annees;
     }
+
+
+
+    public void insertAnnee(Annee annee) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "INSERT INTO Annee (annee, tauxInflation) VALUES (?, ?)";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setInt(1, annee.getAnnee());
+                preparedStatement.setDouble(2, annee.getTauxInflation());
+                preparedStatement.executeUpdate();
+                System.out.println("Année insérée avec succès dans la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void updateAnnee(int annee, double newTauxInflation) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "UPDATE Annee SET tauxInflation = ? WHERE annee = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setDouble(1, newTauxInflation);
+                preparedStatement.setInt(2, annee);
+                preparedStatement.executeUpdate();
+                System.out.println("Année mise à jour avec succès.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void dropAnnee(int annee) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Annee WHERE annee = ?";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.setInt(1, annee);
+                preparedStatement.executeUpdate();
+                System.out.println("Année supprimée avec succès de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dropAllAnnees() {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+            String requeteSQL = "DELETE FROM Annee";
+            try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+                preparedStatement.executeUpdate();
+                System.out.println("Toutes les années ont été supprimées de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
