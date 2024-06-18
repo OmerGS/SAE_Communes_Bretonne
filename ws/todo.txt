@@ -1,15 +1,21 @@
-OmerGS : Review isValidEmail method in the Controller.
-OmerGS : Account Page : view if you are admin are not possibility to change password.
-OmerGS : Administrators Page : display only if your are administrator you can edit, create, update, delete data from Commune, Departement, Gare, Aeroport, Annee
-OmerGS : Backend of FavoritePage (database connection and storage of commune)
-OmerGS : Export data to CSV (All of the database, but not user)
+-> ModifierPage : Ajouter
+		          Supprimer
+                  Modifier
+                  Lire
+
+Commune, Departement, Gare, Aeroport et Année (faire une page de test avec des trucs elementaire)
 
 
-Bray : Account Page : Fait le CSS et les images
-Bray : AdministratorsPage qui doit afficher toutes les communes comme MainPage mais avec un bouton Modifer a coté de chaque commune.
-Bray : FavoritePage qui ressemble à MainPage mais qui doit être vide (enelve tout les trucs qui sert a rien)
-Bray : Modifier TrouverCommunePage pour qu'il ressemble à la MainPage
 
-Romain : Change the style of the CommuneDetailsPage
+-> Bug affichage plan lors de selection d'une commune
 
-Romain OU Bray : Changer le style CSS de la MainPage pour qu'il ressemble au Figma.
+
+
+-> Envoyer l'export par mail
+-> Telecharger export en .zip
+-> Verifier tout les textes pour qu'ils soit correctement ecrit
+-> Enlever tout les elements de debugging.
+-> Dans accountPage faire un onglet, demander mes données (va envoyer par mail tout ce qu'on a sur l'utilisateur).
+-> Onglet Contact (envoyer mail auto)
+-> Modifer le mot de passe directement dans accountPage
+-> Voir la localisation d'une commune (dans CommuneDetailsPage)

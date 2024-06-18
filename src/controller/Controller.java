@@ -32,6 +32,7 @@ import view.misc.CustomAlert;
 import view.ForgotPassword;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,6 +41,8 @@ import java.sql.SQLException;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.mail.MessagingException;
 
@@ -474,26 +477,151 @@ public class Controller implements EventHandler<ActionEvent> {
         // if user clicked on the button finistere we display only the commune in the Finistere department.
         if(e.getSource() == this.mainPage.getFinistereFilterButton()){
             applyFilter(29);
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+            this.mainPage.getFinistereFilterButton().setStyle(buttonStyleFocused);
+            this.mainPage.getCoteArmorFilterButton().setStyle(buttonStyle);
+            this.mainPage.getMorbihanFilterButton().setStyle(buttonStyle);
+            this.mainPage.getIlleEtVilaineFilterButton().setStyle(buttonStyle);
+            this.mainPage.getToutesLesCommunes().setStyle(buttonStyle);
         }
 
         // if user clicked on the button Morbihan, we display only the commune in the Morbihan department.
         if(e.getSource() == this.mainPage.getMorbihanFilterButton()){
             applyFilter(56);
+
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+                this.mainPage.getFinistereFilterButton().setStyle(buttonStyle);
+                this.mainPage.getCoteArmorFilterButton().setStyle(buttonStyle);
+                this.mainPage.getMorbihanFilterButton().setStyle(buttonStyleFocused);
+                this.mainPage.getIlleEtVilaineFilterButton().setStyle(buttonStyle);
+                this.mainPage.getToutesLesCommunes().setStyle(buttonStyle);
         }
 
         // if user clicked on the button CoteArmor, we display only the commune in the CoteArmor department.
         if(e.getSource() == this.mainPage.getCoteArmorFilterButton()){
             applyFilter(22);
+
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+                this.mainPage.getFinistereFilterButton().setStyle(buttonStyle);
+                this.mainPage.getCoteArmorFilterButton().setStyle(buttonStyleFocused);
+                this.mainPage.getMorbihanFilterButton().setStyle(buttonStyle);
+                this.mainPage.getIlleEtVilaineFilterButton().setStyle(buttonStyle);
+                this.mainPage.getToutesLesCommunes().setStyle(buttonStyle);
         }
 
         // if user clicked on the button IlleEtVillaine, we display only the commune in the IlleEtVillaine department.
         if(e.getSource() == this.mainPage.getIlleEtVilaineFilterButton()){
             applyFilter(35);
+
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+            this.mainPage.getFinistereFilterButton().setStyle(buttonStyle);
+            this.mainPage.getCoteArmorFilterButton().setStyle(buttonStyle);
+            this.mainPage.getMorbihanFilterButton().setStyle(buttonStyle);
+            this.mainPage.getIlleEtVilaineFilterButton().setStyle(buttonStyleFocused);
+            this.mainPage.getToutesLesCommunes().setStyle(buttonStyle);
         }
 
         // if the user clicked on all communes, we display all communes.
         if(e.getSource() == this.mainPage.getToutesLesCommunes()){
             getCommune();
+
+            String buttonStyleFocused = 
+                "-fx-background-color: #C4C5CF; " +
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: red; " +
+                "-fx-border-width: 2px;";
+
+            String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                "-fx-text-fill: #000000; " +      
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 14px; " +
+                "-fx-cursor: hand;";
+
+            this.mainPage.getFinistereFilterButton().setStyle(buttonStyle);
+            this.mainPage.getCoteArmorFilterButton().setStyle(buttonStyle);
+            this.mainPage.getMorbihanFilterButton().setStyle(buttonStyle);
+            this.mainPage.getIlleEtVilaineFilterButton().setStyle(buttonStyle);
+            this.mainPage.getToutesLesCommunes().setStyle(buttonStyle);
+            this.mainPage.getToutesLesCommunes().setStyle(buttonStyleFocused);
         }
 
         // If the user clicked on reload database, we call database for had the data stored in the database.
@@ -599,6 +727,15 @@ public class Controller implements EventHandler<ActionEvent> {
                 this.accountPage.getFirstNameLabel().setText(currentUser.getPrenom());
                 this.accountPage.getNameLabel().setText(currentUser.getNom());
                 this.accountPage.getEmailLink().setText(currentUser.getEmail());
+                String utilisateurEtat = "";
+                if(this.userServices.userIsAdmin(currentUser.getEmail()) == 1){
+                    this.currentUser.setAdmin(true);
+                    utilisateurEtat = "Administrateur";
+                } else {
+                    this.currentUser.setAdmin(false);
+                    utilisateurEtat = "Utilisateur";
+                }
+                this.accountPage.getAdmin().setText(utilisateurEtat);
             } else {
                 System.out.println("Utilisateur non connecté.");
                 Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
@@ -624,6 +761,15 @@ public class Controller implements EventHandler<ActionEvent> {
                 this.accountPage.getFirstNameLabel().setText(currentUser.getPrenom());
                 this.accountPage.getNameLabel().setText(currentUser.getNom());
                 this.accountPage.getEmailLink().setText(currentUser.getEmail());
+                String utilisateurEtat = "";
+                if(this.userServices.userIsAdmin(currentUser.getEmail()) == 1){
+                    this.currentUser.setAdmin(true);
+                    utilisateurEtat = "Administrateur";
+                } else {
+                    this.currentUser.setAdmin(false);
+                    utilisateurEtat = "Utilisateur";
+                }
+                this.accountPage.getAdmin().setText(utilisateurEtat);
             } else {
                 System.out.println("Utilisateur non connecté.");
                 Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
@@ -1365,7 +1511,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-    public void exportData(){
+    public void exportData() {
         this.listeGare = this.communeService.getListeGare();
         this.listeAnnee = this.communeService.getListeAnnee();
         try {
@@ -1373,9 +1519,9 @@ public class Controller implements EventHandler<ActionEvent> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try{
+        try {
             this.listeDepartement = new DepartementService().getAllDepartement();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -1384,9 +1530,11 @@ public class Controller implements EventHandler<ActionEvent> {
         anneeData();
         aeroportData();
         departementData();
+
+        createZip();
     }
 
-    public void departementData(){
+    public void departementData() {
         String csvFile = "departementData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
             // Écrire l'en-tête du CSV
@@ -1396,7 +1544,7 @@ public class Controller implements EventHandler<ActionEvent> {
             for (Departement departement : this.listeDepartement) {
                 writer.println(departmentToCSVRow(departement));
             }
-            
+
             System.out.println("Données exportées avec succès dans " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -1405,25 +1553,26 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private String departmentToCSVRow(Departement department) {
         StringBuilder sb = new StringBuilder();
-        
+
         // Append department fields
         sb.append(department.getNomDep()).append(";");
         sb.append(department.getIdDep()).append(";");
         sb.append(department.getInvesCulture2019()).append(";");
-    
+
         // Append aeroport names
         for (Aeroport aeroport : this.listeAeroport) {
-            if(aeroport.getDepartement().getIdDep() == department.getIdDep()){
+            if (aeroport.getDepartement().getIdDep() == department.getIdDep()) {
                 sb.append(aeroport.getNom()).append(",");
             }
         }
-        sb.deleteCharAt(sb.length() - 1); // Remove the last comma
-        
+        if (sb.charAt(sb.length() - 1) == ',') {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+
         return sb.toString();
     }
-    
 
-    public void aeroportData(){
+    public void aeroportData() {
         String csvFile = "aeroportData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
             // Écrire l'en-tête du CSV
@@ -1433,7 +1582,7 @@ public class Controller implements EventHandler<ActionEvent> {
             for (Aeroport aeroport : this.listeAeroport) {
                 writer.println(aeroportToCSVRow(aeroport));
             }
-            
+
             System.out.println("Données exportées avec succès dans " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -1442,11 +1591,11 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private String aeroportToCSVRow(Aeroport aeroport) {
         return aeroport.getNom() + ";" +
-               aeroport.getAdresse() + ";" +
-               aeroport.getDepartement().getIdDep();                      
+                aeroport.getAdresse() + ";" +
+                aeroport.getDepartement().getIdDep();
     }
 
-    public void anneeData(){
+    public void anneeData() {
         String csvFile = "anneeData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
             // Écrire l'en-tête du CSV
@@ -1456,7 +1605,7 @@ public class Controller implements EventHandler<ActionEvent> {
             for (Annee annee : this.listeAnnee) {
                 writer.println(anneeToCSVRow(annee));
             }
-            
+
             System.out.println("Données exportées avec succès dans " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -1465,17 +1614,10 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private String anneeToCSVRow(Annee annee) {
         return annee.getAnnee() + ";" +
-               annee.getTauxInflation();
-                            
+                annee.getTauxInflation();
     }
 
-
-
-
-
-
-
-    public void gareData(){
+    public void gareData() {
         String csvFile = "gareData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
             // Écrire l'en-tête du CSV
@@ -1485,7 +1627,7 @@ public class Controller implements EventHandler<ActionEvent> {
             for (Gare gare : this.listeGare) {
                 writer.println(gareToCSVRow(gare));
             }
-            
+
             System.out.println("Données exportées avec succès dans " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -1494,13 +1636,13 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private String gareToCSVRow(Gare gare) {
         return gare.getCodeGare() + ";" +
-               gare.getNomGare() + ";" +
-               gare.isEstFret() + ";" + 
-               gare.isEstVoyageur() + ";" +
-               gare.getCommune();               
+                gare.getNomGare() + ";" +
+                gare.isEstFret() + ";" +
+                gare.isEstVoyageur() + ";" +
+                gare.getCommune();
     }
 
-    public void communeData(){
+    public void communeData() {
         String csvFile = "communeData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
             // Écrire l'en-tête du CSV
@@ -1508,9 +1650,9 @@ public class Controller implements EventHandler<ActionEvent> {
 
             // Écrire chaque commune dans le fichier CSV
             for (Commune commune : this.communeToute) {
-                writer.println(communeToCSVRow(commune) + ";");
+                writer.println(communeToCSVRow(commune));
             }
-            
+
             System.out.println("Données exportées avec succès dans " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -1519,17 +1661,48 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private String communeToCSVRow(Commune commune) {
         return commune.getIdCommune() + ";" +
-               commune.getNomCommune() + ";" +
-               commune.getAnnee().getAnnee() + ";" +
-               commune.getNbMaison() + ";" +
-               commune.getNbAppart() + ";" +
-               commune.getPrixMoyen() + ";" +
-               commune.getPrixM2Moyen() + ";" +
-               commune.getSurfaceMoy() + ";" +
-               commune.getDepCulturellesTotales() + ";" +
-               commune.getBudgetTotal() + ";" +
-               commune.getPopulation() + ";" +
-               commune.getDepartement().getIdDep() + ";" +
-               commune.getGare();
+                commune.getNomCommune() + ";" +
+                commune.getAnnee().getAnnee() + ";" +
+                commune.getNbMaison() + ";" +
+                commune.getNbAppart() + ";" +
+                commune.getPrixMoyen() + ";" +
+                commune.getPrixM2Moyen() + ";" +
+                commune.getSurfaceMoy() + ";" +
+                commune.getDepCulturellesTotales() + ";" +
+                commune.getBudgetTotal() + ";" +
+                commune.getPopulation() + ";" +
+                commune.getDepartement().getIdDep() + ";" +
+                commune.getGare();
+    }
+
+    private void createZip() {
+        String zipFile = "dataExport.zip";
+        try (FileOutputStream fos = new FileOutputStream(zipFile);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            addToZipFile("departementData.csv", zos);
+            addToZipFile("aeroportData.csv", zos);
+            addToZipFile("anneeData.csv", zos);
+            addToZipFile("gareData.csv", zos);
+            addToZipFile("communeData.csv", zos);
+
+            System.out.println("Fichiers compressés avec succès dans " + zipFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addToZipFile(String fileName, ZipOutputStream zos) throws IOException {
+        try (FileInputStream fis = new FileInputStream(fileName)) {
+            ZipEntry zipEntry = new ZipEntry(fileName);
+            zos.putNextEntry(zipEntry);
+
+            byte[] bytes = new byte[1024];
+            int length;
+            while ((length = fis.read(bytes)) >= 0) {
+                zos.write(bytes, 0, length);
+            }
+            zos.closeEntry();
+        }
     }
 }

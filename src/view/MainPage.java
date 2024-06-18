@@ -49,12 +49,11 @@ public class MainPage extends Application {
     public void start(Stage primaryStage) {
         // Initialize resultsLabel
         this.resultsLabel = new Label(this.nbCommune + " r\u00e9sultats");
-        this.resultsLabel.setStyle("-fx-font-size: 18px; -fx-padding: 10px;");
+        this.resultsLabel.setStyle("-fx-font-size: 18px; -fx-padding: 10px; -fx-text-fill: white;");
 
         // Create filter button
         Button filterButton = new Button("Filtrer");
         filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-
 
         // Checkboxes for filters
         this.toutesLesCommunes = new Button("Toutes");
@@ -63,13 +62,14 @@ public class MainPage extends Application {
         this.coteArmorFilterButton = new Button("Côtes-d'Armor");
         this.illeEtVilaineFilterButton = new Button("Ille-et-Vilaine");
 
-        String buttonStyle = "-fx-background-color: #007bff; " +
-                             "-fx-text-fill: #fff; " +
-                             "-fx-background-radius: 10px; " +
-                             "-fx-border-radius: 10px; " +
-                             "-fx-padding: 10px 20px; " +
-                             "-fx-font-size: 14px; " +
-                             "-fx-cursor: hand;";
+        String buttonStyle = "-fx-background-color: #C4C5CF; " + 
+                     "-fx-text-fill: #000000; " +      
+                     "-fx-background-radius: 10px; " +
+                     "-fx-border-radius: 10px; " +
+                     "-fx-padding: 10px 20px; " +
+                     "-fx-font-size: 14px; " +
+                     "-fx-cursor: hand;";
+
 
         // Appliquer le style à chaque bouton
         this.toutesLesCommunes.setStyle(buttonStyle);
@@ -80,18 +80,17 @@ public class MainPage extends Application {
 
         HBox communeFilterBox = new HBox(5, toutesLesCommunes, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
 
-
         this.toutesLesCommunes.setOnAction(this.controller);
         this.morbihanFilterButton.setOnAction(this.controller);
         this.finistereFilterButton.setOnAction(this.controller);
         this.coteArmorFilterButton.setOnAction(this.controller);
         this.illeEtVilaineFilterButton.setOnAction(this.controller);
 
-
         // HBox for results label and filter button
         HBox resultsBox = new HBox(10);
         resultsBox.setAlignment(Pos.CENTER_LEFT);
         resultsBox.setPadding(new Insets(10));
+        resultsBox.setStyle("-fx-background-color: #5F606D;");
 
         // Add a Region to take up the empty space
         Region spacer2 = new Region();
@@ -99,7 +98,6 @@ public class MainPage extends Application {
 
         // Add the resultsLabel, spacer, and filterButton to the HBox
         resultsBox.getChildren().addAll(this.resultsLabel, spacer2, communeFilterBox);
-
 
         // Logo image
         ImageView logo = new ImageView(new Image("file:../resources/image/logo_bretagne.png"));
@@ -175,7 +173,7 @@ public class MainPage extends Application {
 
         // ListView to display communes
         communeListView.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        communeListView.setStyle("-fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px;");
+        communeListView.setMaxWidth(800);  // Set maximum width
 
         // Custom cell factory to display Commune objects
         communeListView.setCellFactory(new Callback<>() {
@@ -197,7 +195,8 @@ public class MainPage extends Application {
         // VBox to center the ListView and make it grow
         VBox centerBox = new VBox(10);
         centerBox.setAlignment(Pos.TOP_CENTER);
-        centerBox.setStyle("-fx-background-color: linear-gradient(to bottom, #f0f0f0, #c0c0c0);");
+        centerBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6C7BD0 0%, white 50%, #6C7BD0 100%);");
+
         centerBox.getChildren().addAll(resultsBox, communeListView);
         VBox.setVgrow(communeListView, Priority.ALWAYS);
 
@@ -207,15 +206,19 @@ public class MainPage extends Application {
 
         this.controller.verifyAdmin();
 
+        // StackPane to hold centerBox and menuBox
         StackPane mainPane = new StackPane();
         mainPane.getChildren().addAll(centerBox, menuBox);
         StackPane.setAlignment(menuBox, Pos.CENTER_RIGHT);
 
-        VBox mainBox = new VBox(10);
-        mainBox.getChildren().addAll(topBar, mainPane);
-        VBox.setVgrow(mainPane, Priority.ALWAYS);
 
-        Scene scene = new Scene(mainBox, 800, 600);
+        // Main container with topBar and main content
+        BorderPane root = new BorderPane();
+        root.setTop(topBar);
+        root.setCenter(mainPane);
+        root.setStyle("-fx-background-color: #ffffff;");
+
+        Scene scene = new Scene(root, 1600, 900);
         scene.getStylesheets().add("file:../resources/css/style.css");
 
         Screen screen = Screen.getPrimary();

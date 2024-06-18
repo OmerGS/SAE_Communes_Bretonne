@@ -29,6 +29,8 @@ public class Utilisateur {
     */
     private String email;
 
+    private boolean isAdmin;
+
     public void setNom(String nom){
         if(nom != null){
             this.nom = nom;
@@ -95,6 +97,14 @@ public class Utilisateur {
     */
     public String getSalt() {
         return salt;
+    }
+
+    public boolean isAdmin(){
+        return(this.isAdmin);
+    }
+
+    public void setAdmin(boolean admin){
+        this.isAdmin = admin;
     }
 
     /**
