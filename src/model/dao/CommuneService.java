@@ -4,6 +4,7 @@ import data.Annee;
 import data.Commune;
 import data.Departement;
 import data.Gare;
+import data.Utilisateur;
 import data.exceptions.InvalidCommuneIdException;
 import data.exceptions.InvalidCommuneNameException;
 
@@ -227,6 +228,114 @@ public class CommuneService {
         }
         return null;
     }
+
+
+    
+    public void insertCommuneEtDonneesAnnuelles(Commune commune) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+    
+            String insertCommuneSQL = "INSERT INTO Commune (idCommune, nomCommune, leDepartement) VALUES (?, ?, ?)";
+            String insertDonneesAnnuellesSQL = "INSERT INTO DonneesAnnuelles (lAnnee, laCommune, nbMaison, nbAppart, prixMoyen, prixM2Moyen, SurfaceMoy, depensesCulturellesTotales, budgetTotal, population) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+            try (PreparedStatement communeStatement = connexion.prepareStatement(insertCommuneSQL);
+                 PreparedStatement donneesStatement = connexion.prepareStatement(insertDonneesAnnuellesSQL)) {
+    
+                // Insérer les données de la commune
+                communeStatement.setInt(1, commune.getIdCommune());
+                communeStatement.setString(2, commune.getNomCommune());
+                communeStatement.setInt(3, commune.getDepartement().getIdDep());
+                communeStatement.executeUpdate();
+    
+                // Insérer les données annuelles
+                donneesStatement.setInt(1, commune.getAnnee().getAnnee());
+                donneesStatement.setInt(2, commune.getIdCommune());
+                donneesStatement.setInt(3, commune.getNbMaison());
+                donneesStatement.setInt(4, commune.getNbAppart());
+                donneesStatement.setDouble(5, commune.getPrixMoyen());
+                donneesStatement.setDouble(6, commune.getPrixM2Moyen());
+                donneesStatement.setDouble(7, commune.getSurfaceMoy());
+                donneesStatement.setDouble(8, commune.getDepCulturellesTotales());
+                donneesStatement.setDouble(9, commune.getBudgetTotal());
+                donneesStatement.setInt(10, commune.getPopulation());
+                donneesStatement.executeUpdate();
+    
+                System.out.println("Commune et données annuelles enregistrées avec succès dans la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void dropCommuneEtDonneesAnnuelles(int idCommune) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+    
+            String deleteCommuneSQL = "DELETE FROM Commune WHERE idCommune = ?";
+            String deleteDonneesAnnuellesSQL = "DELETE FROM DonneesAnnuelles WHERE laCommune = ?";
+    
+            try (PreparedStatement communeStatement = connexion.prepareStatement(deleteCommuneSQL);
+                 PreparedStatement donneesStatement = connexion.prepareStatement(deleteDonneesAnnuellesSQL)) {
+    
+                // Supprimer les données annuelles
+                donneesStatement.setInt(1, idCommune);
+                donneesStatement.executeUpdate();
+    
+                // Supprimer la commune
+                communeStatement.setInt(1, idCommune);
+                communeStatement.executeUpdate();
+    
+                System.out.println("Commune et données annuelles supprimées avec succès de la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void updateCommuneEtDonneesAnnuelles(int idCommune, String newNomCommune, int newDepartementId, int newNbMaison, int newNbAppart, double newPrixMoyen, double newPrixM2Moyen, double newSurfaceMoy, double newDepensesCulturellesTotales, double newBudgetTotal, int newPopulation, int newAnnee) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+    
+            String updateCommuneSQL = "UPDATE Commune SET nomCommune = ?, leDepartement = ? WHERE idCommune = ?";
+            String updateDonneesAnnuellesSQL = "UPDATE DonneesAnnuelles SET nbMaison = ?, nbAppart = ?, prixMoyen = ?, prixM2Moyen = ?, SurfaceMoy = ?, depensesCulturellesTotales = ?, budgetTotal = ?, population = ?, lAnnee = ? WHERE laCommune = ?";
+    
+            try (PreparedStatement communeStatement = connexion.prepareStatement(updateCommuneSQL);
+                 PreparedStatement donneesStatement = connexion.prepareStatement(updateDonneesAnnuellesSQL)) {
+    
+                // Mettre à jour les données de la commune
+                communeStatement.setString(1, newNomCommune);
+                communeStatement.setInt(2, newDepartementId);
+                communeStatement.setInt(3, idCommune);
+                communeStatement.executeUpdate();
+    
+                // Mettre à jour les données annuelles
+                donneesStatement.setInt(1, newNbMaison);
+                donneesStatement.setInt(2, newNbAppart);
+                donneesStatement.setDouble(3, newPrixMoyen);
+                donneesStatement.setDouble(4, newPrixM2Moyen);
+                donneesStatement.setDouble(5, newSurfaceMoy);
+                donneesStatement.setDouble(6, newDepensesCulturellesTotales);
+                donneesStatement.setDouble(7, newBudgetTotal);
+                donneesStatement.setInt(8, newPopulation);
+                donneesStatement.setInt(9, newAnnee);
+                donneesStatement.setInt(10, idCommune);
+                donneesStatement.executeUpdate();
+    
+                System.out.println("Commune et données annuelles mises à jour avec succès dans la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    
 
 
     public List<Gare> getListeGare(){
