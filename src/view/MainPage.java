@@ -250,13 +250,12 @@ public class MainPage extends Application {
         menuBox.setAlignment(Pos.TOP_LEFT);
         menuBox.setMaxWidth(400);
     
-        this.transportButton = createButtonWithIcon("Transport", "file:../resources/image/transport.png");
         this.cheminCourtButton = createButtonWithIcon("Chemin Entre 2 communes", "file:../resources/image/chemin.png");
         this.editData = createButtonWithIcon("Modifier les données", "file:../resources/image/edit.png");
         this.exportDataButton = createButtonWithIcon("Exporter Données", "file:../resources/image/export.png");
         this.reloadDatabase = createButtonWithIcon("Rechargez la base de données", "file:../resources/image/reload.png");
     
-        menuBox.getChildren().addAll(this.transportButton, this.cheminCourtButton, this.editData, this.exportDataButton, this.reloadDatabase);
+        menuBox.getChildren().addAll(this.cheminCourtButton, this.editData, this.exportDataButton, this.reloadDatabase);
         return menuBox;
     }
 

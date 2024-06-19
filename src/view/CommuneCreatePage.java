@@ -1,6 +1,7 @@
 package view;
 
 import data.Commune;
+import data.Departement;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -46,13 +47,12 @@ public class CommuneCreatePage {
     private TextField prixM2MoyenTextField;
     private TextField surfaceMoyenneTextField;
 
-
+    private TextField nomTextField;
     private TextField idTextField;
-    private TextField departementTextField;
+    private ComboBox<Departement> departementComboBox;
     private TextField anneeTextField;
     private TextField populationTextField;
     private TextField depCulturellesTextField;
-    private TextField gareTextField;
     private TextField budgetTotalField;
 
     private Label importanteLabel;
@@ -74,43 +74,23 @@ public class CommuneCreatePage {
     private Button saveButton;
     private Button plusyearsButton;
 
-    public void showCommune(Commune commune, Controller controller) {
-        this.communeAvantModif = commune;
+    public void showCommune( Controller controller) {
 
         detailsStage = new Stage();
-        detailsStage.setTitle("D\u00e9tails de la commune");
+        detailsStage.setTitle("Création de la commune");
 
         detailsBox = new VBox(20);
         detailsBox.setPadding(new Insets(20));
         detailsBox.setAlignment(Pos.TOP_CENTER);
         detailsBox.setStyle("-fx-background-color: linear-gradient(to right, #E0F7FA 0%, #0288D1 100%);");
 
-        // Load random background image
-        File folder = new File("../resources/image/fonds/");
-        File[] listOfFiles = folder.listFiles();
-        Random rand = new Random();
-        int randomIndex = rand.nextInt(listOfFiles.length);
-        Image backgroundImage = new Image(listOfFiles[randomIndex].toURI().toString());
-        ImageView backgroundImageView = new ImageView(backgroundImage);
-        backgroundImageView.setFitWidth(400);
-        backgroundImageView.setPreserveRatio(true);
 
-        // Section commune name with background
-        StackPane namePane = new StackPane();
-        namePane.setAlignment(Pos.CENTER);
-        namePane.setPadding(new Insets(20));
-        namePane.setStyle("-fx-background-image: url('" + listOfFiles[randomIndex].toURI().toString() + "'); -fx-background-size: cover;");
 
-        nameLabel = new Label(commune.getNomCommune());
-        nameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(one-pass-box, black, 8, 0.0, 2, 0);");
-        namePane.getChildren().add(nameLabel);
 
         // Create TitledPanes for general information and housing statistics
-        generalInfoPane = createTitledPane("Informations g\u00e9n\u00e9rales", createGeneralInfoBox(commune, controller));
-        housingStatsPane = createTitledPane("Statistiques de logement", createHousingStatsBox(commune));
+        generalInfoPane = createTitledPane("Informations g\u00e9n\u00e9rales", createGeneralInfoBox(controller));
+        housingStatsPane = createTitledPane("Statistiques de logement", createHousingStatsBox());
 
-        updateGeneralInfoBox(commune);
-        updateHousingStatsBox(commune);
 
         saveButton = new Button("Sauvegarder");
         plusyearsButton = new Button("+ année");
@@ -122,7 +102,7 @@ public class CommuneCreatePage {
 
 
         detailsBox.getChildren().addAll(
-            namePane, generalInfoPane, housingStatsPane,
+            generalInfoPane, housingStatsPane,
             saveButton, closeButton
         );
 
@@ -145,7 +125,7 @@ public class CommuneCreatePage {
         return pane;
     }
 
-    private VBox createGeneralInfoBox(Commune commune, Controller controller) {
+    private VBox createGeneralInfoBox(Controller controller) {
         VBox box = new VBox(10);
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
@@ -156,26 +136,31 @@ public class CommuneCreatePage {
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
 
+        Label nomLabel = new Label("Nom de Ville : ");
+        nomLabel.setStyle("-fx-font-size: 14px;");
+        nomTextField = new TextField();
+
+
+
         Label idLabel = new Label("ID : ");
         idLabel.setStyle("-fx-font-size: 14px;");
-        idRepLabel = new Label("" + commune.getIdCommune());
+        idTextField = new TextField();
 
+        
         Label depLabel = new Label("D\u00e9partement : ");
         depLabel.setStyle("-fx-font-size: 14px;");
-        depRepLabel = new Label("" + commune.getDepartement().getIdDep());
+        departementComboBox = new ComboBox<>();
+        
 
         Label anneeLabel = new Label("Ann\u00e9e de donn\u00e9es : ");
         anneeLabel.setStyle("-fx-font-size: 14px;");
-        yearsComboBox = createYearsComboBox(commune, controller);
-        yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
+        anneeTextField = new TextField();
+
 
         Label populationLabel = new Label("Population : ");
         populationLabel.setStyle("-fx-font-size: 14px;");
         populationTextField = new TextField();
 
-
-        importanteLabel = new Label("Importante : ");
-        importanteRepLabel = new Label("" + commune.isMostImportant());
 
         Label depCulturellesLabel = new Label("D\u00e9penses culturelles totales : ");
         depCulturellesLabel.setStyle("-fx-font-size: 14px;");
@@ -186,38 +171,28 @@ public class CommuneCreatePage {
         budgetTotal.setStyle("-fx-font-size: 14px;");
         budgetTotalField = new TextField();
 
-        Label gareLabel = new Label("Gare : ");
-        gareLabel.setStyle("-fx-font-size: 14px;");
-        if (commune.aUneGare()) {
-            gareRepLabel = new Label("" + commune.getGare().getNomGare());
-        } else {
-            gareRepLabel = new Label("Aucune");
-        }
 
 
-
-        grid.add(idLabel, 0, 0);
-        grid.add(idRepLabel, 1, 0);
-        grid.add(depLabel, 0, 1);
-        grid.add(depRepLabel, 1, 1);
-        grid.add(anneeLabel, 0, 2);
-        grid.add(yearsComboBox, 1, 2);
-        grid.add(populationLabel, 0, 3);
-        grid.add(populationTextField, 1, 3);
-        grid.add(importanteLabel, 0, 4);
-        grid.add(importanteRepLabel, 1, 4);
+        grid.add(nomLabel, 0, 0);
+        grid.add(nomTextField, 1, 0);
+        grid.add(idLabel, 0, 1);
+        grid.add(idTextField, 1, 1);
+        grid.add(depLabel, 0, 2);
+        grid.add(departementComboBox, 1, 2);
+        grid.add(anneeLabel, 0, 3);
+        grid.add(anneeTextField, 1, 3);
+        grid.add(populationLabel, 0, 4);
+        grid.add(populationTextField, 1, 4);
         grid.add(depCulturellesLabel, 0, 5);
         grid.add(depCulturellesTextField, 1, 5);
         grid.add(budgetTotal, 0, 6);
         grid.add(budgetTotalField, 1, 6);
-        grid.add(gareLabel, 0, 7);
-        grid.add(gareRepLabel, 1, 7);
 
         box.getChildren().addAll(grid);
         return box;
     }
     
-    private VBox createHousingStatsBox(Commune commune) {
+    private VBox createHousingStatsBox() {
         VBox box = new VBox(10);
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
@@ -266,99 +241,16 @@ public class CommuneCreatePage {
     
 
 
-    private void updateGeneralInfoBox(Commune commune) {
-        idTextField.setText(commune.getIdCommune() + "");
-        departementTextField.setText("" + commune.getDepartement().getIdDep());
-        if (commune.getPopulation() < 0) {
-            populationTextField.setText("Information indisponible");
-        } else {
-            populationTextField.setText(commune.getPopulation() + "");
-        }
-        if (commune.getDepCulturellesTotales() < 0) {
-            depCulturellesTextField.setText("Information indisponible");
-        } else {
-            depCulturellesTextField.setText(commune.getDepCulturellesTotales() + "");
-        }
-        if (commune.getBudgetTotal() < 0) {
-            budgetTotalField.setText("Information indisponible");
-        } else {
-            budgetTotalField.setText(commune.getBudgetTotal() + "");
-        }
-        if (commune.aUneGare()) {
-            gareTextField.setText("" + commune.getGare().getNomGare());
-        } else {
-            gareTextField.setText("Aucune");
-        }
-
-        importanteRepLabel.setText((commune.isMostImportant() ? "Oui" : "Non"));
-        
-
+    public String getNomTextFieldValue(){
+        return nomTextField.getText();
     }
-    
-
-    private void updateHousingStatsBox(Commune commune) {
-        nbMaisonsTextField.setText(String.valueOf(commune.getNbMaison()));
-        nbAppartTextField.setText(String.valueOf(commune.getNbAppart()));
-
-        if (commune.getPrixMoyen() < 0) {
-            prixMoyenTextField.setText("Information indisponible");
-        } else {
-            prixMoyenTextField.setText(commune.getPrixMoyen() + "");
-        }
-
-        if (commune.getPrixM2Moyen() < 0) {
-            prixM2MoyenTextField.setText("Information indisponible");
-        } else {
-            prixM2MoyenTextField.setText(commune.getPrixM2Moyen() + "");
-        }
-
-        if (commune.getSurfaceMoy() < 0) {
-            surfaceMoyenneTextField.setText("Information indisponible");
-        } else {
-            surfaceMoyenneTextField.setText(commune.getSurfaceMoy() + "");
-        }
-    }
-
-
-
-    private ComboBox<Integer> createYearsComboBox(Commune commune, Controller controller) {
-        yearsComboBox = new ComboBox<>();
-
-        ArrayList<Integer> years = controller.getYearsForCommune(commune);
-
-        for (int year : years) {
-            yearsComboBox.getItems().add(year);
-        }
-
-        yearsComboBox.setValue(commune.getAnnee().getAnnee());
-
-        yearsComboBox.setOnAction(event -> {
-            int selectedYear = yearsComboBox.getValue();
-
-            Commune selectedCommune = controller.getCommuneForYearAndCommune(commune.getNomCommune(), selectedYear);
-            updateCommuneDetails(selectedCommune, controller);
-        });
-
-        yearsComboBox.setPromptText("S\u00e9lectionnez une ann\u00e9e");
-        yearsComboBox.setMaxWidth(Double.MAX_VALUE);
-
-        return yearsComboBox;
-    }
-
-
-    public void updateCommuneDetails(Commune commune, Controller controller) {
-        nameLabel.setText(commune.getNomCommune());
-        updateGeneralInfoBox(commune);
-        updateHousingStatsBox(commune);
-    }
-
 
     public String getIdTextFieldValue() {
         return idTextField.getText();
     }
 
-    public String getDepartementTextFieldValue() {
-        return departementTextField.getText();
+    public ComboBox<Departement> getDepartementComboBox() {
+        return departementComboBox;
     }
 
     public String getAnneeTextFieldValue() {
@@ -373,9 +265,6 @@ public class CommuneCreatePage {
         return depCulturellesTextField.getText();
     }
 
-    public String getGareTextFieldValue() {
-        return gareTextField.getText();
-    }
 
     // Méthodes pour récupérer les valeurs des TextField
     public String getNbMaisonsText() {
@@ -402,7 +291,5 @@ public class CommuneCreatePage {
         return this.saveButton;
     }
 
-    public Button getplusyearsButton(){
-        return this.plusyearsButton;
-    }
+
 }

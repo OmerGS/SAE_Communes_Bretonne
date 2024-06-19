@@ -247,31 +247,30 @@ public class AdministratorsPage extends Application {
     private VBox createMenuBox() {
         VBox menuBox = new VBox(10);
         menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
-        menuBox.setAlignment(Pos.CENTER_RIGHT);
+        menuBox.setAlignment(Pos.TOP_LEFT);
         menuBox.setMaxWidth(400);
-
-        this.transportButton = new Button("Transport");
-        this.transportButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.transportButton.setOnAction(this.controller);
-
-        this.cheminCourtButton = new Button("Chemin Entre 2 communes");
-        this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.cheminCourtButton.setOnAction(this.controller);
-
-        this.editData = new Button("Page Principal");
-        this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.editData.setOnAction(this.controller);
-
-        this.exportDataButton = new Button("Exporter Données");
-        this.exportDataButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.exportDataButton.setOnAction(this.controller);
-
-        this.reloadDatabase = new Button("Rechargez la base de données");
-        this.reloadDatabase.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.reloadDatabase.setOnAction(this.controller);
-
-        menuBox.getChildren().addAll(this.transportButton, this.cheminCourtButton, editData, exportDataButton, this.reloadDatabase);
+    
+        this.cheminCourtButton = createButtonWithIcon("Chemin Entre 2 communes", "file:../resources/image/chemin.png");
+        this.editData = createButtonWithIcon("Modifier les données", "file:../resources/image/edit.png");
+        this.exportDataButton = createButtonWithIcon("Exporter Données", "file:../resources/image/export.png");
+        this.reloadDatabase = createButtonWithIcon("Rechargez la base de données", "file:../resources/image/reload.png");
+    
+        menuBox.getChildren().addAll(this.cheminCourtButton, this.editData, this.exportDataButton, this.reloadDatabase);
         return menuBox;
+    }
+
+    private Button createButtonWithIcon(String text, String iconPath) {
+        Button button = new Button(text);
+        button.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-border-color: transparent;");
+        button.setOnAction(this.controller);
+    
+        ImageView icon = new ImageView(new Image(iconPath));
+        icon.setFitHeight(16); // Adjust the size as needed
+        icon.setFitWidth(16);  // Adjust the size as needed
+    
+        button.setGraphic(icon);
+        button.setContentDisplay(ContentDisplay.LEFT); // To position the icon on the left of the text
+        return button;
     }
 
     private void toggleMenu() {
