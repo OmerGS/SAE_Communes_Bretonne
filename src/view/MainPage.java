@@ -174,7 +174,7 @@ public class MainPage extends Application {
 
         // ListView to display communes
         communeListView.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        communeListView.setMaxWidth(800);  // Set maximum width
+        communeListView.setMaxWidth(1000);  // Set maximum width
 
         // Custom cell factory to display Commune objects
         communeListView.setCellFactory(new Callback<>() {
@@ -251,7 +251,16 @@ public class MainPage extends Application {
         menuBox.setMaxWidth(400);
     
         this.cheminCourtButton = createButtonWithIcon("Chemin Entre 2 communes", "file:../resources/image/chemin.png");
-        this.editData = createButtonWithIcon("Modifier les données", "file:../resources/image/edit.png");
+        this.editData = new Button("Modifier les données");
+        editData.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-border-color: transparent;");
+        editData.setOnAction(this.controller);
+    
+        ImageView icon = new ImageView(new Image("file:../resources/image/edit.png"));
+        icon.setFitHeight(16); // Adjust the size as needed
+        icon.setFitWidth(16);  // Adjust the size as needed
+    
+        editData.setGraphic(icon);
+        editData.setContentDisplay(ContentDisplay.LEFT); // To position the icon on the left of the text
         this.exportDataButton = createButtonWithIcon("Exporter Données", "file:../resources/image/export.png");
         this.reloadDatabase = createButtonWithIcon("Rechargez la base de données", "file:../resources/image/reload.png");
     
@@ -281,67 +290,89 @@ public class MainPage extends Application {
     
     private HBox createResultRow(Commune commune) {
         HBox returnHbox = new HBox();
-        returnHbox.setAlignment(Pos.CENTER); // Center align the HBox
-        
-        VBox mainBox = new VBox(20); // Main VBox for entire structure with spacing of 10
-        mainBox.setAlignment(Pos.CENTER); // Center align the VBox
-        mainBox.setPadding(new Insets(10)); // Add padding for spacing around the VBox
-        
-        // HBox for left and right information labels
-        HBox infoHBox = new HBox(40); // HBox for left and right info labels with spacing of 10
-        infoHBox.setAlignment(Pos.CENTER); // Center align horizontally
-        
-        // Left VBox for infos1 and infos2
-        HBox leftVBox = new HBox(20); // VBox for left info labels with spacing of 5
-        leftVBox.setAlignment(Pos.CENTER_LEFT); // Align to the left vertically
-        
-        // Infos1 label
-        Label info1Label = new Label("Important\n" + commune.isMostImportant());
-        info1Label.setStyle("-fx-font-size: 12px;");
-        
-        // Infos2 label
-        Label info2Label = new Label("Prix m2\n" + commune.getPrixM2Moyen());
-        info2Label.setStyle("-fx-font-size: 12px;");
-        
-        leftVBox.getChildren().addAll(info1Label, info2Label);
-        
-        // Right VBox for infos3 and infos4
-        HBox rightVBox = new HBox(10); // VBox for right info labels with spacing of 5
-        rightVBox.setAlignment(Pos.CENTER_RIGHT); // Align to the right vertically
-        
-        // Infos3 label
-        Label info3Label = new Label("Prix Moyen\n" + commune.getPrixMoyen());
-        info3Label.setStyle("-fx-font-size: 12px;");
-        
-        // Infos4 label
-        Label info4Label = new Label("Gare\n" + commune.aUneGare());
-        info4Label.setStyle("-fx-font-size: 12px;");
-        
-        rightVBox.getChildren().addAll(info3Label, info4Label);
-        
-        // Commune name label
+        returnHbox.setAlignment(Pos.CENTER); // Centrer l'alignement du HBox
+        returnHbox.setSpacing(40); // Espacement entre les éléments dans le HBox
+        returnHbox.setPrefWidth(600); // Ajuster la largeur de la returnHbox
+        returnHbox.setPrefHeight(100);
+    
+
+    
+        // Infos1 label (Icône de l'importance)
+        HBox info1Box = new HBox(5);
+        info1Box.setAlignment(Pos.CENTER);
+        ImageView populationIcon = new ImageView(new Image("file:../resources/image/population.png"));
+        populationIcon.setFitHeight(40); // Ajuster la taille si nécessaire
+        populationIcon.setFitWidth(40);  // Ajuster la taille si nécessaire
+        Label importanceLabel = new Label();
+        if (commune.aUneGare()) {
+            importanceLabel.setText("Oui");
+        } else {
+            importanceLabel.setText("Non");
+        }
+        importanceLabel.setStyle("-fx-font-size: 18px;");
+        info1Box.getChildren().addAll(populationIcon, importanceLabel);
+    
+        // Infos2 label (Prix au m²)
+        HBox info2Box = new HBox(5);
+        info2Box.setAlignment(Pos.CENTER);
+        ImageView prixM2Icon = new ImageView(new Image("file:../resources/image/metrecarre.png"));
+        prixM2Icon.setFitHeight(40); // Ajuster la taille si nécessaire
+        prixM2Icon.setFitWidth(40);  // Ajuster la taille si nécessaire
+        Label priceM2Label = new Label("Prix \u33A1\n" + commune.getPrixM2Moyen() + " \u20AC");
+        priceM2Label.setStyle("-fx-font-size: 18px;");
+        info2Box.getChildren().addAll(prixM2Icon, priceM2Label);
+    
+    
+        // VBox centrale pour le nom de la commune
+        VBox middleVBox = new VBox(10); // Ajout d'un espacement entre les éléments
+        middleVBox.setAlignment(Pos.CENTER);
         Label communeLabel = new Label(commune.getNomCommune());
-        communeLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-        
-        // Add left and right VBoxes to infoHBox
-        infoHBox.getChildren().addAll(leftVBox, communeLabel, rightVBox);
-        
-        // Button for showing more details
+        communeLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        middleVBox.getChildren().add(communeLabel);
+    
+    
+        // Infos3 label (Prix moyen)
+        HBox info3Box = new HBox(5);
+        info3Box.setAlignment(Pos.CENTER);
+        ImageView avgPriceIcon = new ImageView(new Image("file:../resources/image/prix.png"));
+        avgPriceIcon.setFitHeight(40); // Ajuster la taille si nécessaire
+        avgPriceIcon.setFitWidth(40);  // Ajuster la taille si nécessaire
+        Label avgPriceLabel = new Label("Prix moyen\n" + commune.getPrixMoyen() + " \u20AC");
+        avgPriceLabel.setStyle("-fx-font-size: 18px;");
+        info3Box.getChildren().addAll(avgPriceIcon, avgPriceLabel);
+    
+        // Infos4 label (Icône de la gare et disponibilité)
+        HBox info4Box = new HBox(5);
+        info4Box.setAlignment(Pos.CENTER);
+        ImageView gareIcon;
+        Label stationLabel = new Label();
+        if (commune.aUneGare()) {
+            gareIcon = new ImageView(new Image("file:../resources/image/gare.png"));
+            stationLabel.setText("Oui");
+        } else {
+            gareIcon = new ImageView(new Image("file:../resources/image/pasgare.png"));
+            stationLabel.setText("Non");
+        }
+        gareIcon.setFitHeight(40); // Ajuster la taille si nécessaire
+        gareIcon.setFitWidth(40);  // Ajuster la taille si nécessaire
+        stationLabel.setStyle("-fx-font-size: 18px;");
+        info4Box.getChildren().addAll(gareIcon, stationLabel);
+    
+    
+        // Bouton pour afficher plus de détails
         Button detailsButton = new Button("Voir plus");
         detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
         detailsButton.setOnAction(event -> {
             this.controller.showCommuneDetails(commune);
         });
-        
-        // Align button to the center
-        VBox.setMargin(detailsButton, new Insets(10, 0, 0, 0)); // Adjust top margin for button
-        
-        // Add elements to the main VBox
-        mainBox.getChildren().addAll(infoHBox, detailsButton);
-        returnHbox.getChildren().addAll(mainBox);
-        
+        middleVBox.getChildren().add(detailsButton);
+    
+        // Ajouter toutes les VBox au HBox principal
+        returnHbox.getChildren().addAll(info1Box,info2Box, middleVBox, info3Box, info4Box);
+    
         return returnHbox;
     }
+    
     
     
     

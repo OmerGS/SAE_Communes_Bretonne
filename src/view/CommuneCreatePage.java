@@ -1,7 +1,6 @@
 package view;
 
 import data.Commune;
-import data.Departement;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -10,26 +9,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
 
 import controller.Controller;
 
 public class CommuneCreatePage {
     private VBox detailsBox;
-    private ComboBox<Integer> yearsComboBox;
     private Label nameLabel;
 
     public Label getNameLabel() {
@@ -49,17 +40,11 @@ public class CommuneCreatePage {
 
     private TextField nomTextField;
     private TextField idTextField;
-    private ComboBox<Departement> departementComboBox;
+    private ComboBox<String> departementComboBox;
     private TextField anneeTextField;
     private TextField populationTextField;
     private TextField depCulturellesTextField;
     private TextField budgetTotalField;
-
-    private Label importanteLabel;
-    private Label idRepLabel;
-    private Label depRepLabel;
-    private Label importanteRepLabel;
-    private Label gareRepLabel;
 
     private Commune communeAvantModif;
 
@@ -72,9 +57,9 @@ public class CommuneCreatePage {
     }
 
     private Button saveButton;
-    private Button plusyearsButton;
 
-    public void showCommune( Controller controller) {
+
+    public void showCommune(Controller controller) {
 
         detailsStage = new Stage();
         detailsStage.setTitle("Création de la commune");
@@ -93,7 +78,6 @@ public class CommuneCreatePage {
 
 
         saveButton = new Button("Sauvegarder");
-        plusyearsButton = new Button("+ année");
         Button closeButton = new Button("Fermer");
         closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
         closeButton.setOnAction(event -> detailsStage.close());
@@ -151,6 +135,11 @@ public class CommuneCreatePage {
         depLabel.setStyle("-fx-font-size: 14px;");
         departementComboBox = new ComboBox<>();
         
+        departementComboBox = new ComboBox<>();
+    
+        List<String> departements = controller.getDepartementNameFromDatabase();
+        
+        departementComboBox.getItems().addAll(departements);
 
         Label anneeLabel = new Label("Ann\u00e9e de donn\u00e9es : ");
         anneeLabel.setStyle("-fx-font-size: 14px;");
@@ -249,7 +238,7 @@ public class CommuneCreatePage {
         return idTextField.getText();
     }
 
-    public ComboBox<Departement> getDepartementComboBox() {
+    public ComboBox<String> getDepartementComboBox() {
         return departementComboBox;
     }
 
@@ -290,6 +279,4 @@ public class CommuneCreatePage {
     public Button getSaveButton(){
         return this.saveButton;
     }
-
-
 }

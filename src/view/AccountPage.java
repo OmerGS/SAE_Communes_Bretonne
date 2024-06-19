@@ -187,17 +187,13 @@ public class AccountPage extends Application {
         topBar.setStyle("-fx-padding: 10; -fx-background-color: #000000; -fx-text-fill: #fff;");
         topBar.getChildren().addAll(logo, spacer, userBox);
 
-        // Menu box for the side menu
-        menuBox = createMenuBox();
-        menuBox.setVisible(false);
 
         StackPane mainPane = new StackPane();
         VBox infoPanel = createInfoPanel();
         infoPanel.setMaxWidth(400); // Set a maximum width for the info panel
         infoPanel.setMaxHeight(500); // Set a maximum height for the info panel
-        mainPane.getChildren().addAll(infoPanel, menuBox);
+        mainPane.getChildren().add(infoPanel);
         StackPane.setAlignment(infoPanel, Pos.CENTER); // Center the info panel
-        StackPane.setAlignment(menuBox, Pos.TOP_RIGHT); // Position the menu box in the top right
 
         VBox mainBox = new VBox(10);
         mainBox.setStyle("-fx-background-color: #87CEEB;"); // Blue background

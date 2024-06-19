@@ -54,10 +54,12 @@ public class TrouverCheminCommune extends Application {
         
         
         // Input Box
+
+
         HBox inputBox = new HBox(10);
         inputBox.setAlignment(Pos.CENTER);
         inputBox.setPadding(new Insets(10));
-        inputBox.setStyle("-fx-background-color: #000000; -fx-padding: 10; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        inputBox.setStyle("-fx-background-color: #5F606D; -fx-padding: 10; -fx-border-radius: 10px; -fx-background-radius: 10px; ");
         
         this.startCommuneField = new TextField();
         this.startCommuneField.setPromptText("Commune de d\u00e9part");
@@ -105,6 +107,8 @@ public class TrouverCheminCommune extends Application {
         // Menu Box (assuming menuBox is defined elsewhere)
         this.menuBox = createMenuBox();
         menuBox.setVisible(false);
+
+        this.controller.verifyAdmin();
 
         StackPane mainPane = new StackPane();
         mainPane.getChildren().addAll(centerBox, menuBox);

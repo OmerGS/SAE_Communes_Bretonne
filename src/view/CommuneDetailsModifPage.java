@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
@@ -47,13 +46,9 @@ public class CommuneDetailsModifPage {
     private TextField prixM2MoyenTextField;
     private TextField surfaceMoyenneTextField;
 
-
-    private TextField idTextField;
-    private TextField departementTextField;
     private TextField anneeTextField;
     private TextField populationTextField;
     private TextField depCulturellesTextField;
-    private TextField gareTextField;
     private TextField budgetTotalField;
 
     private Label importanteLabel;
@@ -61,6 +56,26 @@ public class CommuneDetailsModifPage {
     private Label depRepLabel;
     private Label importanteRepLabel;
     private Label gareRepLabel;
+
+    public Label getImportanteLabel() {
+        return importanteLabel;
+    }
+
+    public Label getIdRepLabel() {
+        return idRepLabel;
+    }
+
+    public Label getDepRepLabel() {
+        return depRepLabel;
+    }
+
+    public Label getImportanteRepLabel() {
+        return importanteRepLabel;
+    }
+
+    public Label getGareRepLabel() {
+        return gareRepLabel;
+    }
 
     private Commune communeAvantModif;
 
@@ -173,7 +188,7 @@ public class CommuneDetailsModifPage {
 
         Label idLabel = new Label("ID : ");
         idLabel.setStyle("-fx-font-size: 14px;");
-        idRepLabel = new Label("" + commune.getIdCommune());
+        this.idRepLabel = new Label("" + commune.getIdCommune());
 
         Label depLabel = new Label("D\u00e9partement : ");
         depLabel.setStyle("-fx-font-size: 14px;");
@@ -281,8 +296,6 @@ public class CommuneDetailsModifPage {
 
 
     private void updateGeneralInfoBox(Commune commune) {
-        idTextField.setText(commune.getIdCommune() + "");
-        departementTextField.setText("" + commune.getDepartement().getIdDep());
         if (commune.getPopulation() < 0) {
             populationTextField.setText("Information indisponible");
         } else {
@@ -298,11 +311,6 @@ public class CommuneDetailsModifPage {
             budgetTotalField.setText("Information indisponible");
         } else {
             budgetTotalField.setText(commune.getBudgetTotal() + "");
-        }
-        if (commune.aUneGare()) {
-            gareTextField.setText("" + commune.getGare().getNomGare());
-        } else {
-            gareTextField.setText("Aucune");
         }
 
         importanteRepLabel.setText((commune.isMostImportant() ? "Oui" : "Non"));
@@ -382,15 +390,6 @@ public class CommuneDetailsModifPage {
         updateHousingStatsBox(commune);
     }
 
-
-    public String getIdTextFieldValue() {
-        return idTextField.getText();
-    }
-
-    public String getDepartementTextFieldValue() {
-        return departementTextField.getText();
-    }
-
     public String getAnneeTextFieldValue() {
         return anneeTextField.getText();
     }
@@ -401,10 +400,6 @@ public class CommuneDetailsModifPage {
 
     public String getDepCulturellesTextFieldValue() {
         return depCulturellesTextField.getText();
-    }
-
-    public String getGareTextFieldValue() {
-        return gareTextField.getText();
     }
 
     // Méthodes pour récupérer les valeurs des TextField
