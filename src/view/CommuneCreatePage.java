@@ -1,7 +1,6 @@
 package view;
 
 import data.Commune;
-import data.Departement;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

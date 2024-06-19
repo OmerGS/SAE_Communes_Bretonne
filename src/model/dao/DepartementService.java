@@ -69,6 +69,13 @@ public class DepartementService {
 
 
 
+    /**
+    * Updates the details of an existing department in the database.
+    *
+    * @param idDep The ID of the department to update.
+    * @param newNomDep The new name of the department.
+    * @param newInvestCulture2019 The new cultural investment value for 2019.
+    */
     public void updateDepartement(int idDep, String newNomDep, double newInvestCulture2019) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "UPDATE Departement SET nomDep = ?, investissementCulturel2019 = ? WHERE idDep = ?";
@@ -86,7 +93,11 @@ public class DepartementService {
         }
     }
 
-
+    /**
+    * Inserts a new department into the database.
+    *
+    * @param departement The department object containing the details to insert.
+    */
     public void insertDepartement(Departement departement) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "INSERT INTO Departement (idDep, nomDep, investissementCulturel2019) VALUES (?, ?, ?)";
@@ -104,7 +115,11 @@ public class DepartementService {
         }
     }
 
-
+    /**
+    * Deletes a department from the database based on its ID.
+    *
+    * @param idDep The ID of the department to delete.
+    */
     public void dropDepartement(int idDep) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "DELETE FROM Departement WHERE idDep = ?";
@@ -120,7 +135,9 @@ public class DepartementService {
         }
     }
 
-
+    /**
+    * Deletes all departments from the database.
+    */
     public void dropAllDepartements() {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "DELETE FROM Departement";

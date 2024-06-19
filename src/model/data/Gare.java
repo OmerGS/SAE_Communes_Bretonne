@@ -21,7 +21,12 @@ import java.util.Set;
  */
 public class Gare {
 
+    /**
+     * Static set to store used IDs of train stations.
+     * This set ensures that each train station has a unique code across all instances.
+     */
     private static Set<Integer> idsUtilises = new HashSet<>();
+    
     /**
      * The unique code of the train station.
      */
@@ -219,12 +224,6 @@ public class Gare {
             String prefix = idString.substring(0, 2);
             ret = prefix.equals("29") || prefix.equals("35") || prefix.equals("22") || prefix.equals("56");
         }
-
         return ret;
     }
-
-    
-
-
-
 }

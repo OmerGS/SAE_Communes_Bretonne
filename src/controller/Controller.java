@@ -408,7 +408,7 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.currentUser.setPrenom(name);
                 }
             } else {
-                CustomAlert.showAlert("Alerte", "Le Mail est invalide");
+                CustomAlert.showAlert("Alerte", "Le mail est invalide");
             }
         }
     }
@@ -710,12 +710,12 @@ public class Controller implements EventHandler<ActionEvent> {
                 e1.printStackTrace();
             }
 
-            CustomAlert.showAlert("Chargement Base de Donnees", "Le chargement est fini.");
+            CustomAlert.showAlert("Recuperation", "La recuperation depuis la base de donn\u00e9e est termin\u00e9");
         }
 
         if(e.getSource() == this.mainPage.getExportButton()){
             exportData();
-            CustomAlert.showAlert("Export des données", "Les données ont bien était exporté");
+            CustomAlert.showAlert("Export des donn\u00e9es", "Les donn\u00e9es ont bien \u00e9tait export\u00e9");
         }
 
         if(e.getSource() == this.mainPage.getEditData()){
@@ -819,7 +819,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
                 this.accountPage.getAdmin().setText(utilisateurEtat);
             } else {
-                System.out.println("Utilisateur non connecté.");
+                System.out.println("Utilisateur non connect\u00e9.");
                 Stage stage = (Stage) this.mainPage.getSearchField().getScene().getWindow();
                 this.connectionPage.start(stage);
             }
@@ -1167,8 +1167,15 @@ public class Controller implements EventHandler<ActionEvent> {
 
     // ! ---------------- CommuneCreatePage
 
+    /**
+    * Handle action realised in CommuneCreatePage
+    * @param e The ActionEvent.
+    */
     private void handleCommuneCreatePageActions(ActionEvent e){
+        // When save button is clicked
         if (e.getSource() == this.communeCreatePage.getSaveButton()) {
+
+            //Get all of Field.
             String nomCommune = this.communeCreatePage.getNomTextFieldValue();        
             String idCommune = this.communeCreatePage.getIdTextFieldValue();        
             String departementCommune = this.communeCreatePage.getDepartementComboBox().getValue();        
@@ -1182,7 +1189,7 @@ public class Controller implements EventHandler<ActionEvent> {
             String prixM2MoyenCommune = this.communeCreatePage.getPrixM2MoyenText();
             String surfaceMoyenneCommune = this.communeCreatePage.getSurfaceMoyenneText();
 
-            // Vérifier si l'année existe dans la base de données
+            // Check if the year is in the database.
             List<Annee> allYearsFromDB = getYearsFromDatabase();
             Annee anneeTrouve = null;
             boolean anneeExiste = false;
@@ -1194,11 +1201,14 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
             }
         
+            // check if the id of the new commune is already in the database.
             if(!idIsInDatabase(Integer.parseInt(idCommune))){
+
+                //check if the year is already in the database.
                 if (anneeExiste) {
-                    // Année existe : mettre à jour les données existantes
+                    // Year exists
                     try {
-                        // Récupérer le département
+                        //Recover the departement
                         Departement departementNouvelle = getDepartementByName(departementCommune);
                         Commune communeNouvelle = new Commune(
                             null, anneeTrouve, Integer.parseInt(idCommune), nomCommune, 
@@ -1208,15 +1218,15 @@ public class Controller implements EventHandler<ActionEvent> {
                             Integer.parseInt(budgetTotalCommune), Integer.parseInt(populationCommune), departementNouvelle);
                         
                         this.communeService.insertCommuneEtDonneesAnnuelles(communeNouvelle);
-                        CustomAlert.showAlert("Succès", "Commune mise à jour avec succès.");
+                        CustomAlert.showAlert("Succ\u00e8s", "Commune mise \u00e0 jour avec succ\u00e8s.");
                     } catch (NumberFormatException e1) {	
-                        CustomAlert.showAlert("Erreur", "Les nombres doivent être des entiers valides");
+                        CustomAlert.showAlert("Erreur", "Les nombres doivent \u00eatre des entiers valides");
                     } catch (Exception ex) {
                         CustomAlert.showAlert("Erreur", "Une erreur inattendue s'est produite");
                     }
                 } else {
                     try {
-                        // Récupérer le département
+                        // Recover the department
                         Departement departementNouvelle = getDepartementByName(departementCommune);
                         Annee anneeNouvelle = new Annee(Integer.parseInt(anneeDeDonnees), 1);
     
@@ -1230,15 +1240,15 @@ public class Controller implements EventHandler<ActionEvent> {
                         this.anneeService.insertAnnee(anneeNouvelle);
                         this.communeService.insertCommuneEtDonneesAnnuelles(communeNouvelle);
     
-                        CustomAlert.showAlert("Succès", "Commune mise à jour avec succès.");
+                        CustomAlert.showAlert("Succ\u00e8s", "Commune mise \u00e0 jour avec succ\u00e8s.");
                     } catch (NumberFormatException e1) {	
-                        CustomAlert.showAlert("Erreur", "Les nombres doivent être des entiers valides");
+                        CustomAlert.showAlert("Erreur", "Les nombres doivent \u00eatre des entiers valides");
                     } catch (Exception ex) {
                         CustomAlert.showAlert("Erreur", "Une erreur inattendue s'est produite");
                     }
                 }
             } else {
-                CustomAlert.showAlert("Erreur", "l'id existe deja");
+                CustomAlert.showAlert("Erreur", "L'ID de la commune est d\u00e9j\u00e0 dans la base de donn\u00e9e");
             }
             
         }
@@ -1354,7 +1364,7 @@ public class Controller implements EventHandler<ActionEvent> {
                                 this.administratorsPage.updateCommunesListView(this.communesRecente);
                                 this.mainPage.updateCommunesListView(this.communesRecente);
         
-                                CustomAlert.showAlert("Nouvelle donnée ajoutée", "Ajout avec succès.");
+                                CustomAlert.showAlert("Nouvelle donnée ajout\u00e9e", "Ajout avec succ\u00e9s.");
                             } else {
                                 //year isn't in the database.
                                 int tauxInflation = 1;
@@ -1377,7 +1387,7 @@ public class Controller implements EventHandler<ActionEvent> {
                                 this.administratorsPage.updateCommunesListView(this.communesRecente);
                                 this.mainPage.updateCommunesListView(this.communesRecente);
 
-                                CustomAlert.showAlert("Ajout d'une nouvelle ann\u00e9e", "Marche Correct");
+                                CustomAlert.showAlert("Ajout d'une nouvelle ann\u00e9e", "Ajout effectu\u00e9");
                             }
                         }
                     } catch (NumberFormatException e1) {	
@@ -1458,7 +1468,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
         if(e.getSource() == this.trouverCheminCommune.getExportDataButton()){
             exportData();
-            CustomAlert.showAlert("Export des données", "Les données ont bien était exporté");
+            CustomAlert.showAlert("Export des donn\u00e9es", "Les donn\u00e9es ont bien \u00e9tait export\u00e9");
         }
 
         if(e.getSource() == this.trouverCheminCommune.getPagePrincipalButton()){
@@ -1479,7 +1489,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 e1.printStackTrace();
             }
 
-            CustomAlert.showAlert("Chargement Base de Donnees", "La base de données a etait recharge");
+            CustomAlert.showAlert("Chargement Base de Donn\u00e9es", "La base de donn\u00e9es a \u00e9tait recharg\u00e9");
         }
 
 
@@ -1506,13 +1516,13 @@ public class Controller implements EventHandler<ActionEvent> {
 
             // Step 2: Check if either the start or end commune is not found
             if (startCommune == null || endCommune == null) {
-                this.trouverCheminCommune.setResultLabel("Commune de départ ou d'arrivée introuvable.");
+                this.trouverCheminCommune.setResultLabel("Commune de d\u00e9part ou d'arriv\u00e9e introuvable.");
                 return;
             }
 
             // Step 3: Check if the start and end communes are the same
             if (startCommune.getNomCommune().equalsIgnoreCase(endCommune.getNomCommune())) {
-                this.trouverCheminCommune.setResultLabel("Commune de départ ne peut pas être la même que la commune d'arrivée.");
+                this.trouverCheminCommune.setResultLabel("Commune de d\u00e9part ne peut pas être la m\u00eame que la commune d'arriv\u00e9e.");
                 return;
             }
 
@@ -1582,7 +1592,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 }
                 this.accountPage.getAdmin().setText(utilisateurEtat);
             } else {
-                System.out.println("Utilisateur non connecté.");
+                System.out.println("Utilisateur non connect\u00e9.");
                 Stage stage = (Stage) this.trouverCheminCommune.getButton().getScene().getWindow();
                 this.connectionPage.start(stage);
             }
@@ -1896,7 +1906,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 } else if(!this.userServices.emailExists(mail)){
                     // we display an error message.
                     this.forgotPassword.getErrorMessageLabel().setStyle("-fx-text-fill: red;");
-                    this.forgotPassword.getErrorMessageLabel().setText("Un mail deja renseignee dans la bdd doit etre entrer");
+                    this.forgotPassword.getErrorMessageLabel().setText("Un mail deja renseign\u00e9e dans la bdd doit \u00eatre saisie");
                     this.forgotPassword.getErrorMessageLabel().setVisible(true);
                 } else {
                     // Else we can send code to this email.
@@ -2004,7 +2014,7 @@ public class Controller implements EventHandler<ActionEvent> {
                         this.resetPassword.getErrorMessageLabel().setText("Redirection...");
                         
                         // we display a validation pop-up
-                        CustomAlert.showAlert("Reinitialisation du mot de passe", "Votre mot de passe est change.");
+                        CustomAlert.showAlert("Reinitialisation du mot de passe", "Votre mot de passe est chang\u00e9.");
 
                         // Automatic redirection within 2 seconds.
                         Timer timer = new Timer();

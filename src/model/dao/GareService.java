@@ -75,6 +75,11 @@ public class GareService {
         return gares;
     }
 
+    /**
+    * Inserts a new station (Gare) into the database.
+    *
+    * @param gare The Gare object containing the details to insert.
+    */
     public void insertGare(Gare gare) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "INSERT INTO Gare (codeGare, nomGare, estFret, estVoyageur, laCommune) VALUES (?, ?, ?, ?, ?)";
@@ -95,6 +100,15 @@ public class GareService {
         }
     }
 
+    /**
+    * Updates the details of an existing station (Gare) in the database.
+    *
+    * @param codeGare The code of the station to update.
+    * @param newNomGare The new name of the station.
+    * @param newEstFret The new freight status of the station.
+    * @param newEstVoyageur The new passenger status of the station.
+    * @param newLaCommune The new commune of the station.
+    */
     public void updateGare(int codeGare, String newNomGare, boolean newEstFret, boolean newEstVoyageur, int newLaCommune) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "UPDATE Gare SET nomGare = ?, estFret = ?, estVoyageur = ?, laCommune = ? WHERE codeGare = ?";
@@ -115,6 +129,11 @@ public class GareService {
         }
     }
 
+    /**
+    * Deletes a station (Gare) from the database based on its code.
+    *
+    * @param codeGare The code of the station to delete.
+    */
     public void dropGare(int codeGare) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "DELETE FROM Gare WHERE codeGare = ?";
@@ -131,6 +150,9 @@ public class GareService {
         }
     }
 
+    /**
+    * Deletes all stations (Gares) from the database.
+    */
     public void dropAllGares() {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "DELETE FROM Gare";
