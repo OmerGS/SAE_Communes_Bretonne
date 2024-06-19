@@ -72,7 +72,12 @@ public class UserService {
      * @return 1 if admin, else 0.
      */
     public int userIsAdmin(String email) {
-        return email.contains("@etud.univ-ubs.fr") ? 1 : 0;
+        int nbReturn = 0;
+        if(email.contains("@etud.univ-ubs.fr") || email.contains("@univ-ubs.fr")){
+            nbReturn = 1;
+        }
+
+        return(nbReturn);
     }
 
     /**
