@@ -1,10 +1,8 @@
 package data;
 
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
 
 
 /**
@@ -24,7 +22,10 @@ import java.util.Set;
  */
 public class Departement {
 
-
+    /**
+    * Set to store used IDs of departments.
+    * This set ensures that each department has a unique ID.
+    */
     private Set<Integer> idsUtilises = new HashSet<>();
 
     /**
@@ -58,6 +59,15 @@ public class Departement {
     private static ArrayList<Departement> departements = new ArrayList<>();
 
 
+     /**
+     * Constructs a department with the specified ID, name, and investment in culture for 2019.
+     * 
+     * @param idDep The unique ID of the department.
+     * @param nomDep The name of the department.
+     * @param invesCulture2019 The investment in culture for 2019.
+     * @throws RuntimeException if the ID is already used, or if the department name is null or empty,
+     *         or if the investment amount is less than 0.
+     */
     public Departement(int idDep, String nomDep, double invesCulture2019){
         if((!idsUtilises.contains(idDep)) && nomDep != null && invesCulture2019 > 0){
             this.idDep = idDep;
@@ -73,32 +83,60 @@ public class Departement {
     }
 
 
+
+   /**
+     * Retrieves the unique ID of the department.
+     * 
+     * @return The ID of the department.
+     */
     public int getIdDep() {
         return this.idDep;
     }
 
-
+    /**
+     * Retrieves the name of the department.
+     * 
+     * @return The name of the department.
+     */
     public String getNomDep() {
         return this.nomDep;
     }
 
- 
+    /**
+     * Retrieves the investment in culture for 2019.
+     * 
+     * @return The investment in culture for 2019.
+     */
     public double getInvesCulture2019() {
         return this.invesCulture2019;
     }
 
-
+    /**
+     * Retrieves the list of communes associated with the department.
+     * 
+     * @return The list of communes associated with the department.
+     */
     public ArrayList<Commune> getCommunes() {
         return this.communes;
     }
 
+    /**
+     * Retrieves the list of airports associated with the department.
+     * 
+     * @return The list of airports associated with the department.
+     */
     public ArrayList<Aeroport> getAeroport() {
         return this.aeroports;
     }
 
 
-    // Méthode statique pour obtenir un département par son identifiant
-    public Departement getDepartementById(int idDep) {
+    /**
+     * Retrieves a department instance by its unique ID.
+     * 
+     * @param idDep The ID of the department to retrieve.
+     * @return The department instance matching the given ID, or null if not found.
+     */
+    public static Departement getDepartementById(int idDep) {
         for (Departement dep : departements) {
             if (dep.getIdDep() == idDep) {
                 return dep;
@@ -108,6 +146,12 @@ public class Departement {
     }
 
 
+    /**
+     * Sets the unique ID of the department.
+     * 
+     * @param idDep The new ID to set for the department.
+     * @throws IllegalArgumentException if the new ID is already in use.
+     */
     public void setIdDep(int idDep) {
         if (this.idDep != idDep) {
             if (idsUtilises.contains(idDep)) {
@@ -119,6 +163,12 @@ public class Departement {
         }
     }
 
+    /**
+     * Sets the name of the department.
+     * 
+     * @param nomDep The new name to set for the department.
+     * @throws RuntimeException if the new name is null or empty.
+     */
     public void setNomDep(String nomDep){
         if (nomDep == null || nomDep.trim().isEmpty()) {
             throw new RuntimeException("The name of the department cannot be null or empty.");
@@ -127,6 +177,12 @@ public class Departement {
     }
 
 
+    /**
+     * Sets the investment in culture for 2019.
+     * 
+     * @param invesCulture2019 The new investment amount to set.
+     * @throws RuntimeException if the new investment amount is less than 0.
+     */
     public void setInvesCulture2019(double invesCulture2019){
         if(invesCulture2019 >= 0){
             this.invesCulture2019 = invesCulture2019;
@@ -135,7 +191,12 @@ public class Departement {
         }
     }
 
-
+    /**
+     * Sets the list of communes associated with the department.
+     * 
+     * @param communes The new list of communes to set.
+     * @throws RuntimeException if the new list is null or empty.
+     */
     public void setCommunes(ArrayList<Commune> communes) {
         if(communes != null && communes.size() > 0){
             this.communes = communes;
@@ -144,6 +205,12 @@ public class Departement {
         }
     }
 
+    /**
+     * Sets the list of airports associated with the department.
+     * 
+     * @param aeroports The new list of airports to set.
+     * @throws RuntimeException if the new list is null or empty.
+     */
     public void setAeroport(ArrayList<Aeroport> aeroports) {
         if(aeroports != null && aeroports.size() > 0){
             this.aeroports = aeroports;
@@ -153,13 +220,21 @@ public class Departement {
     }
 
 
-
+    /**
+     * Retrieves a string representation of the department.
+     * 
+     * @return A string representation of the department.
+     */
     @Override
     public String toString() {
         return "Departement [idDep=" + this.idDep + ", nomDep=" + this.nomDep + ", invesCulture2019=" + this.invesCulture2019 + "]";
     }
 
-
+    /**
+     * Retrieves the total population of all communes associated with the department.
+     * 
+     * @return The total population of all communes.
+     */
     public int getTotalPopulation() {
         int totalPopulation = 0;
         for (Commune commune : this.communes) {
@@ -168,6 +243,12 @@ public class Departement {
         return totalPopulation;
     }
 
+    /**
+     * Adds a commune to the list of communes associated with the department.
+     * 
+     * @param commune The commune to add.
+     * @throws IllegalArgumentException if the commune does not belong to this department.
+     */
     public void addCommune(Commune commune) {
         if (commune.getDepartement().getIdDep() == this.idDep) {
             this.communes.add(commune);
@@ -176,6 +257,12 @@ public class Departement {
         }
     }
     
+    /**
+     * Adds an airport to the list of airports associated with the department.
+     * 
+     * @param aeroport The airport to add.
+     * @throws IllegalArgumentException if the airport does not belong to this department.
+     */
     public void addAeroport(Aeroport aeroport) {
     
         if (aeroport.getDepartement().getIdDep() == this.idDep) {
@@ -184,10 +271,4 @@ public class Departement {
             throw new IllegalArgumentException();
         }
     }
-
-
-
-
-
-
 }

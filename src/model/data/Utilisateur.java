@@ -29,25 +29,11 @@ public class Utilisateur {
     */
     private String email;
 
+    /**
+    * If the user is Admin or not 
+    */
     private boolean isAdmin;
 
-    public void setNom(String nom){
-        if(nom != null){
-            this.nom = nom;
-        }
-    }
-
-    public void setPrenom(String prenom) {
-        if(prenom != null){
-            this.prenom = prenom;
-        }
-    }
-
-    public void setEmail(String email) {
-        if(email != null){
-            this.email = email;
-        }
-    }
 
     /**
     * The password of the user. 
@@ -58,6 +44,45 @@ public class Utilisateur {
     * The hash salt of the user. 
     */
     private String salt;
+
+
+
+
+
+    
+
+     /**
+     * Sets the name.
+     *
+     * @param nom the new name to set
+     */
+    public void setNom(String nom){
+        if(nom != null){
+            this.nom = nom;
+        }
+    }
+
+    /**
+     * Sets the first name.
+     *
+     * @param prenom the new first name to set
+     */
+    public void setPrenom(String prenom) {
+        if(prenom != null){
+            this.prenom = prenom;
+        }
+    }
+
+    /**
+     * Sets the email address.
+     *
+     * @param email the new email address to set
+     */
+    public void setEmail(String email) {
+        if(email != null){
+            this.email = email;
+        }
+    }
 
     /**
     * Getter of nom. 

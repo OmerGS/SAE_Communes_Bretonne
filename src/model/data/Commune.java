@@ -43,10 +43,30 @@ public class Commune {
 
 
     private double prixMoyen;
+
+    /**
+    * Price of a square meter 
+    */
     private double prixM2Moyen;
+
+    /**
+    * Average area. 
+    */
     private double surfaceMoy;
+
+    /**
+    * Cultural expenditure. 
+    */
     private double depCulturellesTotales;
+
+    /**
+    * Total budget 
+    */
     private double budgetTotal;
+
+    /**
+    * Population of Communes
+    */
     private int population;
 
 
@@ -65,12 +85,35 @@ public class Commune {
     */
     private ArrayList<Commune> communesVoisines;
 
+    /**
+    * TrainStation of the commune (null if don't have one) 
+    */
     private Gare gare;
 
+    /**
+    * The year when the data was retrieved 
+    */
     private Annee annee;
     
 
 
+    /**
+     * Constructor of Commune to instanciate one commune.
+     * 
+     * @param gare TrainStation of the commune
+     * @param annee Years of the commune
+     * @param idCommune The Id number of a commune
+     * @param nomCommune The name of the commune
+     * @param nbMaison The number of house in the commune
+     * @param nbAppart The number of appartement in the commune
+     * @param prixMoyen The average price in the commune
+     * @param prixM2Moyen The average price of one square meter
+     * @param surfaceMoy The average area
+     * @param depCulturellesTotales The cultural expenditure
+     * @param budgetTotal The total budget
+     * @param population The population
+     * @param departement The departement
+     */
     public Commune(Gare gare, Annee annee, int idCommune, String nomCommune, int nbMaison, int nbAppart, double prixMoyen, 
                    double prixM2Moyen, double surfaceMoy, double depCulturellesTotales, double budgetTotal, 
                    int population, Departement departement) {
@@ -433,6 +476,9 @@ public class Commune {
 
     /* ------ Other Method ------ */
 
+    /**
+    * Return a string with all information about the commune 
+    */
     @Override
     public String toString() {
         return "Commune{" +
@@ -591,11 +637,7 @@ public class Commune {
      * @param nouvelleGare la nouvelle gare à associer à la commune
      */
     public void ajouterGare(Gare nouvelleGare) {
-        if (gare == null) {
-            this.gare = nouvelleGare;
-        } else {
-            this.gare = gare;
-        }
+        this.gare = nouvelleGare;
     }
 
     /**
