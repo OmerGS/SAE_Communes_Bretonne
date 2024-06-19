@@ -19,3 +19,7 @@ Commune, Departement, Gare, Aeroport et Année (faire une page de test avec des 
 -> Onglet Contact (envoyer mail auto)
 -> Modifer le mot de passe directement dans accountPage
 -> Voir la localisation d'une commune (dans CommuneDetailsPage)
+
+
+BUG : 
+-> Ville ne se met pas a jour apres connexion

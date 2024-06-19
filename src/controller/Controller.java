@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import dao.AeroportService;
+import dao.AnneeService;
 import dao.CommuneService;
 import dao.DepartementService;
 import dao.GareService;
@@ -155,11 +156,16 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private CommuneDetailsModifPage communeDetailsModifPage;
 
+    private AnneeService anneeService;
+
+    private DepartementService departementService;
+
     /**
     * The constructor of Controller. 
     * @param connectionPage
     */
     public Controller(MainPage mainPage) {
+        this.anneeService = new AnneeService();
         this.communeDetailsModifPage = new CommuneDetailsModifPage();
         this.userServices = new UserService();
         this.listeUtilisateur = this.userServices.loadAllUsers();
@@ -181,6 +187,7 @@ public class Controller implements EventHandler<ActionEvent> {
     * The Empty constructor of controller 
     */
     public Controller() {
+        this.anneeService = new AnneeService();
         this.communeDetailsModifPage = new CommuneDetailsModifPage();
         this.userServices = new UserService();
         this.listeUtilisateur = this.userServices.loadAllUsers();
@@ -1005,6 +1012,11 @@ public class Controller implements EventHandler<ActionEvent> {
             Stage stage = (Stage) this.administratorsPage.getExportButton().getScene().getWindow();
             this.mainPage.start(stage);
         }
+
+        if(e.getSource() == this.administratorsPage.getCreateCommune()){
+            System.out.println("UZAJDAJDAZJD");
+            
+        }
     }
 
 
@@ -1101,10 +1113,10 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
     private void handleCommuneDetailsModifPage(ActionEvent e){
-        if(e.getSource() == this.communeDetailsModifPage.getSaveButton()){
-            try{
-                // Check if any of the required fields are empty
-                if (this.communeDetailsModifPage.getIdTextFieldValue() == null || this.communeDetailsModifPage.getIdTextFieldValue().isEmpty() ||
+        if (e.getSource() == this.communeDetailsModifPage.getSaveButton()) {
+            try {
+                // Vérification des champs obligatoires
+                if (this.communeDetailsModifPage.getIdValue() == null || this.communeDetailsModifPage.getIdValue().isEmpty() ||
                     this.communeDetailsModifPage.getNbMaisonsText() == null || this.communeDetailsModifPage.getNbMaisonsText().isEmpty() ||
                     this.communeDetailsModifPage.getNbAppartementsText() == null || this.communeDetailsModifPage.getNbAppartementsText().isEmpty() ||
                     this.communeDetailsModifPage.getPrixMoyenText() == null || this.communeDetailsModifPage.getPrixMoyenText().isEmpty() ||
@@ -1115,12 +1127,11 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.communeDetailsModifPage.getPopulationTextFieldValue() == null || this.communeDetailsModifPage.getPopulationTextFieldValue().isEmpty() ||
                     this.communeDetailsModifPage.getAnneeTextFieldValue() == null || this.communeDetailsModifPage.getAnneeTextFieldValue().isEmpty()) 
                 {
-                    
                     CustomAlert.showAlert("Erreur", "Tous les champs doivent être remplis");
                 } else {
-                    // Try parsing all the input fields to ensure they are valid integers
+                    // Essayer de parser tous les champs d'entrée pour s'assurer qu'ils sont valides
                     try {
-                        int id = Integer.parseInt(this.communeDetailsModifPage.getIdTextFieldValue());
+                        int id = Integer.parseInt(this.communeDetailsModifPage.getIdValue());
                         int nbMaisons = Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText());
                         int nbAppartements = Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText());
                         int prixMoyen = Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText());
@@ -1131,28 +1142,39 @@ public class Controller implements EventHandler<ActionEvent> {
                         int population = Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue());
                         int annee = Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue());
         
-                        this.communeService.updateCommuneEtDonneesAnnuelles(id, nbMaisons, nbAppartements, prixMoyen, prixM2Moyen, surfaceMoyenne, depCulturelles, budgetTotal, population, annee);
-        
+                        // Récupération des années existantes pour la commune
                         Commune communeAvantModif = this.communeDetailsModifPage.getCommuneAvantModif();
-                        Commune communeWithGoodYear = getCommuneForYearAndCommune(communeAvantModif.getNomCommune(), annee);
+                        ArrayList<Integer> existingYears = getYearsForCommune(communeAvantModif);
         
-                        communeWithGoodYear.setNbMaison(nbMaisons);
-                        communeWithGoodYear.setNbAppart(nbAppartements);
-                        communeWithGoodYear.setPrixMoyen(prixMoyen);
-                        communeWithGoodYear.setPrixM2Moyen(prixM2Moyen);
-                        communeWithGoodYear.setSurfaceMoy(surfaceMoyenne);
-                        communeWithGoodYear.setDepCulturellesTotales(depCulturelles);
-                        communeWithGoodYear.setBudgetTotal(budgetTotal);
-                        communeWithGoodYear.setPopulation(population);
+                        // Vérification si l'année existe déjà
+                        if (existingYears.contains(annee)) {
+                            // Mise à jour de la commune et des données annuelles
+                            this.communeService.updateCommuneEtDonneesAnnuelles(id, nbMaisons, nbAppartements, prixMoyen, prixM2Moyen, surfaceMoyenne, depCulturelles, budgetTotal, population, annee);
         
-                        Annee anneeAvantModif = communeWithGoodYear.getAnnee();
-                        anneeAvantModif.setAnnee(annee);
-                        communeWithGoodYear.setAnnee(anneeAvantModif);
+                            Commune communeWithGoodYear = getCommuneForYearAndCommune(communeAvantModif.getNomCommune(), annee);
         
-                        this.administratorsPage.updateCommunesListView(this.communesRecente);
-                        this.mainPage.updateCommunesListView(this.communesRecente);
+                            communeWithGoodYear.setNbMaison(nbMaisons);
+                            communeWithGoodYear.setNbAppart(nbAppartements);
+                            communeWithGoodYear.setPrixMoyen(prixMoyen);
+                            communeWithGoodYear.setPrixM2Moyen(prixM2Moyen);
+                            communeWithGoodYear.setSurfaceMoy(surfaceMoyenne);
+                            communeWithGoodYear.setDepCulturellesTotales(depCulturelles);
+                            communeWithGoodYear.setBudgetTotal(budgetTotal);
+                            communeWithGoodYear.setPopulation(population);
         
-                        CustomAlert.showAlert("Modification Commune", "Commune modifié avec succès !");
+                            Annee anneeAvantModif = communeWithGoodYear.getAnnee();
+                            anneeAvantModif.setAnnee(annee);
+                            communeWithGoodYear.setAnnee(anneeAvantModif);
+        
+                            this.administratorsPage.updateCommunesListView(this.communesRecente);
+                            this.mainPage.updateCommunesListView(this.communesRecente);
+        
+                            CustomAlert.showAlert("Modification Commune", "Commune modifiée avec succès !");
+                        } else {
+                            // Nouvelle année, affichage du message "New Year"
+                            CustomAlert.showAlert("New Year", "Une nouvelle année a été ajoutée !");
+
+                        }
                     } catch (NumberFormatException e1) {
                         CustomAlert.showAlert("Erreur", "Les nombres doivent être des entiers valides");
                     }
@@ -1160,7 +1182,7 @@ public class Controller implements EventHandler<ActionEvent> {
             } catch (Exception ex) {
                 CustomAlert.showAlert("Erreur", "Une erreur inattendue s'est produite");
             }
-        }
+        }        
     }
 
 
@@ -1903,6 +1925,39 @@ public class Controller implements EventHandler<ActionEvent> {
         // return the arrayList containing the poosible year for a commune.
         return(returnValue);
     }
+
+
+    /**
+    * Allow to get all of available year in the database
+    *
+    * @return ArrayList of Integer which contains all of years.
+    * 
+    */
+    public List<Annee> getYearsFromDatabase() {
+        List<Annee> allYears = new ArrayList<>();
+        
+        try {
+            allYears = this.anneeService.getAllAnnee();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return allYears;
+    }
+
+
+    public List<Departement> getDepartementFromDatabase(){
+        List<Departement> allDepartement = new ArrayList<>();
+
+        try{
+            allDepartement = this.departementService.getAllDepartement();
+        } catch(Exception e){
+
+        }
+
+        return(allDepartement);
+    }
+    
 
 
     /**

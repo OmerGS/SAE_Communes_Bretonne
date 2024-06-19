@@ -37,6 +37,11 @@ public class AdministratorsPage extends Application {
     private Button editData;
     private int nbCommune;
     private Button exportDataButton;
+    private Button createCommune;
+
+    public Button getCreateCommune() {
+        return createCommune;
+    }
 
 
     public AdministratorsPage(Controller controller){
@@ -54,6 +59,18 @@ public class AdministratorsPage extends Application {
         Button filterButton = new Button("Filtrer");
         filterButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
 
+        String buttonStyleCreateCommune = "-fx-background-color: #3F4A99; " +
+                     "-fx-text-fill: #000000; " +      
+                     "-fx-background-radius: 10px; " +
+                     "-fx-border-radius: 10px; " +
+                     "-fx-padding: 10px 20px; " +
+                     "-fx-font-size: 14px; " +
+                     "-fx-cursor: hand;";
+
+        this.createCommune = new Button("Creer commune");
+        this.createCommune.setStyle(buttonStyleCreateCommune);
+        this.createCommune.setOnAction(this.controller);
+        
         // Checkboxes for filters
         this.toutesLesCommunes = new Button("Toutes");
         this.morbihanFilterButton = new Button("Morbihan");
@@ -77,7 +94,7 @@ public class AdministratorsPage extends Application {
         this.coteArmorFilterButton.setStyle(buttonStyle);
         this.illeEtVilaineFilterButton.setStyle(buttonStyle);
 
-        HBox communeFilterBox = new HBox(5, toutesLesCommunes, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
+        HBox communeFilterBox = new HBox(5, createCommune, toutesLesCommunes, morbihanFilterButton, finistereFilterButton, coteArmorFilterButton, illeEtVilaineFilterButton);
 
         this.toutesLesCommunes.setOnAction(this.controller);
         this.morbihanFilterButton.setOnAction(this.controller);
