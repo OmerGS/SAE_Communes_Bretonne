@@ -79,7 +79,7 @@ public class MainScenario {
                 int newPopulation = 15000;
                 int newAnnee = an1.getAnnee();
     
-                communeService.updateCommuneEtDonneesAnnuelles(idCommune, newNomCommune, newDepartementId, newNbMaison, newNbAppart, newPrixMoyen, newPrixM2Moyen, newSurfaceMoy, newDepensesCulturellesTotales, newBudgetTotal, newPopulation, newAnnee);
+                //communeService.updateCommuneEtDonneesAnnuelles(idCommune, newNomCommune, newDepartementId, newNbMaison, newNbAppart, newPrixMoyen, newPrixM2Moyen, newSurfaceMoy, newDepensesCulturellesTotales, newBudgetTotal, newPopulation, newAnnee);
     
                 // Example update call for Departement
                 int idDep = dep1.getIdDep();

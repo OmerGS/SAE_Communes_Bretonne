@@ -4,7 +4,6 @@ import data.Annee;
 import data.Commune;
 import data.Departement;
 import data.Gare;
-import data.Utilisateur;
 import data.exceptions.InvalidCommuneIdException;
 import data.exceptions.InvalidCommuneNameException;
 
@@ -296,40 +295,31 @@ public class CommuneService {
     }
 
 
-    public void updateCommuneEtDonneesAnnuelles(int idCommune, String newNomCommune, int newDepartementId, int newNbMaison, int newNbAppart, double newPrixMoyen, double newPrixM2Moyen, double newSurfaceMoy, double newDepensesCulturellesTotales, double newBudgetTotal, int newPopulation, int newAnnee) {
+    public void updateCommuneEtDonneesAnnuelles(int idCommune, int newNbMaison, int newNbAppart, double newPrixMoyen, double newPrixM2Moyen, double newSurfaceMoy, double newDepensesCulturellesTotales, double newBudgetTotal, int newPopulation, int newAnnee) {
         try (Connection connexion = ConnectionManager.getConnection()) {
     
-            String updateCommuneSQL = "UPDATE Commune SET nomCommune = ?, leDepartement = ? WHERE idCommune = ?";
-            String updateDonneesAnnuellesSQL = "UPDATE DonneesAnnuelles SET nbMaison = ?, nbAppart = ?, prixMoyen = ?, prixM2Moyen = ?, SurfaceMoy = ?, depensesCulturellesTotales = ?, budgetTotal = ?, population = ?, lAnnee = ? WHERE laCommune = ?";
+            String updateDonneesAnnuellesSQL = "UPDATE DonneesAnnuelles SET nbMaison = ?, nbAppart = ?, prixMoyen = ?, prixM2Moyen = ?, SurfaceMoy = ?, depensesCulturellesTotales = ?, budgetTotal = ?, population = ?, lAnnee = ? WHERE laCommune = ? AND lAnnee = ?";
     
-            try (PreparedStatement communeStatement = connexion.prepareStatement(updateCommuneSQL);
-                 PreparedStatement donneesStatement = connexion.prepareStatement(updateDonneesAnnuellesSQL)) {
+                PreparedStatement donneesStatement = connexion.prepareStatement(updateDonneesAnnuellesSQL); {
     
-                // Mettre à jour les données de la commune
-                communeStatement.setString(1, newNomCommune);
-                communeStatement.setInt(2, newDepartementId);
-                communeStatement.setInt(3, idCommune);
-                communeStatement.executeUpdate();
-    
-                // Mettre à jour les données annuelles
-                donneesStatement.setInt(1, newNbMaison);
-                donneesStatement.setInt(2, newNbAppart);
-                donneesStatement.setDouble(3, newPrixMoyen);
-                donneesStatement.setDouble(4, newPrixM2Moyen);
-                donneesStatement.setDouble(5, newSurfaceMoy);
-                donneesStatement.setDouble(6, newDepensesCulturellesTotales);
-                donneesStatement.setDouble(7, newBudgetTotal);
-                donneesStatement.setInt(8, newPopulation);
-                donneesStatement.setInt(9, newAnnee);
-                donneesStatement.setInt(10, idCommune);
-                donneesStatement.executeUpdate();
-    
-                System.out.println("Commune et données annuelles mises à jour avec succès dans la base de données.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+                    // Mettre à jour les données annuelles
+                    donneesStatement.setInt(1, newNbMaison);
+                    donneesStatement.setInt(2, newNbAppart);
+                    donneesStatement.setDouble(3, newPrixMoyen);
+                    donneesStatement.setDouble(4, newPrixM2Moyen);
+                    donneesStatement.setDouble(5, newSurfaceMoy);
+                    donneesStatement.setDouble(6, newDepensesCulturellesTotales);
+                    donneesStatement.setDouble(7, newBudgetTotal);
+                    donneesStatement.setInt(8, newPopulation);
+                    donneesStatement.setInt(9, newAnnee);
+                    donneesStatement.setInt(10, idCommune);
+                    donneesStatement.setInt(11, newAnnee);
+                    donneesStatement.executeUpdate();
+        
+                    System.out.println("Commune et données annuelles mises à jour avec succès dans la base de données.");
+                 }
         } catch (SQLException e) {
-            e.printStackTrace();
+                e.printStackTrace();
         }
     }
 

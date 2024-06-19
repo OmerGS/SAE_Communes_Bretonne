@@ -40,6 +40,7 @@ public class AccountPage extends Application {
     private TextField nameField;
     private TextField firstNameField;
     private TextField emailField;
+    private Label admin;
 
     /**
      * Public getter for Save
@@ -234,6 +235,7 @@ public class AccountPage extends Application {
         this.nameLabel = new Label("Omer");
         this.firstNameLabel = new Label("GUNES");
         this.emailLink = new Hyperlink("27omerf@gmail.com");
+        this.admin = new Label("Impossible de recuperer");
 
         this.nameField = new TextField();
         this.firstNameField = new TextField();
@@ -256,6 +258,7 @@ public class AccountPage extends Application {
         HBox nameBox = new HBox(10, new Label("Nom :"), nameStack);
         HBox firstNameBox = new HBox(10, new Label("Prénom :"), firstNameStack);
         HBox emailBox = new HBox(10, new Label("Email :"), emailStack);
+        HBox adminBox = new HBox(10, new Label("Role :"), admin);
 
         this.deleteButton = new Button("SUPPRIMER");
         deleteButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white;");
@@ -263,11 +266,15 @@ public class AccountPage extends Application {
         this.disconnectButton = new Button("Deconnexion");
         disconnectButton.setStyle("-fx-background-color: #8293D2; -fx-text-fill: black;");
 
-        infoPanel.getChildren().addAll(topRightBox, nameBox, firstNameBox, emailBox, deleteButton, disconnectButton, saveButton);
+        infoPanel.getChildren().addAll(topRightBox, nameBox, firstNameBox, emailBox, adminBox, deleteButton, disconnectButton, saveButton);
 
         return infoPanel;
     }
 
+
+    public Label getAdmin() {
+        return admin;
+    }
 
     public static void main(String[] args) {
         launch(args);

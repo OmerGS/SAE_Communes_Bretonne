@@ -19,7 +19,7 @@ import javafx.util.Callback;
 
 import java.util.List;
 
-public class MainPageAdmin extends Application {
+public class AdministratorsPage extends Application {
     private ListView<Commune> communeListView = new ListView<>();
     private TextField searchField;
     private Controller controller;
@@ -39,10 +39,8 @@ public class MainPageAdmin extends Application {
     private Button exportDataButton;
 
 
-    public MainPageAdmin(Controller controller){
-       /* this.controller = controller;
-        this.controller.setMainPageAdmin(this);
-        loadCommunes();*/
+    public AdministratorsPage(Controller controller){
+        this.controller = controller;
     }
 
 
@@ -147,6 +145,8 @@ public class MainPageAdmin extends Application {
             System.out.println("user.png not found");
         }
 
+        loadCommunes();
+
         ImageView menuIcon = null;
         try {
             menuIcon = new ImageView(new Image("file:../resources/image/menu.png"));
@@ -236,7 +236,7 @@ public class MainPageAdmin extends Application {
 
         this.searchField.setOnKeyTyped(event -> {
             String searchText = searchField.getText().trim();
-            this.controller.handleSearchEvent(searchText);
+            this.controller.handleSearchEventAdminPage(searchText);
         });
 
         this.userIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -258,7 +258,7 @@ public class MainPageAdmin extends Application {
         this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.cheminCourtButton.setOnAction(this.controller);
 
-        this.editData = new Button("Modifier les données");
+        this.editData = new Button("Page Principal");
         this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.editData.setOnAction(this.controller);
 
@@ -329,7 +329,7 @@ public class MainPageAdmin extends Application {
         Button detailsButton = new Button("Modifier");
         detailsButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
         detailsButton.setOnAction(event -> {
-            this.controller.showCommuneDetails(commune);
+            this.controller.editCommuneDetails(commune);
         });
         
         // Align button to the center
@@ -365,6 +365,7 @@ public class MainPageAdmin extends Application {
     private void loadCommunes() {
         List<Commune> communes = controller.getCommunesFromDataBase();
         this.nbCommune = communes.size();
+        this.resultsLabel.setText(nbCommune + " resultat");
         communeListView.getItems().addAll(communes);
     }
 
@@ -378,7 +379,6 @@ public class MainPageAdmin extends Application {
     }
 
     public void updateCommunesListView(List<Commune> communes) {
-        System.out.println("Updating ListView with " + communes.size() + " communes.");
         this.communeListView.getItems().clear();
         this.communeListView.getItems().addAll(communes);
 
