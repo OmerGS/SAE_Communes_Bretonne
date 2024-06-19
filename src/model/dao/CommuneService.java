@@ -13,24 +13,56 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Service class for handling operations related to Commune objects and their annual data in the database.
+ */
 public class CommuneService {
 
+    /**
+    * Instance of DepartementService allowing to make operation on the database 
+    */
     private DepartementService departementService;
+
+    /**
+    * List containing all of the departement 
+    */
     private List<Departement> listeDepartement;
     
+    /**
+    * Instance of AnneeService allowing to make operation on the database 
+    */
     private AnneeService anneeService;
+
+    /**
+    * List containing all of the years
+    */
     private List<Annee> listeAnnee;
 
+    /**
+    * Instance of GareService allowingto make operation on the database. 
+    */
     private GareService gareService;
+
+    /**
+    * List containing all of the TrainStation 
+    */
     private List<Gare> listeGare;
-    
+
+    /**
+    * Constructs a new CommuneService instance. Initializes the DepartementService,
+    * AnneeService, and GareService to populate lists of departments, years, and train stations.
+    * Any SQLException encountered during data retrieval is printed to standard error output.
+    */
     public CommuneService() {
+        //Recover all of Departement from the database
         this.departementService = new DepartementService();
         try {
             this.listeDepartement = departementService.getAllDepartement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        //Recover all of the years from the database
         this.anneeService = new AnneeService();
         try {
             this.listeAnnee = anneeService.getAllAnnee();
@@ -38,15 +70,22 @@ public class CommuneService {
             e.printStackTrace();
         }
 
+        //recover all of the TrainStation from the database
         this.gareService = new GareService();
         try {
             this.listeGare = gareService.getAllGares();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
     }
 
+    /**
+    * Finds and returns the Departement object from the list of departments (listeDepartement)
+    * that matches the given departementId.
+    *
+    * @param departementId The ID of the department to find.
+    * @return The Departement object with the specified ID, or null if not found.
+    */
     private Departement findDepartementById(int departementId) {
         for (Departement departement : listeDepartement) {
             if (departement.getIdDep() == departementId) {
@@ -56,6 +95,13 @@ public class CommuneService {
         return null;
     }
 
+    /**
+    * Finds and returns the Annee object from the list of years (listeAnnee) that matches
+    * the given year (lAnnee).
+    *
+    * @param lAnnee The year to find.
+    * @return The Annee object with the specified year, or null if not found.
+    */
     private Annee findAnnneByYear(int lAnnee) {
         for (Annee annee : listeAnnee) {
             if (annee.getAnnee() == lAnnee) {
@@ -65,6 +111,13 @@ public class CommuneService {
         return null;
     }
 
+    /**
+    * Finds and returns the Gare object from the list of train stations (listeGare) that matches
+    * the given commune ID.
+    *
+    * @param communeId The ID of the commune for which to find the train station.
+    * @return The Gare object associated with the specified commune ID, or null if not found.
+    */
     private Gare findGareByCommuneId(int communeId){
         for(Gare gare : listeGare){
             if(gare.getCommune() == communeId){
@@ -228,7 +281,15 @@ public class CommuneService {
     }
 
 
-    
+    /**
+    * Inserts a Commune and its annual data into the database.
+    * This method performs two SQL insert operations:
+    * 1. Inserts the Commune details into the 'Commune' table.
+    * 2. Inserts the annual data of the Commune into the 'DonneesAnnuelles' table.
+    *
+    * @param commune The Commune object containing all necessary details to be inserted.
+    * @throws SQLException If a database access error occurs.
+    */
     public void insertCommuneEtDonneesAnnuelles(Commune commune) {
         try (Connection connexion = ConnectionManager.getConnection()) {
     
@@ -267,6 +328,12 @@ public class CommuneService {
     }
 
 
+    /**
+    * Inserts annual data of a Commune into the 'DonneesAnnuelles' table for a new year.
+    *
+    * @param commune The Commune object containing the annual data to be inserted.
+    * @throws SQLException If a database access error occurs.
+    */
     public void insertCommuneEtDonneesAnnuellesNewYear(Commune commune) {
         try (Connection connexion = ConnectionManager.getConnection()) {
     
@@ -296,6 +363,12 @@ public class CommuneService {
     }
 
 
+    /**
+    * Deletes a Commune and its annual data from the database.
+    *
+    * @param idCommune The ID of the Commune to delete along with its annual data.
+    * @throws SQLException If a database access error occurs.
+    */
     public void dropCommuneEtDonneesAnnuelles(int idCommune) {
         try (Connection connexion = ConnectionManager.getConnection()) {
     
@@ -323,6 +396,21 @@ public class CommuneService {
     }
 
 
+    /**
+    * Updates the annual data of a Commune in the database.
+    *
+    * @param idCommune                       The ID of the Commune whose data needs to be updated.
+    * @param newNbMaison                     The new number of houses for the Commune.
+    * @param newNbAppart                     The new number of apartments for the Commune.
+    * @param newPrixMoyen                    The new average price for the Commune.
+    * @param newPrixM2Moyen                  The new average price per square meter for the Commune.
+    * @param newSurfaceMoy                   The new average surface area for the Commune.
+    * @param newDepensesCulturellesTotales   The new total cultural expenses for the Commune.
+    * @param newBudgetTotal                  The new total budget for the Commune.
+    * @param newPopulation                   The new population count for the Commune.
+    * @param newAnnee                        The new year for which the data is updated.
+    * @throws SQLException                  If a database access error occurs.
+    */
     public void updateCommuneEtDonneesAnnuelles(int idCommune, int newNbMaison, int newNbAppart, double newPrixMoyen, double newPrixM2Moyen, double newSurfaceMoy, double newDepensesCulturellesTotales, double newBudgetTotal, int newPopulation, int newAnnee) {
         try (Connection connexion = ConnectionManager.getConnection()) {
     
@@ -351,6 +439,13 @@ public class CommuneService {
         }
     }
 
+    /**
+    * Deletes all Communes and associated annual data and neighborhood information from the database.
+    * This operation is irreversible and removes all records from the 'Commune', 'DonneesAnnuelles',
+    * and 'Voisinage' tables.
+    *
+    * @throws SQLException If a database access error occurs.
+    */
     public void dropAllCommunes() {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteCommuneSQL = "DELETE FROM Commune";
@@ -375,11 +470,20 @@ public class CommuneService {
     
     
 
-
+    /**
+    * Retrieves the list of all train stations (Gares).
+    *
+    * @return The list of train stations (Gares).
+    */
     public List<Gare> getListeGare(){
         return(this.listeGare);
     }
 
+    /**
+    * Retrieves the list of all years (Annees).
+    *
+    * @return The list of years (Annees).
+    */
     public List<Annee> getListeAnnee(){
         return(this.listeAnnee);
     }
