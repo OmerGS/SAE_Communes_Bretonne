@@ -46,9 +46,6 @@ public class CommuneDetailsModifPage {
     private TextField prixM2MoyenTextField;
     private TextField surfaceMoyenneTextField;
 
-
-    private Label idLabel;
-    private Label depLabel;
     private TextField anneeTextField;
     private TextField populationTextField;
     private TextField depCulturellesTextField;
@@ -60,6 +57,26 @@ public class CommuneDetailsModifPage {
     private Label depRepLabel;
     private Label importanteRepLabel;
     private Label gareRepLabel;
+
+    public Label getImportanteLabel() {
+        return importanteLabel;
+    }
+
+    public Label getIdRepLabel() {
+        return idRepLabel;
+    }
+
+    public Label getDepRepLabel() {
+        return depRepLabel;
+    }
+
+    public Label getImportanteRepLabel() {
+        return importanteRepLabel;
+    }
+
+    public Label getGareRepLabel() {
+        return gareRepLabel;
+    }
 
     private Commune communeAvantModif;
 
@@ -170,13 +187,13 @@ public class CommuneDetailsModifPage {
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
 
-        this.idLabel = new Label("ID : ");
+        Label idLabel = new Label("ID : ");
         idLabel.setStyle("-fx-font-size: 14px;");
-        idRepLabel = new Label();
+        this.idRepLabel = new Label("" + commune.getIdCommune());
 
-        this.depLabel = new Label("D\u00e9partement : ");
+        Label depLabel = new Label("D\u00e9partement : ");
         depLabel.setStyle("-fx-font-size: 14px;");
-        depRepLabel = new Label();
+        depRepLabel = new Label("" + commune.getDepartement().getIdDep());
 
         Label anneeLabel = new Label("Ann\u00e9e de donn\u00e9es : ");
         anneeLabel.setStyle("-fx-font-size: 14px;");
@@ -188,7 +205,7 @@ public class CommuneDetailsModifPage {
 
 
         importanteLabel = new Label("Importante : ");
-        importanteRepLabel = new Label();
+        importanteRepLabel = new Label("" + commune.isMostImportant());
 
         Label depCulturellesLabel = new Label("D\u00e9penses culturelles totales : ");
         depCulturellesLabel.setStyle("-fx-font-size: 14px;");
@@ -201,7 +218,12 @@ public class CommuneDetailsModifPage {
 
         Label gareLabel = new Label("Gare : ");
         gareLabel.setStyle("-fx-font-size: 14px;");
-        gareRepLabel = new Label();
+        if (commune.aUneGare()) {
+            gareRepLabel = new Label("" + commune.getGare().getNomGare());
+        } else {
+            gareRepLabel = new Label("Aucune");
+        }
+
 
 
         grid.add(idLabel, 0, 0);
@@ -367,15 +389,6 @@ public class CommuneDetailsModifPage {
         updateNeighborsPane(commune, controller);
         updateGeneralInfoBox(commune);
         updateHousingStatsBox(commune);
-    }
-
-
-    public String getIdValue() {
-        return this.idLabel.getText();
-    }
-
-    public String getDepLabelValue() {
-        return depLabel.getText();
     }
 
     public String getAnneeTextFieldValue() {

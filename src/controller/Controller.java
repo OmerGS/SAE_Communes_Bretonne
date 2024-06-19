@@ -9,8 +9,6 @@ import java.util.Timer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import dao.AeroportService;
 import dao.AnneeService;
@@ -160,11 +158,14 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private DepartementService departementService;
 
+    private double tauxInflation;
+
     /**
     * The constructor of Controller. 
     * @param connectionPage
     */
     public Controller(MainPage mainPage) {
+        this.departementService = new DepartementService();
         this.anneeService = new AnneeService();
         this.communeDetailsModifPage = new CommuneDetailsModifPage();
         this.userServices = new UserService();
@@ -187,6 +188,7 @@ public class Controller implements EventHandler<ActionEvent> {
     * The Empty constructor of controller 
     */
     public Controller() {
+        this.departementService = new DepartementService();
         this.anneeService = new AnneeService();
         this.communeDetailsModifPage = new CommuneDetailsModifPage();
         this.userServices = new UserService();
@@ -652,6 +654,11 @@ public class Controller implements EventHandler<ActionEvent> {
 
         // If the user clicked on reload database, we call database for had the data stored in the database.
         if(e.getSource() == this.mainPage.getReloadDatabase()){
+            try {
+                this.listeAnnee = this.anneeService.getAllAnnee();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             this.mainPage.loadCommunes(getCommunesFromDataBase());
             this.administratorsPage.loadCommunes(getCommunesFromDataBase());
             this.listeUtilisateur = this.userServices.loadAllUsers();
@@ -1107,7 +1114,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-    // ! ----- CommuneDetailsPage
+    // ! ----- CommuneDetailsModifPage
 
 
 
@@ -1116,7 +1123,7 @@ public class Controller implements EventHandler<ActionEvent> {
         if (e.getSource() == this.communeDetailsModifPage.getSaveButton()) {
             try {
                 // Vérification des champs obligatoires
-                if (this.communeDetailsModifPage.getIdValue() == null || this.communeDetailsModifPage.getIdValue().isEmpty() ||
+                if (this.communeDetailsModifPage.getIdRepLabel().getText() == null || this.communeDetailsModifPage.getIdRepLabel().getText().isEmpty() ||
                     this.communeDetailsModifPage.getNbMaisonsText() == null || this.communeDetailsModifPage.getNbMaisonsText().isEmpty() ||
                     this.communeDetailsModifPage.getNbAppartementsText() == null || this.communeDetailsModifPage.getNbAppartementsText().isEmpty() ||
                     this.communeDetailsModifPage.getPrixMoyenText() == null || this.communeDetailsModifPage.getPrixMoyenText().isEmpty() ||
@@ -1129,9 +1136,10 @@ public class Controller implements EventHandler<ActionEvent> {
                 {
                     CustomAlert.showAlert("Erreur", "Tous les champs doivent être remplis");
                 } else {
-                    // Essayer de parser tous les champs d'entrée pour s'assurer qu'ils sont valides
                     try {
-                        int id = Integer.parseInt(this.communeDetailsModifPage.getIdValue());
+                        // Essayer de parser tous les champs d'entrée pour s'assurer qu'ils sont valides
+                        String nomCommune = this.communeDetailsModifPage.getNameLabel().getText();
+                        int id = Integer.parseInt(this.communeDetailsModifPage.getIdRepLabel().getText());
                         int nbMaisons = Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText());
                         int nbAppartements = Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText());
                         int prixMoyen = Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText());
@@ -1145,8 +1153,9 @@ public class Controller implements EventHandler<ActionEvent> {
                         // Récupération des années existantes pour la commune
                         Commune communeAvantModif = this.communeDetailsModifPage.getCommuneAvantModif();
                         ArrayList<Integer> existingYears = getYearsForCommune(communeAvantModif);
+                        List<Annee> allYearsFromDB = getYearsFromDatabase();
         
-                        // Vérification si l'année existe déjà
+                        // Vérification si l'année existe déjà pour la commune
                         if (existingYears.contains(annee)) {
                             // Mise à jour de la commune et des données annuelles
                             this.communeService.updateCommuneEtDonneesAnnuelles(id, nbMaisons, nbAppartements, prixMoyen, prixM2Moyen, surfaceMoyenne, depCulturelles, budgetTotal, population, annee);
@@ -1171,9 +1180,54 @@ public class Controller implements EventHandler<ActionEvent> {
         
                             CustomAlert.showAlert("Modification Commune", "Commune modifiée avec succès !");
                         } else {
-                            // Nouvelle année, affichage du message "New Year"
-                            CustomAlert.showAlert("New Year", "Une nouvelle année a été ajoutée !");
+                            // Vérification si l'année existe déjà dans la base de données
+                            Annee anneeBDD = null;
+                            for (Annee an : allYearsFromDB) {
+                                if (an.getAnnee() == annee) {
+                                    anneeBDD = an;
+                                    break;
+                                }
+                            }
+        
+                            if (anneeBDD != null) {
+                                // Year is in the database
+                                Departement departementNouvelle = getDepartementById(Integer.parseInt(this.communeDetailsModifPage.getDepRepLabel().getText()));
+                                
+                                Commune communeNouvelle = new Commune(
+                                    null, anneeBDD, id, nomCommune, nbMaisons, 
+                                    nbAppartements, prixMoyen, prixM2Moyen, surfaceMoyenne, 
+                                    depCulturelles, budgetTotal, population, departementNouvelle);
+        
+                                this.communeService.insertCommuneEtDonneesAnnuellesNewYear(communeNouvelle);
+                                    
+                                this.communeToute.add(communeNouvelle);
+        
+                                this.administratorsPage.updateCommunesListView(this.communesRecente);
+                                this.mainPage.updateCommunesListView(this.communesRecente);
+        
+                                CustomAlert.showAlert("Nouvelle donnée ajoutée", "Ajout avec succès.");
+                            } else {
+                                this.tauxInflation = 0;
 
+                                Annee anneeCreer = new Annee(Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()), tauxInflation);
+                                this.anneeService.insertAnnee(anneeCreer);
+
+                                Departement departementNouvelle = getDepartementById(Integer.parseInt(this.communeDetailsModifPage.getDepRepLabel().getText()));
+                                
+                                Commune communeNouvelle = new Commune(
+                                    null, anneeCreer, id, nomCommune, nbMaisons, 
+                                    nbAppartements, prixMoyen, prixM2Moyen, surfaceMoyenne, 
+                                    depCulturelles, budgetTotal, population, departementNouvelle);
+        
+                                this.communeService.insertCommuneEtDonneesAnnuellesNewYear(communeNouvelle);
+                                    
+                                this.communeToute.add(communeNouvelle);
+        
+                                this.administratorsPage.updateCommunesListView(this.communesRecente);
+                                this.mainPage.updateCommunesListView(this.communesRecente);
+
+                                CustomAlert.showAlert("Ajout d'une nouvelle année", "Marche Correct");
+                            }
                         }
                     } catch (NumberFormatException e1) {
                         CustomAlert.showAlert("Erreur", "Les nombres doivent être des entiers valides");
@@ -1182,13 +1236,13 @@ public class Controller implements EventHandler<ActionEvent> {
             } catch (Exception ex) {
                 CustomAlert.showAlert("Erreur", "Une erreur inattendue s'est produite");
             }
-        }        
+        }     
     }
 
 
 
 
-
+    
 
 
 
@@ -1867,37 +1921,37 @@ public class Controller implements EventHandler<ActionEvent> {
     * @return ArrayList<Commune> which contains the most recent year for each commune.
     */
     public ArrayList<Commune> getCommunesFromDataBase() {
-    this.communesRecente = new ArrayList<>();
-    try {
-        // On récupère toutes les communes avec getAllCommunes du service commune (appelle la base de données)
-        this.communeToute = this.communeService.getAllCommunes();
-        
-        // Utilisation d'une map pour stocker la commune la plus récente par identifiant
-        HashMap<Integer, Commune> recentCommunesMap = new HashMap<>();
-        
-        for (Commune commune : communeToute) {
-            int communeId = commune.getIdCommune();
-            int currentYear = commune.getAnnee().getAnnee();
+        this.communesRecente = new ArrayList<>();
+        try {
+            // On récupère toutes les communes avec getAllCommunes du service commune (appelle la base de données)
+            this.communeToute = this.communeService.getAllCommunes();
             
-            // Si la commune est déjà dans la map, on compare les années
-            if (recentCommunesMap.containsKey(communeId)) {
-                int mostRecentYear = recentCommunesMap.get(communeId).getAnnee().getAnnee();
-                if (currentYear > mostRecentYear) {
+            // Utilisation d'une map pour stocker la commune la plus récente par identifiant
+            HashMap<Integer, Commune> recentCommunesMap = new HashMap<>();
+            
+            for (Commune commune : communeToute) {
+                int communeId = commune.getIdCommune();
+                int currentYear = commune.getAnnee().getAnnee();
+                
+                // Si la commune est déjà dans la map, on compare les années
+                if (recentCommunesMap.containsKey(communeId)) {
+                    int mostRecentYear = recentCommunesMap.get(communeId).getAnnee().getAnnee();
+                    if (currentYear > mostRecentYear) {
+                        recentCommunesMap.put(communeId, commune);
+                    }
+                } else {
                     recentCommunesMap.put(communeId, commune);
                 }
-            } else {
-                recentCommunesMap.put(communeId, commune);
             }
+            
+            this.communesRecente.addAll(recentCommunesMap.values());
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         
-        this.communesRecente.addAll(recentCommunesMap.values());
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return this.communesRecente;
     }
-    
-    return this.communesRecente;
-}
 
 
 
@@ -1959,6 +2013,20 @@ public class Controller implements EventHandler<ActionEvent> {
     }
     
 
+    public Departement getDepartementById(int idDep) {
+        try {
+            this.listeDepartement = this.departementService.getAllDepartement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for (Departement dep : this.listeDepartement) {
+            if (dep.getIdDep() == idDep) {
+                return dep;
+            }
+        }
+        return null;
+    }
+
 
     /**
     * Allow to get a specific commune which contains data of specified year 
@@ -1993,6 +2061,11 @@ public class Controller implements EventHandler<ActionEvent> {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 
 
 
