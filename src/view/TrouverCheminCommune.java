@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,67 +41,80 @@ public class TrouverCheminCommune extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        VBox root = new VBox(10);
-        root.setPadding(new Insets(10));
-        root.setAlignment(Pos.TOP_CENTER);
-
+        StackPane root = new StackPane();
+        root.setStyle("-fx-background-color: linear-gradient(to bottom, #00bfff 10%, #FFFFFF);");
+    
+        // Création des éléments principaux
         HBox topBar = createTopBar();
-
-        menuBox = createMenuBox();
-        menuBox.setVisible(false);
-
+    
+        VBox contentBox = new VBox(10);
+        contentBox.setAlignment(Pos.TOP_CENTER);
+        contentBox.setPadding(new Insets(10));
+    
         HBox inputBox = new HBox(10);
         inputBox.setAlignment(Pos.CENTER);
-        inputBox.setPadding(new Insets(10));
         inputBox.setStyle("-fx-background-color: #000000; -fx-padding: 10; -fx-border-radius: 10px; -fx-background-radius: 10px;");
-
-        this.startCommuneField = new TextField();
-        this.startCommuneField.setPromptText("Commune de d\u00e9part");
-        this.startCommuneField.setPrefWidth(150);
-        this.startCommuneField.setStyle("-fx-background-color: #fff; -fx-border-color: #FFFFFF; -fx-border-radius: 10px; -fx-background-radius: 10px;");
-
-        this.endCommuneField = new TextField();
-        this.endCommuneField.setPromptText("Commune d'arriv\u00e9e");
-        this.endCommuneField.setPrefWidth(150);
-        this.endCommuneField.setStyle("-fx-background-color: #fff; -fx-border-color: #FFFFFF; -fx-border-radius: 10px; -fx-background-radius: 10px;");
-
-        inputBox.getChildren().addAll(this.startCommuneField, this.endCommuneField);
-
-        this.findPathButton = new Button("Trouver Chemin");
-        this.findPathButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        this.findPathButton.setOnAction(this.controller);
-
-        this.controller.verifyAdminTrouverChemin();
-
-        this.resultLabel = new Label();
-        this.resultLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
-
-        this.resultButtonBox = new HBox();
-
-        // Ajout de l'ImageView
-        this.imageView = new ImageView();
-        this.imageView.setImage(null);
-        this.imageView.setFitWidth(800);
-        this.imageView.setFitHeight(600);
-        StackPane imagePane = new StackPane(this.imageView);
-
-        root.getChildren().addAll(topBar, inputBox, this.findPathButton, this.resultLabel, this.resultButtonBox, menuBox, imagePane);
-
-        Scene scene = new Scene(root, 800, 1000);
+        inputBox.setPadding(new Insets(10));
+    
+        startCommuneField = new TextField();
+        startCommuneField.setPromptText("Commune de départ");
+        startCommuneField.setPrefWidth(150);
+        startCommuneField.setStyle("-fx-background-color: #fff; -fx-border-color: #FFFFFF; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+    
+        endCommuneField = new TextField();
+        endCommuneField.setPromptText("Commune d'arrivée");
+        endCommuneField.setPrefWidth(150);
+        endCommuneField.setStyle("-fx-background-color: #fff; -fx-border-color: #FFFFFF; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+    
+        inputBox.getChildren().addAll(startCommuneField, endCommuneField);
+    
+        findPathButton = new Button("Trouver Chemin");
+        findPathButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: #fff; -fx-background-radius: 10px; -fx-border-radius: 10px;");
+        findPathButton.setOnAction(controller);
+    
+        resultLabel = new Label();
+        resultLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
+    
+        resultButtonBox = new HBox();
+    
+        // ImageView avec une image de trajet
+        Image cheminImage = new Image("file:chemin_image.png"); // Remplacez par le chemin de votre image
+        imageView = new ImageView(cheminImage);
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(800); // Ajustez en fonction de la taille réelle de votre image
+        imageView.setFitHeight(600); // Ajustez en fonction de la taille réelle de votre image
+    
+        StackPane imagePane = new StackPane(imageView);
+    
+        // Ajout des éléments à contentBox
+        contentBox.getChildren().addAll(topBar, inputBox, findPathButton, resultLabel, resultButtonBox, imagePane);
+    
+        // Création du menuBox
+        menuBox = createMenuBox();
+        menuBox.setVisible(false); // Initialiser comme invisible
+    
+        // Positionnement de contentBox au centre et menuBox en dessous dans le StackPane
+        StackPane.setAlignment(contentBox, Pos.CENTER);
+        StackPane.setAlignment(menuBox, Pos.BOTTOM_RIGHT);
+    
+        // Ajout de contentBox et menuBox au StackPane (root)
+        root.getChildren().addAll(contentBox, menuBox);
+    
+        // ScrollPane pour envelopper root (si nécessaire)
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+    
+        Scene scene = new Scene(scrollPane, 800, 600); // Taille initiale de la scène
         primaryStage.setScene(scene);
         primaryStage.setTitle("Trouver Chemin entre Communes");
-
-        Screen screen = Screen.getPrimary();
-        Rectangle2D bounds = screen.getVisualBounds();
-
-        primaryStage.setX(bounds.getMinX());
-        primaryStage.setY(bounds.getMinY());
-        primaryStage.setWidth(bounds.getWidth());
-        primaryStage.setHeight(bounds.getHeight());
-        
+    
+        // Positionnement et affichage de la scène
         primaryStage.show();
     }
 
+
+    
     private HBox createTopBar() {
         HBox topBar = new HBox(10);
         topBar.setStyle("-fx-padding: 10; -fx-background-color: #000000; -fx-text-fill: #fff;");
@@ -111,7 +125,6 @@ public class TrouverCheminCommune extends Application {
         logo.setFitWidth(50);
         logo.setFitHeight(50);
         logo.setClip(new Circle(25, 25, 25));
-        //logo.setStyle("-fx-background-color: #ffffff; -fx-shape: \"M20 0 L40 20 L20 40 L0 20 Z\";");
 
         ImageView menuIcon = null;
         try {
@@ -150,21 +163,21 @@ public class TrouverCheminCommune extends Application {
         VBox menuBox = new VBox(10);
         menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
         menuBox.setAlignment(Pos.CENTER_RIGHT);
-        menuBox.setMaxWidth(400);
+        menuBox.setMaxWidth(300);
 
         this.pagePrincipale = new Button("Page Principale");
         this.pagePrincipale.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.pagePrincipale.setOnAction(this.controller);
 
-        this.editData = new Button("Modifier les données");
+        this.editData = new Button("Modifier les donn\u00e9es");
         this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.editData.setOnAction(this.controller);
 
-        this.exportDataButton = new Button("Exporter Données");
+        this.exportDataButton = new Button("Exporter Donn\u00e9es");
         this.exportDataButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.exportDataButton.setOnAction(this.controller);
 
-        this.reloadDatabase = new Button("Rechargez la base de données");
+        this.reloadDatabase = new Button("Rechargez la base de donn\u00e9es");
         this.reloadDatabase.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.reloadDatabase.setOnAction(this.controller);
 
