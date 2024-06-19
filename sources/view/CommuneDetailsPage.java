@@ -29,9 +29,10 @@ public class CommuneDetailsPage {
     private static ComboBox<Integer> yearsComboBox;
     private static Label nameLabel;
     private static Stage detailsStage;
+
     private static TitledPane generalInfoPane;
     private static TitledPane housingStatsPane;
-    
+
     public static void showCommune(Commune commune, Controller controller) {
         detailsStage = new Stage();
         detailsStage.setTitle("D\u00e9tails de la commune");
@@ -250,7 +251,7 @@ public class CommuneDetailsPage {
         }
     }
 
-    private static ComboBox<Integer> createYearsComboBox(Commune commune, Controller controller) {
+   private static ComboBox<Integer> createYearsComboBox(Commune commune, Controller controller) {
         yearsComboBox = new ComboBox<>();
 
         ArrayList<Integer> years = controller.getYearsForCommune(commune);
