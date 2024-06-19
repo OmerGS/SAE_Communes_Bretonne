@@ -206,7 +206,7 @@ public class UserService {
     public void sendVerificationEmail(String email, String code) throws IOException, MessagingException {
         EmailService emailService = new EmailService();
         String subject = "Code de vérification";
-        String message = "Votre code de vérification est : " + code;
+        String message = "Votre code de v\u00e9rification est : " + code;
         emailService.sendEmail(email, subject, message);
     }
 
