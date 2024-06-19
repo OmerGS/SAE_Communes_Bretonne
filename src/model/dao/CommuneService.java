@@ -133,7 +133,6 @@ public class CommuneService {
                     // Ajouter la commune à la liste globale
                     allCommunes.add(commune);
                 } catch (InvalidCommuneIdException | InvalidCommuneNameException e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -268,6 +267,35 @@ public class CommuneService {
     }
 
 
+    public void insertCommuneEtDonneesAnnuellesNewYear(Commune commune) {
+        try (Connection connexion = ConnectionManager.getConnection()) {
+    
+            String insertDonneesAnnuellesSQL = "INSERT INTO DonneesAnnuelles (lAnnee, laCommune, nbMaison, nbAppart, prixMoyen, prixM2Moyen, SurfaceMoy, depensesCulturellesTotales, budgetTotal, population) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+            try (PreparedStatement donneesStatement = connexion.prepareStatement(insertDonneesAnnuellesSQL)) {
+                // Insérer les données annuelles
+                donneesStatement.setInt(1, commune.getAnnee().getAnnee());
+                donneesStatement.setInt(2, commune.getIdCommune());
+                donneesStatement.setInt(3, commune.getNbMaison());
+                donneesStatement.setInt(4, commune.getNbAppart());
+                donneesStatement.setDouble(5, commune.getPrixMoyen());
+                donneesStatement.setDouble(6, commune.getPrixM2Moyen());
+                donneesStatement.setDouble(7, commune.getSurfaceMoy());
+                donneesStatement.setDouble(8, commune.getDepCulturellesTotales());
+                donneesStatement.setDouble(9, commune.getBudgetTotal());
+                donneesStatement.setInt(10, commune.getPopulation());
+                donneesStatement.executeUpdate();
+    
+                System.out.println("Commune et données annuelles enregistrées avec succès dans la base de données.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void dropCommuneEtDonneesAnnuelles(int idCommune) {
         try (Connection connexion = ConnectionManager.getConnection()) {
     
@@ -322,7 +350,6 @@ public class CommuneService {
                 e.printStackTrace();
         }
     }
-
 
     public void dropAllCommunes() {
         try (Connection connexion = ConnectionManager.getConnection()) {
