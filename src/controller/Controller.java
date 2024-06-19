@@ -1002,7 +1002,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
         if(e.getSource() == this.administratorsPage.getEditData()){
             Stage stage = (Stage) this.administratorsPage.getExportButton().getScene().getWindow();
-            this.administratorsPage.start(stage);
+            this.mainPage.start(stage);
         }
     }
 
@@ -1113,18 +1113,25 @@ public class Controller implements EventHandler<ActionEvent> {
             Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()));
 
             Commune communeAvantModif = this.communeDetailsModifPage.getCommuneAvantModif();
+            Commune communeWithGoodYear = getCommuneForYearAndCommune(communeAvantModif.getNomCommune(), Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()));
 
-            communeAvantModif.setNbMaison(Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText()));
-            communeAvantModif.setNbAppart(Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText()));
-            communeAvantModif.setPrixMoyen(Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText()));
-            communeAvantModif.setPrixM2Moyen(Integer.parseInt(this.communeDetailsModifPage.getPrixM2MoyenText()));
-            communeAvantModif.setSurfaceMoy(Integer.parseInt(this.communeDetailsModifPage.getSurfaceMoyenneText()));
-            communeAvantModif.setDepCulturellesTotales(Integer.parseInt(this.communeDetailsModifPage.getDepCulturellesTextFieldValue()));
-            communeAvantModif.setBudgetTotal(Integer.parseInt(this.communeDetailsModifPage.getBudgetTotalField().getText()));
-            communeAvantModif.setPopulation(Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue()));
+            communeWithGoodYear.setNbMaison(Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText()));
+            communeWithGoodYear.setNbAppart(Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText()));
+            communeWithGoodYear.setPrixMoyen(Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText()));
+            communeWithGoodYear.setPrixM2Moyen(Integer.parseInt(this.communeDetailsModifPage.getPrixM2MoyenText()));
+            communeWithGoodYear.setSurfaceMoy(Integer.parseInt(this.communeDetailsModifPage.getSurfaceMoyenneText()));
+            communeWithGoodYear.setDepCulturellesTotales(Integer.parseInt(this.communeDetailsModifPage.getDepCulturellesTextFieldValue()));
+            communeWithGoodYear.setBudgetTotal(Integer.parseInt(this.communeDetailsModifPage.getBudgetTotalField().getText()));
+            communeWithGoodYear.setPopulation(Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue()));
+            
+            Annee anneeAvantModif = communeWithGoodYear.getAnnee();
+            anneeAvantModif.setAnnee(Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()));
+            communeWithGoodYear.setAnnee(anneeAvantModif);
 
             this.administratorsPage.updateCommunesListView(this.communesRecente);
             this.mainPage.updateCommunesListView(this.communesRecente);
+
+            CustomAlert.showAlert("Modification Commune", "Commune ajouté avec succès !");
         }
 
 

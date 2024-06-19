@@ -258,7 +258,7 @@ public class AdministratorsPage extends Application {
         this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.cheminCourtButton.setOnAction(this.controller);
 
-        this.editData = new Button("Modifier les données");
+        this.editData = new Button("Page Principal");
         this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
         this.editData.setOnAction(this.controller);
 
