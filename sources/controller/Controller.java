@@ -384,31 +384,31 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.envoieCodeValidation = new CodeAlert(this);
                     envoieCodeValidation.askCode(newEmail);
                 } else {
-                    this.accountPage.getNameLabel().setText(this.accountPage.getNameField().getText());
-                    this.accountPage.getFirstNameLabel().setText(this.accountPage.getFirstNameField().getText());
-                    this.accountPage.getEmailLink().setText(this.accountPage.getEmailField().getText());
-
-                    this.accountPage.getNameLabel().setVisible(true);
-                    this.accountPage.getFirstNameLabel().setVisible(true);
-                    this.accountPage.getEmailLink().setVisible(true);
-
-                    this.accountPage.getNameField().setVisible(false);
-                    this.accountPage.getFirstNameField().setVisible(false);
-                    this.accountPage.getEmailField().setVisible(false);
-
-                    this.accountPage.getModifyButton().setVisible(true);
-                    this.accountPage.getSaveButton().setVisible(false);
-
-                    String surname = this.accountPage.getNameLabel().getText();
-                    String name = this.accountPage.getFirstNameLabel().getText();
-                    String email = this.accountPage.getEmailLink().getText();
-                    this.userServices.updateUser(this.currentUser.getEmail(), surname, name, email);
-
-                    this.currentUser.setNom(surname);
-                    this.currentUser.setPrenom(name);
+                    CustomAlert.showAlert("Erreur", "Mail deja existant");
                 }
-            } else {
-                CustomAlert.showAlert("Alerte", "Le mail est invalide");
+            } else if(this.currentUser.getEmail().equals(this.currentUser.getEmail())) {
+                this.accountPage.getNameLabel().setText(this.accountPage.getNameField().getText());
+                this.accountPage.getFirstNameLabel().setText(this.accountPage.getFirstNameField().getText());
+                this.accountPage.getEmailLink().setText(this.accountPage.getEmailField().getText());
+
+                this.accountPage.getNameLabel().setVisible(true);
+                this.accountPage.getFirstNameLabel().setVisible(true);
+                this.accountPage.getEmailLink().setVisible(true);
+
+                this.accountPage.getNameField().setVisible(false);
+                this.accountPage.getFirstNameField().setVisible(false);
+                this.accountPage.getEmailField().setVisible(false);
+
+                this.accountPage.getModifyButton().setVisible(true);
+                this.accountPage.getSaveButton().setVisible(false);
+
+                String surname = this.accountPage.getNameLabel().getText();
+                String name = this.accountPage.getFirstNameLabel().getText();
+                String email = this.accountPage.getEmailLink().getText();
+                this.userServices.updateUser(this.currentUser.getEmail(), surname, name, email);
+
+                this.currentUser.setNom(surname);
+                this.currentUser.setPrenom(name);
             }
         }
     }
