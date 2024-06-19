@@ -105,6 +105,11 @@ public class AeroportService {
     }
 
 
+    /**
+    * Inserts a new airport into the database.
+    *
+    * @param aeroport The Aeroport object containing airport details to be inserted.
+    */
     public void insertAeroport(Aeroport aeroport) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "INSERT INTO Aeroport (nom, adresse, leDepartement) VALUES (?, ?, ?)";
@@ -122,6 +127,13 @@ public class AeroportService {
         }
     }
 
+    /**
+    * Updates an existing airport's address and associated department in the database.
+    *
+    * @param nom             The name of the airport to update.
+    * @param newAdresse      The new address to update.
+    * @param newDepartementId The new department ID to update.
+    */
     public void updateAeroport(String nom, String newAdresse, int newDepartementId) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "UPDATE Aeroport SET adresse = ?, leDepartement = ? WHERE nom = ?";
@@ -139,6 +151,11 @@ public class AeroportService {
         }
     }
 
+    /**
+    * Deletes an airport from the database based on its name.
+    *
+    * @param nom The name of the airport to delete.
+    */
     public void dropAeroport(String nom) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "DELETE FROM Aeroport WHERE nom = ?";
@@ -154,7 +171,10 @@ public class AeroportService {
         }
     }
 
-
+    /**
+    * Deletes all airports from the database.
+    * Use with caution as it deletes all records in the Aeroport table.
+    */
     public void dropAllAeroports() {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "DELETE FROM Aeroport";
@@ -168,4 +188,5 @@ public class AeroportService {
             e.printStackTrace();
         }
     }
+
 }

@@ -24,6 +24,7 @@ import data.Gare;
 import data.Utilisateur;
 import view.AccountPage;
 import view.AdministratorsPage;
+import view.CommuneCreatePage;
 import view.CommuneDetailsModifPage;
 import view.CommuneDetailsPage;
 import view.ConnectionPage;
@@ -138,27 +139,60 @@ public class Controller implements EventHandler<ActionEvent> {
     */
     private String pendingNewEmail;
 
+    /**
+    * List containing all of TrainStation 
+    */
     private List<Gare> listeGare;
 
+    /**
+    * Instance of GareServices allowing to interract with bdd 
+    */
     private GareService gareService;
 
+    /**
+    * Instance of CommuneService allowing to interract with the database 
+    */
     private CommuneService communeService;
 
+    /**
+    * List containing all of Years 
+    */
     private List<Annee> listeAnnee;
 
+    /**
+    * List containing all of the Airport 
+    */
     private List<Aeroport> listeAeroport;
 
+    /**
+    * List containing all of the Department 
+    */
     private List<Departement> listeDepartement;
 
+    /**
+    * Administrators Page 
+    */
     private AdministratorsPage administratorsPage;
 
+    /**
+    * CommuneDetailsModifPage for change the data of a specific commune 
+    */
     private CommuneDetailsModifPage communeDetailsModifPage;
 
+    /**
+    * Instance of AnneeService allowing to interract with the database 
+    */
     private AnneeService anneeService;
 
+    /**
+    * Instance of DepartementService allowing to interract with the database 
+    */
     private DepartementService departementService;
 
-    private double tauxInflation;
+    /**
+    * Page for create commune 
+    */
+    private CommuneCreatePage communeCreatePage;
 
 
     /**
@@ -166,6 +200,7 @@ public class Controller implements EventHandler<ActionEvent> {
     * @param connectionPage
     */
     public Controller(MainPage mainPage) {
+        this.communeCreatePage = new CommuneCreatePage();
         this.departementService = new DepartementService();
         this.anneeService = new AnneeService();
         this.communeDetailsModifPage = new CommuneDetailsModifPage();
@@ -189,6 +224,7 @@ public class Controller implements EventHandler<ActionEvent> {
     * The Empty constructor of controller 
     */
     public Controller() {
+        this.communeCreatePage = new CommuneCreatePage();
         this.departementService = new DepartementService();
         this.anneeService = new AnneeService();
         this.communeDetailsModifPage = new CommuneDetailsModifPage();
@@ -260,9 +296,14 @@ public class Controller implements EventHandler<ActionEvent> {
         // Redirect Actions into CodeAlert.
         handleCodeAlertActions(e);
 
+        // Redirect Actions into AdministratorsPage
         handleAdministratorPageActions(e);
 
+        // Redirect Actions into CommuneDetailsModifPage.
         handleCommuneDetailsModifPage(e);
+
+        // Redirect Actions into CommuneCreatePage.
+        handleCommuneCreatePageActions(e);
     }
 
 
@@ -826,8 +867,16 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-    //! AdministratorPage
+    //! ---------------- AdministratorPage
+    // following code is for actions realised in AdministratorPage
 
+
+
+    /**
+    * Handle action realised in Administration Page
+    * 
+    * @param e The Action Event
+    */
     private void handleAdministratorPageActions(ActionEvent e) {
         // if search field is triggered.
         if(e.getSource() == this.administratorsPage.getSearchField()){
@@ -870,6 +919,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 "-fx-font-size: 14px; " +
                 "-fx-cursor: hand;";
 
+            // we change style of each button to had a different border in only the selected button
             this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyleFocused);
             this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyle);
             this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyle);
@@ -900,6 +950,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 "-fx-font-size: 14px; " +
                 "-fx-cursor: hand;";
 
+                // we change style of each button to had a different border in only the selected button
                 this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyle);
                 this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyle);
                 this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyleFocused);
@@ -930,6 +981,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 "-fx-font-size: 14px; " +
                 "-fx-cursor: hand;";
 
+                // we change style of each button to had a different border in only the selected button
                 this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyle);
                 this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyleFocused);
                 this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyle);
@@ -960,6 +1012,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 "-fx-font-size: 14px; " +
                 "-fx-cursor: hand;";
 
+            // we change style of each button to had a different border in only the selected button    
             this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyle);
             this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyle);
             this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyle);
@@ -990,6 +1043,7 @@ public class Controller implements EventHandler<ActionEvent> {
                 "-fx-font-size: 14px; " +
                 "-fx-cursor: hand;";
 
+            // we change style of each button to had a different border in only the selected button    
             this.administratorsPage.getFinistereFilterButton().setStyle(buttonStyle);
             this.administratorsPage.getCoteArmorFilterButton().setStyle(buttonStyle);
             this.administratorsPage.getMorbihanFilterButton().setStyle(buttonStyle);
@@ -1008,12 +1062,13 @@ public class Controller implements EventHandler<ActionEvent> {
                 e1.printStackTrace();
             }
 
-            CustomAlert.showAlert("Chargement Base de Donnees", "Le chargement est fini.");
+            CustomAlert.showAlert("Chargement de la base de donn\u00e9es", "La base de donn\u00e9e a \u00e9t\u00e9 recharg\u00e9");	
         }
 
+        //Export data if the user want it.
         if(e.getSource() == this.administratorsPage.getExportButton()){
             exportData();
-            CustomAlert.showAlert("Export des données", "Les données ont bien était exporté");
+            CustomAlert.showAlert("Export des donn\u00e9es", "Les donn\u00e9es ont bien \u00e9tait export\u00e9");
         }
 
         if(e.getSource() == this.administratorsPage.getEditData()){
@@ -1022,7 +1077,7 @@ public class Controller implements EventHandler<ActionEvent> {
         }
 
         if(e.getSource() == this.administratorsPage.getCreateCommune()){
-            // ? ICI
+            this.communeCreatePage.showCommune(this);
         }
     }
 
@@ -1110,19 +1165,110 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+    // ! ---------------- CommuneCreatePage
+
+    private void handleCommuneCreatePageActions(ActionEvent e){
+        if (e.getSource() == this.communeCreatePage.getSaveButton()) {
+            String nomCommune = this.communeCreatePage.getNomTextFieldValue();        
+            String idCommune = this.communeCreatePage.getIdTextFieldValue();        
+            String departementCommune = this.communeCreatePage.getDepartementComboBox().getValue();        
+            String anneeDeDonnees = this.communeCreatePage.getAnneeTextFieldValue();        
+            String populationCommune = this.communeCreatePage.getPopulationTextFieldValue();        
+            String depenseCulturelleCommune = this.communeCreatePage.getDepCulturellesTextFieldValue();        
+            String budgetTotalCommune = this.communeCreatePage.getBudgetTotalField().getText();        
+            String nbMaisonCommune = this.communeCreatePage.getNbMaisonsText();        
+            String nbAppartementCommune = this.communeCreatePage.getNbAppartementsText();        
+            String prixMoyenCommune = this.communeCreatePage.getPrixM2MoyenText();        
+            String prixM2MoyenCommune = this.communeCreatePage.getPrixM2MoyenText();
+            String surfaceMoyenneCommune = this.communeCreatePage.getSurfaceMoyenneText();
+
+            // Vérifier si l'année existe dans la base de données
+            List<Annee> allYearsFromDB = getYearsFromDatabase();
+            Annee anneeTrouve = null;
+            boolean anneeExiste = false;
+            for (Annee an : allYearsFromDB) {
+                if (an.getAnnee() == Integer.parseInt(anneeDeDonnees)) {
+                    anneeExiste = true;
+                    anneeTrouve = an;
+                    break;
+                }
+            }
+        
+            if(!idIsInDatabase(Integer.parseInt(idCommune))){
+                if (anneeExiste) {
+                    // Année existe : mettre à jour les données existantes
+                    try {
+                        // Récupérer le département
+                        Departement departementNouvelle = getDepartementByName(departementCommune);
+                        Commune communeNouvelle = new Commune(
+                            null, anneeTrouve, Integer.parseInt(idCommune), nomCommune, 
+                            Integer.parseInt(nbMaisonCommune), Integer.parseInt(nbAppartementCommune), 
+                            Integer.parseInt(prixMoyenCommune), Integer.parseInt(prixM2MoyenCommune), 
+                            Integer.parseInt(surfaceMoyenneCommune), Integer.parseInt(depenseCulturelleCommune), 
+                            Integer.parseInt(budgetTotalCommune), Integer.parseInt(populationCommune), departementNouvelle);
+                        
+                        this.communeService.insertCommuneEtDonneesAnnuelles(communeNouvelle);
+                        CustomAlert.showAlert("Succès", "Commune mise à jour avec succès.");
+                    } catch (NumberFormatException e1) {	
+                        CustomAlert.showAlert("Erreur", "Les nombres doivent être des entiers valides");
+                    } catch (Exception ex) {
+                        CustomAlert.showAlert("Erreur", "Une erreur inattendue s'est produite");
+                    }
+                } else {
+                    try {
+                        // Récupérer le département
+                        Departement departementNouvelle = getDepartementByName(departementCommune);
+                        Annee anneeNouvelle = new Annee(Integer.parseInt(anneeDeDonnees), 1);
+    
+                        Commune communeNouvelle = new Commune(
+                            null, anneeNouvelle, Integer.parseInt(idCommune), nomCommune, 
+                            Integer.parseInt(nbMaisonCommune), Integer.parseInt(nbAppartementCommune), 
+                            Integer.parseInt(prixMoyenCommune), Integer.parseInt(prixM2MoyenCommune), 
+                            Integer.parseInt(surfaceMoyenneCommune), Integer.parseInt(depenseCulturelleCommune), 
+                            Integer.parseInt(budgetTotalCommune), Integer.parseInt(populationCommune), departementNouvelle);
+    
+                        this.anneeService.insertAnnee(anneeNouvelle);
+                        this.communeService.insertCommuneEtDonneesAnnuelles(communeNouvelle);
+    
+                        CustomAlert.showAlert("Succès", "Commune mise à jour avec succès.");
+                    } catch (NumberFormatException e1) {	
+                        CustomAlert.showAlert("Erreur", "Les nombres doivent être des entiers valides");
+                    } catch (Exception ex) {
+                        CustomAlert.showAlert("Erreur", "Une erreur inattendue s'est produite");
+                    }
+                }
+            } else {
+                CustomAlert.showAlert("Erreur", "l'id existe deja");
+            }
+            
+        }
+    }
 
 
 
 
-    // ! ----- CommuneDetailsModifPage
 
 
 
 
+
+
+
+
+
+    // ! ---------------- CommuneDetailsModifPage
+    //Following code is for CommuneDetailsModifPage actions handling.
+
+    /**
+    * Handle the action realised in CommuneDetailsModifPage
+    * 
+    * @param e The Action Event
+    */
     private void handleCommuneDetailsModifPage(ActionEvent e){
+        //the user want to save his changes
         if (e.getSource() == this.communeDetailsModifPage.getSaveButton()) {
             try {
-                // Vérification des champs obligatoires
+                // check if all of field is not empty
                 if (this.communeDetailsModifPage.getIdRepLabel().getText() == null || this.communeDetailsModifPage.getIdRepLabel().getText().isEmpty() ||
                     this.communeDetailsModifPage.getNbMaisonsText() == null || this.communeDetailsModifPage.getNbMaisonsText().isEmpty() ||
                     this.communeDetailsModifPage.getNbAppartementsText() == null || this.communeDetailsModifPage.getNbAppartementsText().isEmpty() ||
@@ -1134,10 +1280,11 @@ public class Controller implements EventHandler<ActionEvent> {
                     this.communeDetailsModifPage.getPopulationTextFieldValue() == null || this.communeDetailsModifPage.getPopulationTextFieldValue().isEmpty() ||
                     this.communeDetailsModifPage.getAnneeTextFieldValue() == null || this.communeDetailsModifPage.getAnneeTextFieldValue().isEmpty()) 
                 {
-                    CustomAlert.showAlert("Erreur", "Tous les champs doivent être remplis");
+                    // else we display an error.
+                    CustomAlert.showAlert("Erreur", "Tous les champs doivent \u00eatre remplis");
                 } else {
                     try {
-                        // Essayer de parser tous les champs d'entrée pour s'assurer qu'ils sont valides
+                        // Parsing all data, for check if there are correct.
                         String nomCommune = this.communeDetailsModifPage.getNameLabel().getText();
                         int id = Integer.parseInt(this.communeDetailsModifPage.getIdRepLabel().getText());
                         int nbMaisons = Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText());
@@ -1150,16 +1297,17 @@ public class Controller implements EventHandler<ActionEvent> {
                         int population = Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue());
                         int annee = Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue());
         
-                        // Récupération des années existantes pour la commune
+                        // Recover the years available for this commune (years with data inside)
                         Commune communeAvantModif = this.communeDetailsModifPage.getCommuneAvantModif();
                         ArrayList<Integer> existingYears = getYearsForCommune(communeAvantModif);
                         List<Annee> allYearsFromDB = getYearsFromDatabase();
         
-                        // Vérification si l'année existe déjà pour la commune
+                        // Checking the available years
                         if (existingYears.contains(annee)) {
-                            // Mise à jour de la commune et des données annuelles
+                            // Update commune and DonnéesAnnuelles
                             this.communeService.updateCommuneEtDonneesAnnuelles(id, nbMaisons, nbAppartements, prixMoyen, prixM2Moyen, surfaceMoyenne, depCulturelles, budgetTotal, population, annee);
         
+                            //Getting the right commune for modify the object.
                             Commune communeWithGoodYear = getCommuneForYearAndCommune(communeAvantModif.getNomCommune(), annee);
         
                             communeWithGoodYear.setNbMaison(nbMaisons);
@@ -1175,12 +1323,13 @@ public class Controller implements EventHandler<ActionEvent> {
                             anneeAvantModif.setAnnee(annee);
                             communeWithGoodYear.setAnnee(anneeAvantModif);
         
+                            //update the list of MainPage and AdministratorPage.
                             this.administratorsPage.updateCommunesListView(this.communesRecente);
                             this.mainPage.updateCommunesListView(this.communesRecente);
         
-                            CustomAlert.showAlert("Modification Commune", "Commune modifiée avec succès !");
+                            CustomAlert.showAlert("Modification Commune", "Commune modifi\u00e9e avec succ\u00e8s !");
                         } else {
-                            // Vérification si l'année existe déjà dans la base de données
+                            // Check if the years is in the database.
                             Annee anneeBDD = null;
                             for (Annee an : allYearsFromDB) {
                                 if (an.getAnnee() == annee) {
@@ -1207,11 +1356,13 @@ public class Controller implements EventHandler<ActionEvent> {
         
                                 CustomAlert.showAlert("Nouvelle donnée ajoutée", "Ajout avec succès.");
                             } else {
-                                this.tauxInflation = 0;
+                                //year isn't in the database.
+                                int tauxInflation = 1;
 
                                 Annee anneeCreer = new Annee(Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()), tauxInflation);
                                 this.anneeService.insertAnnee(anneeCreer);
 
+                                //recover department by his id.
                                 Departement departementNouvelle = getDepartementById(Integer.parseInt(this.communeDetailsModifPage.getDepRepLabel().getText()));
                                 
                                 Commune communeNouvelle = new Commune(
@@ -1226,11 +1377,11 @@ public class Controller implements EventHandler<ActionEvent> {
                                 this.administratorsPage.updateCommunesListView(this.communesRecente);
                                 this.mainPage.updateCommunesListView(this.communesRecente);
 
-                                CustomAlert.showAlert("Ajout d'une nouvelle année", "Marche Correct");
+                                CustomAlert.showAlert("Ajout d'une nouvelle ann\u00e9e", "Marche Correct");
                             }
                         }
-                    } catch (NumberFormatException e1) {
-                        CustomAlert.showAlert("Erreur", "Les nombres doivent être des entiers valides");
+                    } catch (NumberFormatException e1) {	
+                        CustomAlert.showAlert("Erreur", "Les nombres doivent \u00eatre des entiers valides");
                     }
                 }
             } catch (Exception ex) {
@@ -1289,6 +1440,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
     //! ---------------- TROUVERCHEMINCOMMUNE METHOD
+    //following code is for handle all action in Trou
 
 
     /**
@@ -1405,6 +1557,11 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
+    /**
+    * Handles the action of finding the user's account page when a connection button is clicked.
+    * If the current user is logged in, their account details are displayed.
+    * If no user is logged in, the login page is displayed instead.
+    */
     public void connectionClickedTrouverCheminCommune() {
         try {
             if (this.currentUser != null) {
@@ -1458,6 +1615,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
     //! ---------------- CONNECTIONPAGE METHOD
+    // following code is for handle connectionpage actions.
 
 
     /**
@@ -1553,7 +1711,8 @@ public class Controller implements EventHandler<ActionEvent> {
     
     /**
     * Lookup if the current user is admin or not.
-    * @return
+    *
+    * @return True if admin, otherwise return false
     */
     public boolean isAdmin(){
         boolean isAdmin = false;
@@ -1581,6 +1740,9 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
 
+    /**
+    * Check if user is Admin in TrouverCheminCommune. 
+    */
     public void verifyAdminTrouverChemin(){
         if(!isAdmin()){
             this.trouverCheminCommune.getEditData().setDisable(true);
@@ -1595,6 +1757,11 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
+
+
+
+
+    
 
 
 
@@ -2000,32 +2167,90 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
 
-    public List<Departement> getDepartementFromDatabase(){
+    /**
+    * Retrieves all departments from the database.
+    * 
+    * @return A list of all departments retrieved from the database.
+    */
+    public List<Departement> getDepartementFromDatabase() {
         List<Departement> allDepartement = new ArrayList<>();
 
-        try{
+        try {
             allDepartement = this.departementService.getAllDepartement();
-        } catch(Exception e){
-
+        } catch (Exception e) {
+            // Handle exception (optional)
         }
 
-        return(allDepartement);
+        return allDepartement;
     }
-    
 
+
+    /**
+    * Retrieves all departments from the database.
+    * 
+    * @return A list of all departments retrieved from the database.
+    */
+    public List<String> getDepartementNameFromDatabase() {
+        List<Departement> allDepartement = new ArrayList<>();
+        List<String> departementName = new ArrayList<>();
+
+        try {
+            allDepartement = this.departementService.getAllDepartement();
+        } catch (Exception e) {
+            // Handle exception (optional)
+        }
+
+        for (Departement departement : allDepartement) {
+            departementName.add(departement.getNomDep());
+        }
+
+        return(departementName);
+    }
+
+    /**
+    * Retrieves a department from the database based on the provided department ID.
+    * 
+    * @param idDep The ID of the department to retrieve.
+    * @return The department object corresponding to the provided ID, or null if not found.
+    */
     public Departement getDepartementById(int idDep) {
         try {
             this.listeDepartement = this.departementService.getAllDepartement();
         } catch (SQLException e) {
+            // Handle SQLException (optional)
             e.printStackTrace();
         }
+        
+        // Search for the department with the specified ID
         for (Departement dep : this.listeDepartement) {
             if (dep.getIdDep() == idDep) {
                 return dep;
             }
         }
+        
+        // Return null if department with the specified ID is not found
         return null;
     }
+
+    public Departement getDepartementByName(String nomDep) {
+        try {
+            this.listeDepartement = this.departementService.getAllDepartement();
+        } catch (SQLException e) {
+            // Handle SQLException (optional)
+            e.printStackTrace();
+        }
+        
+        // Search for the department with the specified name
+        for (Departement dep : this.listeDepartement) {
+            if (dep.getNomDep().equalsIgnoreCase(nomDep)) {
+                return dep;
+            }
+        }
+        
+        // Return null if department with the specified name is not found
+        return null;
+    }
+
 
 
     /**
@@ -2062,6 +2287,20 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
+    public boolean idIsInDatabase(int idCommune) {
+        // Récupérer toutes les communes de la base de données
+        this.communeToute = getCommunesFromDataBase();
+    
+        // Parcourir la liste des communes pour vérifier si l'ID existe
+        for (Commune commune : this.communeToute) {
+            if (commune.getIdCommune() == idCommune) {
+                return true; // Si une commune avec l'ID spécifié est trouvée
+            }
+        }
+    
+        return false; // Si aucune commune avec l'ID spécifié n'est trouvée
+    }
+    
 
 
 
@@ -2076,9 +2315,16 @@ public class Controller implements EventHandler<ActionEvent> {
 
 
 
-    //! EXPORT DES DONNEES
+
+    //! ---------------- EXPORT DES DONNEES
+    // following code is for export the data
 
 
+
+    /**
+    * Export data from different services into CSV files and compress them into a ZIP archive.
+    * Retrieves necessary data from services and writes them to CSV files before creating a ZIP file.
+    */
     public void exportData() {
         this.listeGare = this.communeService.getListeGare();
         this.listeAnnee = this.communeService.getListeAnnee();
@@ -2102,23 +2348,34 @@ public class Controller implements EventHandler<ActionEvent> {
         createZip();
     }
 
+    /**
+    * Export department data to a CSV file.
+    * Writes department information including cultural investments and associated airports.
+    */
     public void departementData() {
         String csvFile = "departementData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
-            // Écrire l'en-tête du CSV
+            // Write CSV header
             writer.println("nomDep;idDep;invesCulture;aeroports");
 
-            // Écrire chaque Departement dans le fichier CSV
+            // Write each Department to the CSV file
             for (Departement departement : this.listeDepartement) {
                 writer.println(departmentToCSVRow(departement));
             }
 
-            System.out.println("Données exportées avec succès dans " + csvFile);
+            System.out.println("Data successfully exported to " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+    * Convert a Department object to a CSV row string.
+    * Includes department fields and associated airport names.
+    *
+    * @param department The Department object to convert.
+    * @return A CSV formatted string representing the department's data.
+    */
     private String departmentToCSVRow(Departement department) {
         StringBuilder sb = new StringBuilder();
 
@@ -2127,7 +2384,7 @@ public class Controller implements EventHandler<ActionEvent> {
         sb.append(department.getIdDep()).append(";");
         sb.append(department.getInvesCulture2019()).append(";");
 
-        // Append aeroport names
+        // Append airport names
         for (Aeroport aeroport : this.listeAeroport) {
             if (aeroport.getDepartement().getIdDep() == department.getIdDep()) {
                 sb.append(aeroport.getNom()).append(",");
@@ -2140,68 +2397,101 @@ public class Controller implements EventHandler<ActionEvent> {
         return sb.toString();
     }
 
+    /**
+    * Export airport data to a CSV file.
+    * Writes airport information including name, address, and associated department ID.
+    */
     public void aeroportData() {
         String csvFile = "aeroportData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
-            // Écrire l'en-tête du CSV
+            // Write CSV header
             writer.println("nom;adresse;departement");
 
-            // Écrire chaque Aeroport dans le fichier CSV
+            // Write each Airport to the CSV file
             for (Aeroport aeroport : this.listeAeroport) {
                 writer.println(aeroportToCSVRow(aeroport));
             }
 
-            System.out.println("Données exportées avec succès dans " + csvFile);
+            System.out.println("Data successfully exported to " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+    * Convert an Airport object to a CSV row string.
+    * Includes airport name, address, and associated department ID.
+    *
+    * @param aeroport The Airport object to convert.
+    * @return A CSV formatted string representing the airport's data.
+    */
     private String aeroportToCSVRow(Aeroport aeroport) {
         return aeroport.getNom() + ";" +
                 aeroport.getAdresse() + ";" +
                 aeroport.getDepartement().getIdDep();
     }
 
+    /**
+    * Export year data to a CSV file.
+    * Writes year information including year and inflation rate.
+    */
     public void anneeData() {
         String csvFile = "anneeData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
-            // Écrire l'en-tête du CSV
+            // Write CSV header
             writer.println("annee;tauxInflation");
 
-            // Écrire chaque Annee dans le fichier CSV
+            // Write each Year to the CSV file
             for (Annee annee : this.listeAnnee) {
                 writer.println(anneeToCSVRow(annee));
             }
 
-            System.out.println("Données exportées avec succès dans " + csvFile);
+            System.out.println("Data successfully exported to " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+    * Convert a Year object to a CSV row string.
+    * Includes year and inflation rate.
+    *
+    * @param annee The Year object to convert.
+    * @return A CSV formatted string representing the year's data.
+    */
     private String anneeToCSVRow(Annee annee) {
         return annee.getAnnee() + ";" +
                 annee.getTauxInflation();
     }
 
+    /**
+    * Export train station data to a CSV file.
+    * Writes train station information including code, name, type (freight/passenger), and associated commune ID.
+    */
     public void gareData() {
         String csvFile = "gareData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
-            // Écrire l'en-tête du CSV
+            // Write CSV header
             writer.println("CodeGare;NomGare;Fret;Voyageur;idCommune");
 
-            // Écrire chaque Gare dans le fichier CSV
+            // Write each Train Station to the CSV file
             for (Gare gare : this.listeGare) {
                 writer.println(gareToCSVRow(gare));
             }
 
-            System.out.println("Données exportées avec succès dans " + csvFile);
+            System.out.println("Data successfully exported to " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+    * Convert a Train Station object to a CSV row string.
+    * Includes train station code, name, type (freight/passenger), and associated commune ID.
+    *
+    * @param gare The Train Station object to convert.
+    * @return A CSV formatted string representing the train station's data.
+    */
     private String gareToCSVRow(Gare gare) {
         return gare.getCodeGare() + ";" +
                 gare.getNomGare() + ";" +
@@ -2210,23 +2500,38 @@ public class Controller implements EventHandler<ActionEvent> {
                 gare.getCommune();
     }
 
+    /**
+    * Export commune data to a CSV file.
+    * Writes commune information including ID, name, year, number of houses/apartments,
+    * average price, average square meter price, average surface, cultural expenditures,
+    * total budget, population, associated department ID, and associated train station.
+    */
     public void communeData() {
         String csvFile = "communeData.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
-            // Écrire l'en-tête du CSV
+            // Write CSV header
             writer.println("idCommune;nomCommune;Annee;nbMaison;nbAppart;prixMoyen;prixM2Moyen;surfaceMoy;depCulturellesTotales;budgetTotal;population;departement;gare");
 
-            // Écrire chaque Commune dans le fichier CSV
+            // Write each Commune to the CSV file
             for (Commune commune : this.communeToute) {
                 writer.println(communeToCSVRow(commune));
             }
 
-            System.out.println("Données exportées avec succès dans " + csvFile);
+            System.out.println("Data successfully exported to " + csvFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+    * Convert a Commune object to a CSV row string.
+    * Includes commune ID, name, year, number of houses/apartments,
+    * average price, average square meter price, average surface, cultural expenditures,
+    * total budget, population, associated department ID, and associated train station.
+    *
+    * @param commune The Commune object to convert.
+    * @return A CSV formatted string representing the commune's data.
+    */
     private String communeToCSVRow(Commune commune) {
         return commune.getIdCommune() + ";" +
                 commune.getNomCommune() + ";" +
@@ -2243,24 +2548,35 @@ public class Controller implements EventHandler<ActionEvent> {
                 commune.getGare();
     }
 
+    /**
+    * Create a ZIP archive containing all exported CSV files.
+    * Deletes each CSV file after adding it to the ZIP archive.
+    */
     private void createZip() {
         String zipFile = "dataExport.zip";
         String[] csvFiles = {"departementData.csv", "aeroportData.csv", "anneeData.csv", "gareData.csv", "communeData.csv"};
 
         try (FileOutputStream fos = new FileOutputStream(zipFile);
-             ZipOutputStream zos = new ZipOutputStream(fos)) {
+            ZipOutputStream zos = new ZipOutputStream(fos)) {
 
             for (String csvFile : csvFiles) {
                 addToZipFile(csvFile, zos);
                 Files.delete(Paths.get(csvFile));  // Delete the CSV file after adding it to the zip
             }
 
-            System.out.println("Fichiers compressés avec succès dans " + zipFile);
+            System.out.println("Files successfully compressed into " + zipFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+    * Add a file to a ZIP archive.
+    *
+    * @param fileName The name of the file to add.
+    * @param zos      The ZipOutputStream to add the file to.
+    * @throws IOException If an I/O error occurs.
+    */
     private void addToZipFile(String fileName, ZipOutputStream zos) throws IOException {
         try (FileInputStream fis = new FileInputStream(fileName)) {
             ZipEntry zipEntry = new ZipEntry(fileName);

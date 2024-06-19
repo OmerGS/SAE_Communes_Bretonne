@@ -49,7 +49,6 @@ public class CommuneDetailsModifPage {
     private TextField anneeTextField;
     private TextField populationTextField;
     private TextField depCulturellesTextField;
-    private TextField gareTextField;
     private TextField budgetTotalField;
 
     private Label importanteLabel;

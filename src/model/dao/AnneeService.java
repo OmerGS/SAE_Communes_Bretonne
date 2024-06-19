@@ -75,13 +75,20 @@ public class AnneeService {
 
 
 
+    /**
+    * Inserts a new year with inflation rate into the database.
+    *
+    * @param annee The Annee object containing the year and inflation rate to be inserted.
+    */
     public void insertAnnee(Annee annee) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "INSERT INTO Annee (annee, tauxInflation) VALUES (?, ?)";
             try (PreparedStatement preparedStatement = connexion.prepareStatement(requeteSQL)) {
+
                 preparedStatement.setInt(1, annee.getAnnee());
                 preparedStatement.setDouble(2, annee.getTauxInflation());
                 preparedStatement.executeUpdate();
+                
                 System.out.println("Année insérée avec succès dans la base de données.");
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -91,7 +98,12 @@ public class AnneeService {
         }
     }
 
-
+    /**
+    * Updates the inflation rate of an existing year in the database.
+    *
+    * @param annee           The year to update.
+    * @param newTauxInflation The new inflation rate to update.
+    */
     public void updateAnnee(int annee, double newTauxInflation) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "UPDATE Annee SET tauxInflation = ? WHERE annee = ?";
@@ -108,7 +120,11 @@ public class AnneeService {
         }
     }
 
-
+    /**
+    * Deletes a year from the database based on the year value.
+    *
+    * @param annee The year to delete.
+    */
     public void dropAnnee(int annee) {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "DELETE FROM Annee WHERE annee = ?";
@@ -124,6 +140,10 @@ public class AnneeService {
         }
     }
 
+    /**
+    * Deletes all years from the database.
+    * Use with caution as it deletes all records in the Annee table.
+    */
     public void dropAllAnnees() {
         try (Connection connexion = ConnectionManager.getConnection()) {
             String requeteSQL = "DELETE FROM Annee";
@@ -137,4 +157,5 @@ public class AnneeService {
             e.printStackTrace();
         }
     }
+
 }
