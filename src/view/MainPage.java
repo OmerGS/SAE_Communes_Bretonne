@@ -247,7 +247,7 @@ public class MainPage extends Application {
     private VBox createMenuBox() {
         VBox menuBox = new VBox(10);
         menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
-        menuBox.setAlignment(Pos.CENTER_RIGHT);
+        menuBox.setAlignment(Pos.TOP_LEFT);
         menuBox.setMaxWidth(400);
     
         this.transportButton = createButtonWithIcon("Transport", "file:../resources/image/transport.png");
@@ -262,7 +262,7 @@ public class MainPage extends Application {
 
     private Button createButtonWithIcon(String text, String iconPath) {
         Button button = new Button(text);
-        button.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
+        button.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-border-color: transparent;");
         button.setOnAction(this.controller);
     
         ImageView icon = new ImageView(new Image(iconPath));
@@ -273,6 +273,8 @@ public class MainPage extends Application {
         button.setContentDisplay(ContentDisplay.LEFT); // To position the icon on the left of the text
         return button;
     }
+
+
 
     private void toggleMenu() {
         menuBox.setVisible(!menuBox.isVisible());

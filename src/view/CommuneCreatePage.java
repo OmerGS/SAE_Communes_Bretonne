@@ -26,9 +26,8 @@ import java.util.Random;
 
 import controller.Controller;
 
-public class CommuneDetailsModifPage {
+public class CommuneCreatePage {
     private VBox detailsBox;
-    private FlowPane neighborsPane;
     private ComboBox<Integer> yearsComboBox;
     private Label nameLabel;
 
@@ -107,26 +106,12 @@ public class CommuneDetailsModifPage {
         namePane.getChildren().add(nameLabel);
 
         // Create TitledPanes for general information and housing statistics
-        generalInfoPane = createTitledPane("Informations g\u00e9n\u00e9rales", createGeneralInfoBox(commune));
+        generalInfoPane = createTitledPane("Informations g\u00e9n\u00e9rales", createGeneralInfoBox(commune, controller));
         housingStatsPane = createTitledPane("Statistiques de logement", createHousingStatsBox(commune));
 
         updateGeneralInfoBox(commune);
         updateHousingStatsBox(commune);
 
-        // Section neighboring communes
-        Label neighborsLabel = new Label("Communes voisines:");
-        neighborsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        neighborsPane = new FlowPane();
-        neighborsPane.setHgap(10);
-        neighborsPane.setVgap(10);
-        neighborsPane.setAlignment(Pos.CENTER);
-
-        updateNeighborsPane(commune, controller);
-
-        // Create ComboBox containing years
-        yearsComboBox = createYearsComboBox(commune, controller);
-        yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
         saveButton = new Button("Sauvegarder");
         plusyearsButton = new Button("+ année");
         Button closeButton = new Button("Fermer");
@@ -137,8 +122,8 @@ public class CommuneDetailsModifPage {
 
 
         detailsBox.getChildren().addAll(
-            namePane, generalInfoPane, housingStatsPane, neighborsLabel, neighborsPane,
-            yearsComboBox, saveButton, closeButton
+            namePane, generalInfoPane, housingStatsPane,
+            saveButton, closeButton
         );
 
         ScrollPane scrollPane = new ScrollPane(detailsBox);
@@ -160,7 +145,7 @@ public class CommuneDetailsModifPage {
         return pane;
     }
 
-    private VBox createGeneralInfoBox(Commune commune) {
+    private VBox createGeneralInfoBox(Commune commune, Controller controller) {
         VBox box = new VBox(10);
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER_LEFT);
@@ -181,7 +166,8 @@ public class CommuneDetailsModifPage {
 
         Label anneeLabel = new Label("Ann\u00e9e de donn\u00e9es : ");
         anneeLabel.setStyle("-fx-font-size: 14px;");
-        anneeTextField = new TextField();
+        yearsComboBox = createYearsComboBox(commune, controller);
+        yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
 
         Label populationLabel = new Label("Population : ");
         populationLabel.setStyle("-fx-font-size: 14px;");
@@ -215,7 +201,7 @@ public class CommuneDetailsModifPage {
         grid.add(depLabel, 0, 1);
         grid.add(depRepLabel, 1, 1);
         grid.add(anneeLabel, 0, 2);
-        grid.add(anneeTextField, 1, 2);
+        grid.add(yearsComboBox, 1, 2);
         grid.add(populationLabel, 0, 3);
         grid.add(populationTextField, 1, 3);
         grid.add(importanteLabel, 0, 4);
@@ -288,7 +274,6 @@ public class CommuneDetailsModifPage {
         } else {
             populationTextField.setText(commune.getPopulation() + "");
         }
-        anneeTextField.setText("" + commune.getAnnee().getAnnee());
         if (commune.getDepCulturellesTotales() < 0) {
             depCulturellesTextField.setText("Information indisponible");
         } else {
@@ -334,21 +319,7 @@ public class CommuneDetailsModifPage {
         }
     }
 
-    private void updateNeighborsPane(Commune commune, Controller controller) {
-        neighborsPane.getChildren().clear();
-        ArrayList<Commune> neighbors = commune.getCommunesVoisines();
-        if (neighbors.isEmpty()) {
-            neighborsPane.getChildren().add(new Label("Aucune commune voisine."));
-        } else {
-            for (Commune neighbor : neighbors) {
-                Button neighborButton = new Button(neighbor.getNomCommune());
-                neighborButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
-                neighborButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
-                neighborButton.setOnAction(event -> showCommune(neighbor, controller));
-                neighborsPane.getChildren().add(neighborButton);
-            }
-        }
-    }
+
 
     private ComboBox<Integer> createYearsComboBox(Commune commune, Controller controller) {
         yearsComboBox = new ComboBox<>();
@@ -377,7 +348,6 @@ public class CommuneDetailsModifPage {
 
     public void updateCommuneDetails(Commune commune, Controller controller) {
         nameLabel.setText(commune.getNomCommune());
-        updateNeighborsPane(commune, controller);
         updateGeneralInfoBox(commune);
         updateHousingStatsBox(commune);
     }

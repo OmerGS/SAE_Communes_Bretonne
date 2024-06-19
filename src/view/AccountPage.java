@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -30,7 +31,10 @@ public class AccountPage extends Application {
     private VBox menuBox;
     private Button cheminCourtButton;
     private Button reloadDatabase;
-    private Label nameLabel;
+    private Button transportButton; 
+    private Button editData; 
+    private Button exportDataButton;
+     private Label nameLabel;
     private Label firstNameLabel;
     private Hyperlink emailLink;
     private Button deleteButton;
@@ -89,6 +93,18 @@ public class AccountPage extends Application {
 
     public Button getReloadDatabase() {
         return reloadDatabase;
+    }
+
+    public Button getTransportButton() {
+        return transportButton;
+    }
+
+    public Button getEditData() {
+        return editData;
+    }
+
+    public Button getExportDataButton() {
+        return exportDataButton;
     }
 
     public Label getNameLabel() {
@@ -194,22 +210,31 @@ public class AccountPage extends Application {
     private VBox createMenuBox() {
         VBox menuBox = new VBox(10);
         menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
-        menuBox.setAlignment(Pos.CENTER_RIGHT);
+        menuBox.setAlignment(Pos.TOP_LEFT);
         menuBox.setMaxWidth(400);
-
-        this.cheminCourtButton = new Button("Chemin Entre 2 commune");
-        this.cheminCourtButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.cheminCourtButton.setOnAction(this.controller);
-
-        Label exportDataLabel = new Label("Exporter Données");
-        exportDataLabel.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-
-        this.reloadDatabase = new Button("Rechargez la base de données");
-        this.reloadDatabase.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.reloadDatabase.setOnAction(this.controller);
-
-        menuBox.getChildren().addAll(this.cheminCourtButton, exportDataLabel, this.reloadDatabase);
+    
+        this.transportButton = createButtonWithIcon("Transport", "file:../resources/image/transport.png");
+        this.cheminCourtButton = createButtonWithIcon("Chemin Entre 2 communes", "file:../resources/image/chemin.png");
+        this.editData = createButtonWithIcon("Modifier les données", "file:../resources/image/edit.png");
+        this.exportDataButton = createButtonWithIcon("Exporter Données", "file:../resources/image/export.png");
+        this.reloadDatabase = createButtonWithIcon("Rechargez la base de données", "file:../resources/image/reload.png");
+    
+        menuBox.getChildren().addAll(this.transportButton, this.cheminCourtButton, this.editData, this.exportDataButton, this.reloadDatabase);
         return menuBox;
+    }
+
+    private Button createButtonWithIcon(String text, String iconPath) {
+        Button button = new Button(text);
+        button.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-border-color: transparent;");
+        button.setOnAction(this.controller);
+    
+        ImageView icon = new ImageView(new Image(iconPath));
+        icon.setFitHeight(16); // Adjust the size as needed
+        icon.setFitWidth(16);  // Adjust the size as needed
+    
+        button.setGraphic(icon);
+        button.setContentDisplay(ContentDisplay.LEFT); // To position the icon on the left of the text
+        return button;
     }
 
     private void toggleMenu() {
