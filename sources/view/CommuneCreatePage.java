@@ -62,7 +62,7 @@ public class CommuneCreatePage {
     public void showCommune(Controller controller) {
 
         detailsStage = new Stage();
-        detailsStage.setTitle("Création de la commune");
+        detailsStage.setTitle("Cr\u00E9ation de la commune");
 
         detailsBox = new VBox(20);
         detailsBox.setPadding(new Insets(20));

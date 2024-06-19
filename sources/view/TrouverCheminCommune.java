@@ -106,7 +106,8 @@ public class TrouverCheminCommune extends Application {
 
         
 
-        
+        this.controller.verifyAdmin();
+
         // Menu Box (assuming menuBox is defined elsewhere)
         this.menuBox = createMenuBox();
         menuBox.setVisible(false);
@@ -193,11 +194,10 @@ public class TrouverCheminCommune extends Application {
         menuBox.setMaxWidth(400);
 
         this.mainPageButton = createButtonWithIcon("Page d'accueil", "file:../resources/image/home.png");
-        this.editData = createButtonWithIcon("Modifier les données", "file:../resources/image/edit.png");
-        this.exportDataButton = createButtonWithIcon("Exporter Données", "file:../resources/image/export.png");
-        this.reloadDatabase = createButtonWithIcon("Rechargez la base de données", "file:../resources/image/reload.png");
+        this.exportDataButton = createButtonWithIcon("Exporter Donn\u00E9es", "file:../resources/image/export.png");
+        this.reloadDatabase = createButtonWithIcon("Rechargez la base de donn\u00E9es", "file:../resources/image/reload.png");
     
-        menuBox.getChildren().addAll(this.mainPageButton, this.editData, this.exportDataButton, this.reloadDatabase);
+        menuBox.getChildren().addAll(this.mainPageButton, this.exportDataButton, this.reloadDatabase);
         return menuBox;
     }
 
