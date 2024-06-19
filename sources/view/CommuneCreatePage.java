@@ -83,6 +83,7 @@ public class CommuneCreatePage {
         closeButton.setOnAction(event -> detailsStage.close());
 
         this.saveButton.setOnAction(controller);
+        saveButton.setStyle("-fx-background-color: #5F3384; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
 
 
         detailsBox.getChildren().addAll(

@@ -142,6 +142,8 @@ public class CommuneDetailsModifPage {
         yearsComboBox = createYearsComboBox(commune, controller);
         yearsComboBox.setStyle("-fx-max-width: 150px; -fx-font-size: 14px;");
         saveButton = new Button("Sauvegarder");
+        saveButton.setStyle("-fx-background-color: #5F3384; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
+
         Button closeButton = new Button("Fermer");
         closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px; -fx-cursor: hand;");
         closeButton.setOnAction(event -> detailsStage.close());
