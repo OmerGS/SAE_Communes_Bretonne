@@ -9,6 +9,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -33,7 +34,12 @@ public class TrouverCheminCommune extends Application {
     private Button editData;
     private Button exportDataButton;
     private Button reloadDatabase;
+    private Button transportButton;
 
+
+    public Button getTransportButton() {
+        return transportButton;
+    }
 
     public TrouverCheminCommune(Controller controller) {
         this.controller = controller;
@@ -41,6 +47,7 @@ public class TrouverCheminCommune extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.TOP_CENTER);
@@ -150,27 +157,30 @@ public class TrouverCheminCommune extends Application {
     private VBox createMenuBox() {
         VBox menuBox = new VBox(10);
         menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
-        menuBox.setAlignment(Pos.CENTER_RIGHT);
+        menuBox.setAlignment(Pos.TOP_LEFT);
         menuBox.setMaxWidth(400);
-
-        this.pagePrincipale = new Button("Page Principale");
-        this.pagePrincipale.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.pagePrincipale.setOnAction(this.controller);
-
-        this.editData = new Button("Modifier les données");
-        this.editData.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.editData.setOnAction(this.controller);
-
-        this.exportDataButton = new Button("Exporter Données");
-        this.exportDataButton.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.exportDataButton.setOnAction(this.controller);
-
-        this.reloadDatabase = new Button("Rechargez la base de données");
-        this.reloadDatabase.setStyle("-fx-text-fill: #fff; -fx-font-size: 16px;");
-        this.reloadDatabase.setOnAction(this.controller);
-
-        menuBox.getChildren().addAll(this.pagePrincipale, editData, exportDataButton, this.reloadDatabase);
+    
+        this.transportButton = createButtonWithIcon("Transport", "file:../resources/image/transport.png");
+        this.editData = createButtonWithIcon("Modifier les données", "file:../resources/image/edit.png");
+        this.exportDataButton = createButtonWithIcon("Exporter Données", "file:../resources/image/export.png");
+        this.reloadDatabase = createButtonWithIcon("Rechargez la base de données", "file:../resources/image/reload.png");
+    
+        menuBox.getChildren().addAll(this.transportButton, this.editData, this.exportDataButton, this.reloadDatabase);
         return menuBox;
+    }
+
+    private Button createButtonWithIcon(String text, String iconPath) {
+        Button button = new Button(text);
+        button.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-border-color: transparent;");
+        button.setOnAction(this.controller);
+    
+        ImageView icon = new ImageView(new Image(iconPath));
+        icon.setFitHeight(16); // Adjust the size as needed
+        icon.setFitWidth(16);  // Adjust the size as needed
+    
+        button.setGraphic(icon);
+        button.setContentDisplay(ContentDisplay.LEFT); // To position the icon on the left of the text
+        return button;
     }
 
     private void toggleMenu() {

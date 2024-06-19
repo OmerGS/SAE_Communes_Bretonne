@@ -58,6 +58,8 @@ public class ConnectionPage extends Application {
     */
     private Label errorMessageLabel;
 
+    private Button returnButton;
+
     /**
     * The constructor of ConnectionPage, initializes the controller.
     * @param controller The controller.
@@ -233,6 +235,9 @@ public class ConnectionPage extends Application {
 
     public Label getErrorMessageLabel() {
         return errorMessageLabel;
+    }
+    public Button getReturnButton(){
+        return this.returnButton;
     }
 
     public static void main(String[] args) {
