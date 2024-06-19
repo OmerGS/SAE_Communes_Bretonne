@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
@@ -1101,42 +1102,65 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private void handleCommuneDetailsModifPage(ActionEvent e){
         if(e.getSource() == this.communeDetailsModifPage.getSaveButton()){
-            this.communeService.updateCommuneEtDonneesAnnuelles(Integer.parseInt(this.communeDetailsModifPage.getIdTextFieldValue()), 
-            Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText()), 
-            Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText()), 
-            Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText()), 
-            Integer.parseInt(this.communeDetailsModifPage.getPrixM2MoyenText()), 
-            Integer.parseInt(this.communeDetailsModifPage.getSurfaceMoyenneText()), 
-            Integer.parseInt(this.communeDetailsModifPage.getDepCulturellesTextFieldValue()), 
-            Integer.parseInt(this.communeDetailsModifPage.getBudgetTotalField().getText()), 
-            Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue()), 
-            Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()));
-
-            Commune communeAvantModif = this.communeDetailsModifPage.getCommuneAvantModif();
-            Commune communeWithGoodYear = getCommuneForYearAndCommune(communeAvantModif.getNomCommune(), Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()));
-
-            communeWithGoodYear.setNbMaison(Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText()));
-            communeWithGoodYear.setNbAppart(Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText()));
-            communeWithGoodYear.setPrixMoyen(Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText()));
-            communeWithGoodYear.setPrixM2Moyen(Integer.parseInt(this.communeDetailsModifPage.getPrixM2MoyenText()));
-            communeWithGoodYear.setSurfaceMoy(Integer.parseInt(this.communeDetailsModifPage.getSurfaceMoyenneText()));
-            communeWithGoodYear.setDepCulturellesTotales(Integer.parseInt(this.communeDetailsModifPage.getDepCulturellesTextFieldValue()));
-            communeWithGoodYear.setBudgetTotal(Integer.parseInt(this.communeDetailsModifPage.getBudgetTotalField().getText()));
-            communeWithGoodYear.setPopulation(Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue()));
-            
-            Annee anneeAvantModif = communeWithGoodYear.getAnnee();
-            anneeAvantModif.setAnnee(Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue()));
-            communeWithGoodYear.setAnnee(anneeAvantModif);
-
-            this.administratorsPage.updateCommunesListView(this.communesRecente);
-            this.mainPage.updateCommunesListView(this.communesRecente);
-
-            CustomAlert.showAlert("Modification Commune", "Commune ajouté avec succès !");
+            try{
+                // Check if any of the required fields are empty
+                if (this.communeDetailsModifPage.getIdTextFieldValue() == null || this.communeDetailsModifPage.getIdTextFieldValue().isEmpty() ||
+                    this.communeDetailsModifPage.getNbMaisonsText() == null || this.communeDetailsModifPage.getNbMaisonsText().isEmpty() ||
+                    this.communeDetailsModifPage.getNbAppartementsText() == null || this.communeDetailsModifPage.getNbAppartementsText().isEmpty() ||
+                    this.communeDetailsModifPage.getPrixMoyenText() == null || this.communeDetailsModifPage.getPrixMoyenText().isEmpty() ||
+                    this.communeDetailsModifPage.getPrixM2MoyenText() == null || this.communeDetailsModifPage.getPrixM2MoyenText().isEmpty() ||
+                    this.communeDetailsModifPage.getSurfaceMoyenneText() == null || this.communeDetailsModifPage.getSurfaceMoyenneText().isEmpty() ||
+                    this.communeDetailsModifPage.getDepCulturellesTextFieldValue() == null || this.communeDetailsModifPage.getDepCulturellesTextFieldValue().isEmpty() ||
+                    this.communeDetailsModifPage.getBudgetTotalField().getText() == null || this.communeDetailsModifPage.getBudgetTotalField().getText().isEmpty() ||
+                    this.communeDetailsModifPage.getPopulationTextFieldValue() == null || this.communeDetailsModifPage.getPopulationTextFieldValue().isEmpty() ||
+                    this.communeDetailsModifPage.getAnneeTextFieldValue() == null || this.communeDetailsModifPage.getAnneeTextFieldValue().isEmpty()) 
+                {
+                    
+                    CustomAlert.showAlert("Erreur", "Tous les champs doivent être remplis");
+                } else {
+                    // Try parsing all the input fields to ensure they are valid integers
+                    try {
+                        int id = Integer.parseInt(this.communeDetailsModifPage.getIdTextFieldValue());
+                        int nbMaisons = Integer.parseInt(this.communeDetailsModifPage.getNbMaisonsText());
+                        int nbAppartements = Integer.parseInt(this.communeDetailsModifPage.getNbAppartementsText());
+                        int prixMoyen = Integer.parseInt(this.communeDetailsModifPage.getPrixMoyenText());
+                        int prixM2Moyen = Integer.parseInt(this.communeDetailsModifPage.getPrixM2MoyenText());
+                        int surfaceMoyenne = Integer.parseInt(this.communeDetailsModifPage.getSurfaceMoyenneText());
+                        int depCulturelles = Integer.parseInt(this.communeDetailsModifPage.getDepCulturellesTextFieldValue());
+                        int budgetTotal = Integer.parseInt(this.communeDetailsModifPage.getBudgetTotalField().getText());
+                        int population = Integer.parseInt(this.communeDetailsModifPage.getPopulationTextFieldValue());
+                        int annee = Integer.parseInt(this.communeDetailsModifPage.getAnneeTextFieldValue());
+        
+                        this.communeService.updateCommuneEtDonneesAnnuelles(id, nbMaisons, nbAppartements, prixMoyen, prixM2Moyen, surfaceMoyenne, depCulturelles, budgetTotal, population, annee);
+        
+                        Commune communeAvantModif = this.communeDetailsModifPage.getCommuneAvantModif();
+                        Commune communeWithGoodYear = getCommuneForYearAndCommune(communeAvantModif.getNomCommune(), annee);
+        
+                        communeWithGoodYear.setNbMaison(nbMaisons);
+                        communeWithGoodYear.setNbAppart(nbAppartements);
+                        communeWithGoodYear.setPrixMoyen(prixMoyen);
+                        communeWithGoodYear.setPrixM2Moyen(prixM2Moyen);
+                        communeWithGoodYear.setSurfaceMoy(surfaceMoyenne);
+                        communeWithGoodYear.setDepCulturellesTotales(depCulturelles);
+                        communeWithGoodYear.setBudgetTotal(budgetTotal);
+                        communeWithGoodYear.setPopulation(population);
+        
+                        Annee anneeAvantModif = communeWithGoodYear.getAnnee();
+                        anneeAvantModif.setAnnee(annee);
+                        communeWithGoodYear.setAnnee(anneeAvantModif);
+        
+                        this.administratorsPage.updateCommunesListView(this.communesRecente);
+                        this.mainPage.updateCommunesListView(this.communesRecente);
+        
+                        CustomAlert.showAlert("Modification Commune", "Commune modifié avec succès !");
+                    } catch (NumberFormatException e1) {
+                        CustomAlert.showAlert("Erreur", "Les nombres doivent être des entiers valides");
+                    }
+                }
+            } catch (Exception ex) {
+                CustomAlert.showAlert("Erreur", "Une erreur inattendue s'est produite");
+            }
         }
-
-
-
-
     }
 
 
@@ -1820,42 +1844,39 @@ public class Controller implements EventHandler<ActionEvent> {
     * Allow to get all of the commune.
     * @return ArrayList<Commune> which contains the most recent year for each commune.
     */
-    public ArrayList<Commune> getCommunesFromDataBase(){
-        this.communesRecente = new ArrayList<>();    
-        try {
-            // we get all commune with getAllCommunes of communeService (call the database)
-            this.communeToute = this.communeService.getAllCommunes();
+    public ArrayList<Commune> getCommunesFromDataBase() {
+    this.communesRecente = new ArrayList<>();
+    try {
+        // On récupère toutes les communes avec getAllCommunes du service commune (appelle la base de données)
+        this.communeToute = this.communeService.getAllCommunes();
+        
+        // Utilisation d'une map pour stocker la commune la plus récente par identifiant
+        HashMap<Integer, Commune> recentCommunesMap = new HashMap<>();
+        
+        for (Commune commune : communeToute) {
+            int communeId = commune.getIdCommune();
+            int currentYear = commune.getAnnee().getAnnee();
             
-            // in the beginning the most recentyear is -1. (it's hard to make data of commune before -1).
-            int mostRecentYear = -1;
-    
-           // we try to get the most recent year in the database.
-            for (int i = 0; i < communeToute.size(); i++) {
-                Commune commune = communeToute.get(i);
-                int currentYear = commune.getAnnee().getAnnee();
+            // Si la commune est déjà dans la map, on compare les années
+            if (recentCommunesMap.containsKey(communeId)) {
+                int mostRecentYear = recentCommunesMap.get(communeId).getAnnee().getAnnee();
                 if (currentYear > mostRecentYear) {
-                    mostRecentYear = currentYear;
+                    recentCommunesMap.put(communeId, commune);
                 }
+            } else {
+                recentCommunesMap.put(communeId, commune);
             }
-    
-            // we get all communes with the most recent year.
-            ArrayList<Commune> recentCommunes = new ArrayList<>();
-            for (int i = 0; i < communeToute.size(); i++) {
-                Commune commune = communeToute.get(i);
-                if (commune.getAnnee().getAnnee() == mostRecentYear) {
-                    recentCommunes.add(commune);
-                }
-            }
-    
-            // we put the recentCommunes in the class attribut.
-            this.communesRecente = recentCommunes;
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-    
-        // we retun all recent commune.
-        return this.communesRecente;
+        
+        this.communesRecente.addAll(recentCommunesMap.values());
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    
+    return this.communesRecente;
+}
+
 
 
 
