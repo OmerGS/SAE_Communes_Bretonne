@@ -300,17 +300,17 @@ public class MainPage extends Application {
         // Infos1 label (Icône de l'importance)
         HBox info1Box = new HBox(5);
         info1Box.setAlignment(Pos.CENTER);
-        ImageView populationIcon = new ImageView(new Image("file:../resources/image/population.png"));
-        populationIcon.setFitHeight(40); // Ajuster la taille si nécessaire
-        populationIcon.setFitWidth(40);  // Ajuster la taille si nécessaire
+        ImageView importantIcon = new ImageView(new Image("file:../resources/image/important.png"));
+        importantIcon.setFitHeight(40); // Ajuster la taille si nécessaire
+        importantIcon.setFitWidth(40);  // Ajuster la taille si nécessaire
         Label importanceLabel = new Label();
-        if (commune.aUneGare()) {
+        if (commune.isMostImportant()) {
             importanceLabel.setText("Oui");
         } else {
             importanceLabel.setText("Non");
         }
         importanceLabel.setStyle("-fx-font-size: 18px;");
-        info1Box.getChildren().addAll(populationIcon, importanceLabel);
+        info1Box.getChildren().addAll(importantIcon, importanceLabel);
     
         // Infos2 label (Prix au m²)
         HBox info2Box = new HBox(5);
@@ -344,19 +344,10 @@ public class MainPage extends Application {
         // Infos4 label (Icône de la gare et disponibilité)
         HBox info4Box = new HBox(5);
         info4Box.setAlignment(Pos.CENTER);
-        ImageView gareIcon;
-        Label stationLabel = new Label();
-        if (commune.aUneGare()) {
-            gareIcon = new ImageView(new Image("file:../resources/image/gare.png"));
-            stationLabel.setText("Oui");
-        } else {
-            gareIcon = new ImageView(new Image("file:../resources/image/pasgare.png"));
-            stationLabel.setText("Non");
-        }
-        gareIcon.setFitHeight(40); // Ajuster la taille si nécessaire
-        gareIcon.setFitWidth(40);  // Ajuster la taille si nécessaire
+        Label stationLabel = new Label("Gare : " +(commune.aUneGare() ? "Oui" : "Non"));
+
         stationLabel.setStyle("-fx-font-size: 18px;");
-        info4Box.getChildren().addAll(gareIcon, stationLabel);
+        info4Box.getChildren().addAll(stationLabel);
     
     
         // Bouton pour afficher plus de détails
