@@ -88,10 +88,10 @@ public class ServerConnectionManager {
                 // Create an Image from the InputStream and set it in the ImageView
                 Image image = new Image(response.body());
                 this.trouverCheminCommune.getImageView().setImage(image);
-                this.trouverCheminCommune.setResultLabel("Chemin trouvé :");
+                this.trouverCheminCommune.setResultLabel("Chemin trouv\u00E9 :");
             } else {
                 // Set an error message if the status code is not 200
-                this.trouverCheminCommune.setResultLabel("Erreur lors de la récupération du chemin.");
+                this.trouverCheminCommune.setResultLabel("Erreur lors de la r\u00E9cup\u00E9ration du chemin.");
             }
         } catch (IOException | InterruptedException e) {
             // Set an error message if an exception occurs

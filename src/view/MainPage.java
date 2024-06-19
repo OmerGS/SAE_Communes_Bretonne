@@ -59,8 +59,8 @@ public class MainPage extends Application {
         // Checkboxes for filters
         this.toutesLesCommunes = new Button("Toutes");
         this.morbihanFilterButton = new Button("Morbihan");
-        this.finistereFilterButton = new Button("Finistère");
-        this.coteArmorFilterButton = new Button("Côtes-d'Armor");
+        this.finistereFilterButton = new Button("Finist\u00E8re");
+        this.coteArmorFilterButton = new Button("C\u00F4tes-d'Armor");
         this.illeEtVilaineFilterButton = new Button("Ille-et-Vilaine");
 
         String buttonStyle = "-fx-background-color: #C4C5CF; " + 
@@ -251,7 +251,7 @@ public class MainPage extends Application {
         menuBox.setMaxWidth(400);
     
         this.cheminCourtButton = createButtonWithIcon("Chemin Entre 2 communes", "file:../resources/image/chemin.png");
-        this.editData = new Button("Modifier les données");
+        this.editData = new Button("Modifier les donn\u00E9es");
         editData.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-border-color: transparent;");
         editData.setOnAction(this.controller);
     
@@ -261,8 +261,8 @@ public class MainPage extends Application {
     
         editData.setGraphic(icon);
         editData.setContentDisplay(ContentDisplay.LEFT); // To position the icon on the left of the text
-        this.exportDataButton = createButtonWithIcon("Exporter Données", "file:../resources/image/export.png");
-        this.reloadDatabase = createButtonWithIcon("Rechargez la base de données", "file:../resources/image/reload.png");
+        this.exportDataButton = createButtonWithIcon("Exporter Donn\u00E9es", "file:../resources/image/export.png");
+        this.reloadDatabase = createButtonWithIcon("Rechargez la base de donn\u00E9es", "file:../resources/image/reload.png");
     
         menuBox.getChildren().addAll(this.cheminCourtButton, this.editData, this.exportDataButton, this.reloadDatabase);
         return menuBox;

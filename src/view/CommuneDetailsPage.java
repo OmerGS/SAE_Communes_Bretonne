@@ -38,7 +38,6 @@ public class CommuneDetailsPage {
 
     private static TitledPane generalInfoPane;
     private static TitledPane housingStatsPane;
-    private static Image backgroundImageLoc;
 
     public static void showCommune(Commune commune, Controller controller) {
         detailsStage = new Stage();

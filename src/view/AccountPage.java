@@ -165,17 +165,7 @@ public class AccountPage extends Application {
         VBox menuBar = new VBox(2);
         menuBar.setAlignment(Pos.TOP_RIGHT);
 
-        // Ajouter trois barres pour l'icône du menu
-        for (int i = 0; i < 3; i++) {
-            Rectangle bar = new Rectangle(30, 5, Color.WHITE);
-            bar.setArcWidth(5);
-            bar.setArcHeight(5);
-            menuBar.getChildren().add(bar);
-        }
 
-        menuBar.setOnMouseClicked(e -> {
-            toggleMenu();
-        });
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -196,27 +186,13 @@ public class AccountPage extends Application {
         StackPane.setAlignment(infoPanel, Pos.CENTER); // Center the info panel
 
         VBox mainBox = new VBox(10);
-        mainBox.setStyle("-fx-background-color: #87CEEB;"); // Blue background
+        mainBox.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6C7BD0 0%, white 50%, #6C7BD0 100%);");
         mainBox.getChildren().addAll(topBar, mainPane);
         VBox.setVgrow(mainPane, Priority.ALWAYS);
 
         return mainBox;
     }
 
-    private VBox createMenuBox() {
-        VBox menuBox = new VBox(10);
-        menuBox.setStyle("-fx-background-color: #000000; -fx-padding: 20px;");
-        menuBox.setAlignment(Pos.TOP_LEFT);
-        menuBox.setMaxWidth(400);
-    
-        this.cheminCourtButton = createButtonWithIcon("Chemin Entre 2 communes", "file:../resources/image/chemin.png");
-        this.editData = createButtonWithIcon("Modifier les données", "file:../resources/image/edit.png");
-        this.exportDataButton = createButtonWithIcon("Exporter Données", "file:../resources/image/export.png");
-        this.reloadDatabase = createButtonWithIcon("Rechargez la base de données", "file:../resources/image/reload.png");
-    
-        menuBox.getChildren().addAll( this.cheminCourtButton, this.editData, this.exportDataButton, this.reloadDatabase);
-        return menuBox;
-    }
 
     private Button createButtonWithIcon(String text, String iconPath) {
         Button button = new Button(text);
@@ -232,29 +208,37 @@ public class AccountPage extends Application {
         return button;
     }
 
-    private void toggleMenu() {
-        menuBox.setVisible(!menuBox.isVisible());
-    }
 
     private VBox createInfoPanel() {
         VBox infoPanel = new VBox(10);
         infoPanel.setPadding(new Insets(20));
-        infoPanel.setStyle("-fx-background-color: #d3d3d3; -fx-background-radius: 20; -fx-padding: 20; -fx-border-radius: 20;");
+        infoPanel.setStyle("-fx-background-color: #f7f7f7; " +
+                           "-fx-background-radius: 15; " +
+                           "-fx-padding: 20; " +
+                           "-fx-border-radius: 15; " +
+                           "-fx-border-color: #d3d3d3; " +
+                           "-fx-border-width: 1;");
         infoPanel.setAlignment(Pos.CENTER);
-
+    
         HBox topRightBox = new HBox();
         topRightBox.setAlignment(Pos.TOP_RIGHT);
         this.modifyButton = new Button("MODIFIER");
-        this.modifyButton.setStyle("-fx-background-color: green; -fx-text-fill: black;");
+        this.modifyButton.setStyle("-fx-background-color: #4CAF50; " +
+                                   "-fx-text-fill: white; " +
+                                   "-fx-background-radius: 10; " +
+                                   "-fx-padding: 5 15;");
         topRightBox.getChildren().add(this.modifyButton);
-
+    
         this.saveButton = new Button("SAVE");
-        this.saveButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        this.saveButton.setStyle("-fx-background-color: #2196F3; " +
+                                 "-fx-text-fill: white; " +
+                                 "-fx-background-radius: 10; " +
+                                 "-fx-padding: 5 15;");
         this.saveButton.setVisible(false);
-
-        this.nameLabel = new Label("Omer");
-        this.firstNameLabel = new Label("GUNES");
-        this.emailLink = new Hyperlink("27omerf@gmail.com");
+    
+        this.nameLabel = new Label("Connexion serveur impossible");
+        this.firstNameLabel = new Label("Connexion serveur impossible");
+        this.emailLink = new Hyperlink("Connexion serveur impossible");
         this.admin = new Label("Impossible de recuperer");
 
         this.nameField = new TextField();
@@ -274,22 +258,40 @@ public class AccountPage extends Application {
         StackPane.setAlignment(nameField, Pos.CENTER_LEFT);
         StackPane.setAlignment(firstNameField, Pos.CENTER_LEFT);
         StackPane.setAlignment(emailField, Pos.CENTER_LEFT);
+        
+        Region spacerid = new Region();
+        spacerid.setMinWidth(40);
 
         HBox nameBox = new HBox(10, new Label("Nom :"), nameStack);
-        HBox firstNameBox = new HBox(10, new Label("Prénom :"), firstNameStack);
+        nameBox.setAlignment(Pos.CENTER);
+
+        HBox firstNameBox = new HBox(10, new Label("Pr\u00E9nom :"), firstNameStack);
+        firstNameBox.setAlignment(Pos.CENTER);
+
         HBox emailBox = new HBox(10, new Label("Email :"), emailStack);
+        emailBox.setAlignment(Pos.CENTER);
+
         HBox adminBox = new HBox(10, new Label("Role :"), admin);
+        adminBox.setAlignment(Pos.CENTER);
 
+    
         this.deleteButton = new Button("SUPPRIMER");
-        deleteButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white;");
-
-        this.disconnectButton = new Button("Deconnexion");
-        disconnectButton.setStyle("-fx-background-color: #8293D2; -fx-text-fill: black;");
-
+        deleteButton.setStyle("-fx-background-color: #ff0000; " +
+                              "-fx-text-fill: white; " +
+                              "-fx-background-radius: 10; " +
+                              "-fx-padding: 5 15;");
+    
+        this.disconnectButton = new Button("DECONNEXION");
+        disconnectButton.setStyle("-fx-background-color: #8293D2; " +
+                                  "-fx-text-fill: white; " +
+                                  "-fx-background-radius: 10; " +
+                                  "-fx-padding: 5 15;");
+    
         infoPanel.getChildren().addAll(topRightBox, nameBox, firstNameBox, emailBox, adminBox, deleteButton, disconnectButton, saveButton);
-
+    
         return infoPanel;
     }
+    
 
 
     public Label getAdmin() {

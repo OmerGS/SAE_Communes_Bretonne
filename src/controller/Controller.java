@@ -1471,10 +1471,19 @@ public class Controller implements EventHandler<ActionEvent> {
             CustomAlert.showAlert("Export des donn\u00e9es", "Les donn\u00e9es ont bien \u00e9tait export\u00e9");
         }
 
-        if(e.getSource() == this.trouverCheminCommune.getPagePrincipalButton()){
+        if(e.getSource() == this.trouverCheminCommune.getMainPageButton()){
             try {
-                Stage stage = (Stage) this.trouverCheminCommune.getPagePrincipalButton().getScene().getWindow();
+                Stage stage = (Stage) this.trouverCheminCommune.getEndCommuneName().getScene().getWindow();
                 this.mainPage.start(stage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        if(e.getSource() == this.trouverCheminCommune.getEditData()){
+            try {
+                Stage stage = (Stage) this.trouverCheminCommune.getEndCommuneName().getScene().getWindow();
+                this.administratorsPage.start(stage);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
