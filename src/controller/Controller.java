@@ -160,6 +160,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private double tauxInflation;
 
+
     /**
     * The constructor of Controller. 
     * @param connectionPage
@@ -1021,8 +1022,7 @@ public class Controller implements EventHandler<ActionEvent> {
         }
 
         if(e.getSource() == this.administratorsPage.getCreateCommune()){
-            System.out.println("UZAJDAJDAZJD");
-            
+            // ? ICI
         }
     }
 
